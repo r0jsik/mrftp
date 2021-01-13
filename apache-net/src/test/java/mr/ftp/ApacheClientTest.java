@@ -1,7 +1,7 @@
 package mr.ftp;
 
+import mr.ftp.entry.Entry;
 import mr.mock.*;
-import org.apache.commons.net.ftp.FTPClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,20 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.mockftpserver.fake.FakeFtpServer;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ApacheClientTest
 {
-	private final static FakeFtpServer fakeFtpServer = new FakeFtpServer();
+	private static final FakeFtpServer fakeFtpServer = new FakeFtpServer();
+	private static final ClientFactory clientFactory = new InsecureApacheClientFactory();
 	
-	private final ApacheClient apacheClient;
+	private final Client client;
 	
-	public ApacheClientTest() throws IOException
+	public ApacheClientTest() throws ClientFactoryException
 	{
-		FTPClient ftpClient = new FTPClient();
-		ftpClient.connect("localhost", 7000);
-		ftpClient.login("MrFTP", "MrFTP");
-		
-		apacheClient = new ApacheClient(ftpClient);
+		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
 	
 	@BeforeAll
@@ -51,7 +49,7 @@ public class ApacheClientTest
 		
 		try (MockInputStream inputStream = new MockInputStream(sentText))
 		{
-			apacheClient.upload("/MrFTP/mock-uploaded-file.txt", inputStream);
+			client.upload("/MrFTP/mock-uploaded-file.txt", inputStream);
 			
 			boolean uploaded = fileExists("/MrFTP/mock-uploaded-file.txt");
 			Assertions.assertTrue(uploaded);
@@ -68,7 +66,7 @@ public class ApacheClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			apacheClient.download("/MrFTP/mock-file.txt", outputStream);
+			client.download("/MrFTP/mock-file.txt", outputStream);
 			
 			byte[] expected = "Mock content".getBytes();
 			byte[] actual = outputStream.toByteArray();
@@ -87,7 +85,27 @@ public class ApacheClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			apacheClient.download("/MrFTP/not-existing-file.txt", outputStream);
+			client.download("/MrFTP/not-existing-file.txt", outputStream);
 		}
+	}
+	
+	@Test
+	public void testForEach() throws IOException
+	{
+		AtomicBoolean fileExists = new AtomicBoolean(false);
+		
+		client.forEach("/MrFTP", entry -> {
+			if (isEntryToFind(entry))
+			{
+				fileExists.set(true);
+			}
+		});
+		
+		Assertions.assertTrue(fileExists.get());
+	}
+	
+	private boolean isEntryToFind(Entry entry)
+	{
+		return entry.getName().equals("existing-file");
 	}
 }

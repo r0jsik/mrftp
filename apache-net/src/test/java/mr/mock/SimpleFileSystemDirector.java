@@ -7,5 +7,6 @@ public class SimpleFileSystemDirector implements FileSystemDirector
 	{
 		fileSystemBuilder.createDirectory("/MrFTP");
 		fileSystemBuilder.createFile("/MrFTP/mock-file.txt", "Mock content");
+		fileSystemBuilder.createFile("/MrFTP/existing-file", "");
 	}
 }
