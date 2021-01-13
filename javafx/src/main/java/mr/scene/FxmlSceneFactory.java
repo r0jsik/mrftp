@@ -26,7 +26,7 @@ public class FxmlSceneFactory implements SceneFactory
 		}
 		catch (IOException | IllegalStateException exception)
 		{
-			throw new SceneFactoryException();
+			throw new SceneFactoryException(exception);
 		}
 	}
 	
