@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<?import javafx.scene.layout.VBox ?>
+<?import javafx.scene.control.SplitPane ?>
+<?import javafx.scene.control.TableView ?>
+<?import javafx.scene.control.TableColumn ?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
+	<SplitPane>
+		<TableView fx:id="remoteView">
+			<columns>
+				<TableColumn text="Nazwa" />
+				<TableColumn text="Rozmiar" />
+			</columns>
+			
+			<columnResizePolicy>
+				<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+			</columnResizePolicy>
+		</TableView>
+		
+		<TableView fx:id="localView">
+			<columns>
+				<TableColumn text="Nazwa" />
+				<TableColumn text="Rozmiar" />
+			</columns>
+			
+			<columnResizePolicy>
+				<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+			</columnResizePolicy>
+		</TableView>
+	</SplitPane>
+</VBox>
