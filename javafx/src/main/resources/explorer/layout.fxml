@@ -4,29 +4,71 @@
 <?import javafx.scene.control.SplitPane ?>
 <?import javafx.scene.control.TableView ?>
 <?import javafx.scene.control.TableColumn ?>
+<?import javafx.scene.control.Label ?>
+<?import javafx.scene.control.cell.PropertyValueFactory ?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
 	<SplitPane>
 		<TableView fx:id="remoteView">
 			<columns>
-				<TableColumn text="Nazwa" />
-				<TableColumn text="Rozmiar" />
+				<TableColumn text="Typ">
+					<cellValueFactory>
+						<PropertyValueFactory property="icon" />
+					</cellValueFactory>
+				</TableColumn>
+				
+				<TableColumn text="Nazwa">
+					<cellValueFactory>
+						<PropertyValueFactory property="name" />
+					</cellValueFactory>
+				</TableColumn>
+				
+				<TableColumn text="Rozmiar">
+					<cellValueFactory>
+						<PropertyValueFactory property="size" />
+					</cellValueFactory>
+				</TableColumn>
 			</columns>
 			
 			<columnResizePolicy>
 				<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
 			</columnResizePolicy>
+			
+			<placeholder>
+				<Label text="Brak plików" />
+			</placeholder>
 		</TableView>
 		
 		<TableView fx:id="localView">
 			<columns>
-				<TableColumn text="Nazwa" />
-				<TableColumn text="Rozmiar" />
+				<TableColumn text="Typ">
+					<cellValueFactory>
+						<PropertyValueFactory property="icon" />
+					</cellValueFactory>
+				</TableColumn>
+				
+				<TableColumn text="Nazwa">
+					<cellValueFactory>
+						<PropertyValueFactory property="name" />
+					</cellValueFactory>
+				</TableColumn>
+				
+				<TableColumn text="Rozmiar">
+					<cellValueFactory>
+						<PropertyValueFactory property="size" />
+					</cellValueFactory>
+				</TableColumn>
 			</columns>
 			
 			<columnResizePolicy>
 				<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
 			</columnResizePolicy>
+			
+			<placeholder>
+				<Label text="Brak plików" />
+			</placeholder>
 		</TableView>
 	</SplitPane>
+	
+	<Label fx:id="statusLabel" />
 </VBox>

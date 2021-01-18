@@ -14,4 +14,16 @@ public class FileEntry implements Entry
 	{
 		return file.getName();
 	}
+	
+	@Override
+	public long getSize()
+	{
+		return file.length();
+	}
+	
+	@Override
+	public boolean isDirectory()
+	{
+		return file.isDirectory();
+	}
 }

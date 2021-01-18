@@ -13,4 +13,16 @@ public class ApacheEntry implements Entry
 	{
 		return ftpFile.getName();
 	}
+	
+	@Override
+	public long getSize()
+	{
+		return ftpFile.getSize();
+	}
+	
+	@Override
+	public boolean isDirectory()
+	{
+		return ftpFile.isDirectory();
+	}
 }
