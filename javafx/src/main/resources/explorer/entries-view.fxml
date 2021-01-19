@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<?import javafx.scene.control.TableView ?>
+<?import javafx.scene.control.TableColumn ?>
+<?import javafx.scene.control.Label ?>
+<?import javafx.scene.control.cell.PropertyValueFactory ?>
+
+<TableView xmlns:fx="http://javafx.com/fxml" minWidth="240" stylesheets="@style.css">
+	<columns>
+		<TableColumn minWidth="24" maxWidth="24" reorderable="false" resizable="false" sortable="false">
+			<cellValueFactory>
+				<PropertyValueFactory property="icon" />
+			</cellValueFactory>
+		</TableColumn>
+		
+		<TableColumn minWidth="144" reorderable="false" text="Nazwa">
+			<cellValueFactory>
+				<PropertyValueFactory property="name" />
+			</cellValueFactory>
+		</TableColumn>
+		
+		<TableColumn minWidth="72" reorderable="false" text="Rozmiar">
+			<cellValueFactory>
+				<PropertyValueFactory property="size" />
+			</cellValueFactory>
+		</TableColumn>
+	</columns>
+	
+	<columnResizePolicy>
+		<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+	</columnResizePolicy>
+	
+	<placeholder>
+		<Label text="Brak plików" />
+	</placeholder>
+</TableView>

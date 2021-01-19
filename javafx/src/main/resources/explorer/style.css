@@ -1,0 +1,11 @@
+#statusLabel
+{
+    -fx-padding: 5px 10px;
+}
+
+.table-view .scroll-bar *
+{
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}

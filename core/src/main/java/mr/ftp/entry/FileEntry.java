@@ -1,28 +1,29 @@
 package mr.ftp.entry;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.net.ftp.FTPFile;
+
+import java.io.File;
 
 @RequiredArgsConstructor
-public class ApacheEntry implements Entry
+public class FileEntry implements Entry
 {
-	private final FTPFile ftpFile;
+	private final File file;
 	
 	@Override
 	public String getName()
 	{
-		return ftpFile.getName();
+		return file.getName();
 	}
 	
 	@Override
 	public long getSize()
 	{
-		return ftpFile.getSize();
+		return file.length();
 	}
 	
 	@Override
 	public boolean isDirectory()
 	{
-		return ftpFile.isDirectory();
+		return file.isDirectory();
 	}
 }
