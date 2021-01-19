@@ -31,6 +31,11 @@ public class JavaFX extends Application
 		StageInitializer stageInitializer = new SimpleStageInitializer("MrFTP", scene);
 		stageInitializer.initialize(stage);
 		
+		stage.setMinWidth(640);
+		stage.setMinHeight(480);
+		stage.setWidth(640);
+		stage.setHeight(480);
+		
 		stage.show();
 	}
 }

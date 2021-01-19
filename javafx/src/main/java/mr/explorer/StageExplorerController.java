@@ -1,10 +1,14 @@
 package mr.explorer;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import lombok.RequiredArgsConstructor;
 import mr.ftp.entry.Entry;
 
@@ -13,6 +17,9 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class StageExplorerController implements ExplorerController
 {
+	@FXML
+	private SplitPane splitPane;
+	
 	@FXML
 	private TableView<EntryView> remoteView;
 	
@@ -23,6 +30,21 @@ public class StageExplorerController implements ExplorerController
 	private Label statusLabel;
 	
 	private final IconLoader iconLoader;
+	
+	@FXML
+	private void initialize()
+	{
+		bindSplitPaneHeight();
+	}
+	
+	private void bindSplitPaneHeight()
+	{
+		Region root = (Region) splitPane.getParent();
+		ReadOnlyDoubleProperty rootHeight = root.heightProperty();
+		DoubleProperty paneHeight = splitPane.prefHeightProperty();
+		
+		paneHeight.bind(rootHeight);
+	}
 	
 	@Override
 	public void showStatus(String status)
