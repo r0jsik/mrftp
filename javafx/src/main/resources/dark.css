@@ -1,0 +1,26 @@
+.root
+{
+	-fx-focus-color: -fx-accent;
+	-fx-base: #373e43;
+	-fx-control-inner-background: derive(-fx-base, 35%);
+}
+
+.label
+{
+	-fx-text-fill: silver;
+}
+
+.text-field, .password-field
+{
+	-fx-prompt-text-fill: silver;
+}
+
+.button
+{
+	-fx-focus-traversable: false;
+}
+
+.button:hover
+{
+	-fx-text-fill: white;
+}

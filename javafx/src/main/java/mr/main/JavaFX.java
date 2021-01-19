@@ -10,6 +10,9 @@ import mr.explorer.StageExplorerController;
 import mr.scene.FxmlSceneFactory;
 import mr.scene.SceneFactory;
 import mr.scene.SceneFactoryException;
+import mr.scene.theme.StylesheetTheme;
+import mr.scene.theme.Theme;
+import mr.scene.theme.ThemeSceneFactory;
 import mr.stage.SimpleStageInitializer;
 import mr.stage.StageInitializer;
 
@@ -23,7 +26,11 @@ public class JavaFX extends Application
 	@Override
 	public void start(Stage stage) throws SceneFactoryException
 	{
+		Theme theme = new StylesheetTheme(true);
+		
 		SceneFactory sceneFactory = new FxmlSceneFactory("layout.fxml");
+		sceneFactory = new ThemeSceneFactory(sceneFactory, theme);
+		
 		IconLoader iconLoader = new ResourcesIconLoader();
 		ExplorerController explorerController = new StageExplorerController(iconLoader);
 		Scene scene = sceneFactory.create("explorer", explorerController);
