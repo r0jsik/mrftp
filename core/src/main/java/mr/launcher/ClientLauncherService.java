@@ -1,9 +1,9 @@
 package mr.launcher;
 
 import lombok.RequiredArgsConstructor;
-import mr.ftp.Client;
-import mr.ftp.ClientFactory;
-import mr.ftp.ClientFactoryException;
+import mr.client.Client;
+import mr.client.ClientFactory;
+import mr.client.ClientFactoryException;
 
 import java.util.function.Consumer;
 

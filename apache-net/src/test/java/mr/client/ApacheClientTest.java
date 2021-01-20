@@ -1,6 +1,5 @@
-package mr.ftp;
+package mr.client;
 
-import mr.ftp.entry.Entry;
 import mr.mock.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockftpserver.fake.FakeFtpServer;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ApacheClientTest
 {
@@ -90,22 +88,14 @@ public class ApacheClientTest
 	}
 	
 	@Test
-	public void testForEach() throws IOException
+	public void testShow() throws IOException
 	{
-		AtomicBoolean fileExists = new AtomicBoolean(false);
+		MockEntriesView mockEntriesView = new MockEntriesView();
 		
-		client.forEach("/MrFTP", entry -> {
-			if (isEntryToFind(entry))
-			{
-				fileExists.set(true);
-			}
-		});
+		client.show("/MrFTP", mockEntriesView);
 		
-		Assertions.assertTrue(fileExists.get());
-	}
-	
-	private boolean isEntryToFind(Entry entry)
-	{
-		return entry.getName().equals("existing-file");
+		boolean shown = mockEntriesView.isShown("existing-file");
+		
+		Assertions.assertTrue(shown);
 	}
 }

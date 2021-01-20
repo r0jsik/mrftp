@@ -1,4 +1,4 @@
-package mr.ftp;
+package mr.client;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPSClient;

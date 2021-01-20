@@ -1,15 +1,14 @@
-package mr.ftp;
+package mr.client;
 
 import lombok.RequiredArgsConstructor;
-import mr.ftp.entry.ApacheEntry;
-import mr.ftp.entry.Entry;
+import mr.entry.EntriesView;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class ApacheClient implements Client
@@ -39,8 +38,23 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
-	public void forEach(String path, Consumer<Entry> callback) throws IOException
+	public void show(String path, EntriesView entriesView) throws IOException
 	{
-		Arrays.stream(ftpClient.listFiles(path)).map(ApacheEntry::new).forEach(callback);
+		Arrays.stream(ftpClient.listFiles(path)).forEach(ftpFile -> show(ftpFile, entriesView));
+	}
+	
+	private void show(FTPFile ftpFile, EntriesView entriesView)
+	{
+		String name = ftpFile.getName();
+		long size = ftpFile.getSize();
+		
+		if (ftpFile.isDirectory())
+		{
+			entriesView.showDirectory(name, size);
+		}
+		else
+		{
+			entriesView.showFile(name, size);
+		}
 	}
 }
