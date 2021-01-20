@@ -1,14 +1,13 @@
 package mr.client;
 
 import lombok.RequiredArgsConstructor;
-import mr.entry.EntriesView;
+import mr.entry.ApacheEntriesProjector;
+import mr.entry.EntriesProjector;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class ApacheClient implements Client
@@ -38,23 +37,8 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
-	public void show(String path, EntriesView entriesView) throws IOException
+	public EntriesProjector entriesProjector()
 	{
-		Arrays.stream(ftpClient.listFiles(path)).forEach(ftpFile -> show(ftpFile, entriesView));
-	}
-	
-	private void show(FTPFile ftpFile, EntriesView entriesView)
-	{
-		String name = ftpFile.getName();
-		long size = ftpFile.getSize();
-		
-		if (ftpFile.isDirectory())
-		{
-			entriesView.showDirectory(name, size);
-		}
-		else
-		{
-			entriesView.showFile(name, size);
-		}
+		return new ApacheEntriesProjector(ftpClient);
 	}
 }

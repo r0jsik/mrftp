@@ -1,19 +1,18 @@
 package mr.entry;
 
 import java.io.File;
-import java.io.IOException;
 
 public class FileEntriesProjector implements EntriesProjector
 {
 	@Override
-	public void show(String path, EntriesView entriesView) throws IOException
+	public void show(String path, EntriesView entriesView) throws EntriesProjectionException
 	{
 		File parent = new File(path);
 		File[] files = parent.listFiles();
 		
 		if (files == null)
 		{
-			throw new IOException();
+			throw new EntriesProjectionException();
 		}
 		
 		for (File file : files)

@@ -12,15 +12,26 @@ public class ApacheClientFactory implements ClientFactory
 	{
 		try
 		{
-			FTPClient ftpClient = createFtpClient();
-			ftpClient.connect(hostname, port);
-			ftpClient.login(username, password);
-			
-			return new ApacheClient(ftpClient);
+			return tryToCreate(hostname, port, username, password);
 		}
 		catch (IOException exception)
 		{
 			throw new ClientFactoryException(exception);
+		}
+	}
+	
+	private Client tryToCreate(String hostname, int port, String username, String password) throws IOException, ClientFactoryException
+	{
+		FTPClient ftpClient = createFtpClient();
+		ftpClient.connect(hostname, port);
+		
+		if (ftpClient.login(username, password))
+		{
+			return new ApacheClient(ftpClient);
+		}
+		else
+		{
+			throw new ClientFactoryException();
 		}
 	}
 	

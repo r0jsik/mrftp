@@ -3,6 +3,7 @@ package mr.main;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import mr.entry.EntriesProjectionException;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.entry.FileEntriesProjector;
@@ -19,8 +20,6 @@ import mr.scene.theme.ThemeSceneFactory;
 import mr.stage.SimpleStageInitializer;
 import mr.stage.StageInitializer;
 
-import java.io.IOException;
-
 public class JavaFX extends Application
 {
 	public static void main(String[] args)
@@ -29,7 +28,7 @@ public class JavaFX extends Application
 	}
 	
 	@Override
-	public void start(Stage stage) throws SceneFactoryException, IOException
+	public void start(Stage stage) throws SceneFactoryException, EntriesProjectionException
 	{
 		Theme theme = new StylesheetTheme(true);
 		
