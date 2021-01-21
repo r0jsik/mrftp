@@ -26,6 +26,12 @@ public class MockEntriesView implements EntriesView
 		entryNames.add(name);
 	}
 	
+	@Override
+	public void hideAll()
+	{
+		entryNames.clear();
+	}
+	
 	public boolean isShown(String name)
 	{
 		return entryNames.stream().anyMatch(name::equals);

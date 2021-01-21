@@ -8,6 +8,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import lombok.RequiredArgsConstructor;
+import mr.entry.EntriesController;
+import mr.entry.TableEntriesController;
 import mr.entry.TableEntriesView;
 import mr.entry.TableEntryView;
 
@@ -56,8 +58,20 @@ public class StageExplorerController implements ExplorerController
 	}
 	
 	@Override
+	public EntriesController remoteEntriesController()
+	{
+		return new TableEntriesController(remoteView);
+	}
+	
+	@Override
 	public TableEntriesView localEntriesView()
 	{
 		return new TableEntriesView(iconLoader, localView);
+	}
+	
+	@Override
+	public EntriesController localEntriesController()
+	{
+		return new TableEntriesController(localView);
 	}
 }

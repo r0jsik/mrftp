@@ -38,4 +38,10 @@ public class TableEntriesView implements EntriesView
 	{
 		show(iconLoader.loadDirectoryIcon(), name, size);
 	}
+	
+	@Override
+	public void hideAll()
+	{
+		tableView.getItems().clear();
+	}
 }
