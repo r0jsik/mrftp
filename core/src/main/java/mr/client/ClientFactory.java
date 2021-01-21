@@ -1,4 +1,4 @@
-package mr.ftp;
+package mr.client;
 
 public interface ClientFactory
 {

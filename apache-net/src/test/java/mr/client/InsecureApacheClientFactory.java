@@ -1,6 +1,5 @@
-package mr.mock;
+package mr.client;
 
-import mr.ftp.ApacheClientFactory;
 import org.apache.commons.net.ftp.FTPClient;
 
 public class InsecureApacheClientFactory extends ApacheClientFactory

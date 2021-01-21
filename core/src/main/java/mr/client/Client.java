@@ -1,15 +1,14 @@
-package mr.ftp;
+package mr.client;
 
-import mr.ftp.entry.Entry;
+import mr.entry.EntriesProjector;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.function.Consumer;
 
 public interface Client
 {
 	void upload(String path, InputStream inputStream) throws IOException;
 	void download(String path, OutputStream outputStream) throws IOException;
-	void forEach(String path, Consumer<Entry> callback) throws IOException;
+	EntriesProjector entriesProjector();
 }

@@ -2,5 +2,5 @@ package mr.launcher;
 
 public interface LauncherService
 {
-	void launch(String address, int port, String username, String password);
+	void launch(String hostname, int port, String username, String password);
 }

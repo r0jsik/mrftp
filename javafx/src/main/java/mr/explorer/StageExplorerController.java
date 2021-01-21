@@ -6,13 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import lombok.RequiredArgsConstructor;
-import mr.ftp.entry.Entry;
-
-import java.io.InputStream;
+import mr.entry.EntriesController;
+import mr.entry.TableEntriesController;
+import mr.entry.TableEntriesView;
+import mr.entry.TableEntryView;
 
 @RequiredArgsConstructor
 public class StageExplorerController implements ExplorerController
@@ -21,10 +20,10 @@ public class StageExplorerController implements ExplorerController
 	private SplitPane splitPane;
 	
 	@FXML
-	private TableView<EntryView> remoteView;
+	private TableView<TableEntryView> remoteView;
 	
 	@FXML
-	private TableView<EntryView> localView;
+	private TableView<TableEntryView> localView;
 	
 	@FXML
 	private Label statusLabel;
@@ -53,64 +52,26 @@ public class StageExplorerController implements ExplorerController
 	}
 	
 	@Override
-	public void showRemote(Entry entry)
+	public TableEntriesView remoteEntriesView()
 	{
-		show(remoteView, entry);
-	}
-	
-	private void show(TableView<EntryView> tableView, Entry entry)
-	{
-		ImageView icon = loadIconOf(entry);
-		
-		EntryView entryView = new EntryView();
-		entryView.setIcon(icon);
-		entryView.setName(entry.getName());
-		entryView.setSize(entry.getSize() + " B");
-		
-		tableView.getItems().add(entryView);
-	}
-	
-	private ImageView loadIconOf(Entry entry)
-	{
-		InputStream inputStream;
-		
-		if (entry.isDirectory())
-		{
-			inputStream = iconLoader.loadDirectoryIcon();
-		}
-		else
-		{
-			inputStream = iconLoader.loadFileIcon();
-		}
-		
-		Image image = new Image(inputStream);
-		
-		ImageView imageView = new ImageView();
-		imageView.setImage(image);
-		
-		return imageView;
+		return new TableEntriesView(iconLoader, remoteView);
 	}
 	
 	@Override
-	public void hideRemote(Entry entry)
+	public EntriesController remoteEntriesController()
 	{
-		hide(remoteView, entry);
-	}
-	
-	private void hide(TableView<EntryView> tableView, Entry entry)
-	{
-		tableView.getItems().removeIf(entryView -> entryView.refersTo(entry));
+		return new TableEntriesController(remoteView);
 	}
 	
 	@Override
-	public void showLocal(Entry entry)
+	public TableEntriesView localEntriesView()
 	{
-		show(localView, entry);
+		return new TableEntriesView(iconLoader, localView);
 	}
 	
 	@Override
-	public void hideLocal(Entry entry)
+	public EntriesController localEntriesController()
 	{
-		hide(localView, entry);
+		return new TableEntriesController(localView);
 	}
 }

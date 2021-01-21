@@ -1,15 +1,13 @@
-package mr.ftp;
+package mr.client;
 
 import lombok.RequiredArgsConstructor;
-import mr.ftp.entry.ApacheEntry;
-import mr.ftp.entry.Entry;
+import mr.entry.ApacheEntriesProjector;
+import mr.entry.EntriesProjector;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class ApacheClient implements Client
@@ -39,8 +37,8 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
-	public void forEach(String path, Consumer<Entry> callback) throws IOException
+	public EntriesProjector entriesProjector()
 	{
-		Arrays.stream(ftpClient.listFiles(path)).map(ApacheEntry::new).forEach(callback);
+		return new ApacheEntriesProjector(ftpClient);
 	}
 }
