@@ -26,16 +26,16 @@ public class Launcher extends Application
 	@Override
 	public void start(Stage stage)
 	{
-		StageInitializer stageInitializer = applicationContext.getBean(StageInitializer.class);
-		stageInitializer.initialize(stage);
-		
 		Scene scene = applicationContext.getBean("launcherScene", Scene.class);
-		stage.setScene(scene);
+		
+		StageInitializer stageInitializer = applicationContext.getBean(StageInitializer.class);
+		stageInitializer.initializeLauncher(stage, scene);
 		
 		SimpleLauncherService simpleLauncherService = applicationContext.getBean(SimpleLauncherService.class);
 		
 		simpleLauncherService.setOnSuccess(client -> {
-			startExplorer(stage, client);
+			stageInitializer.initializeExplorer(stage, scene);
+			start(client);
 		});
 		
 		simpleLauncherService.setOnFailure(exception -> {
@@ -46,14 +46,8 @@ public class Launcher extends Application
 		stage.show();
 	}
 	
-	private void startExplorer(Stage stage, Client client)
+	private void start(Client client)
 	{
-		Scene scene = applicationContext.getBean("explorerScene", Scene.class);
-		stage.setScene(scene);
-		
-		stage.setMinWidth(640);
-		stage.setMinHeight(480);
-		stage.setWidth(640);
-		stage.setHeight(480);
+	
 	}
 }

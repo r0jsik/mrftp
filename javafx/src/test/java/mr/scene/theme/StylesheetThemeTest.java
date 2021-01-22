@@ -12,17 +12,7 @@ public class StylesheetThemeTest
 		Pane root = new Pane();
 		Scene scene = new Scene(root);
 		
-		Theme theme = new StylesheetTheme(true);
-		theme.stylize(scene);
-	}
-	
-	@Test
-	public void testStylizeDefault()
-	{
-		Pane root = new Pane();
-		Scene scene = new Scene(root);
-		
-		Theme theme = new StylesheetTheme(false);
-		theme.stylize(scene);
+		Theme theme = new StylesheetTheme();
+		theme.stylizeDark(scene);
 	}
 }

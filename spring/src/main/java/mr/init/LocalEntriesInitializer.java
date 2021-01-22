@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @DependsOn("explorerScene")
 @RequiredArgsConstructor
-public class LocalEntriesContext implements InitializingBean
+public class LocalEntriesInitializer implements InitializingBean
 {
 	private final Walk localWalk;
 	private final EntriesProjector localEntriesProjector;

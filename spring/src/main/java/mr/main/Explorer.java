@@ -24,16 +24,12 @@ public class Explorer extends Application
 	@Override
 	public void start(Stage stage)
 	{
-		StageInitializer stageInitializer = applicationContext.getBean(StageInitializer.class);
-		stageInitializer.initialize(stage);
-		
 		Scene scene = applicationContext.getBean("explorerScene", Scene.class);
 		stage.setScene(scene);
 		
-		stage.setMinWidth(640);
-		stage.setMinHeight(480);
-		stage.setWidth(640);
-		stage.setHeight(480);
+		StageInitializer stageInitializer = applicationContext.getBean(StageInitializer.class);
+		stageInitializer.initializeExplorer(stage, scene);
+		
 		stage.show();
 	}
 }
