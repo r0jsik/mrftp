@@ -4,40 +4,30 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>mr.ftp</groupId>
 		<artifactId>mr-ftp</artifactId>
+		<groupId>mr.ftp</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>javafx</artifactId>
-	
-	<properties>
-		<javafx.version>13.0.2</javafx.version>
-	</properties>
+	<artifactId>spring</artifactId>
 	
 	<dependencies>
 		<dependency>
 			<groupId>mr.ftp</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>apache-net</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>mr.ftp</groupId>
-			<artifactId>gui</artifactId>
+			<artifactId>javafx</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-graphics</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-fxml</artifactId>
-			<version>${javafx.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>5.2.8.RELEASE</version>
 		</dependency>
 	</dependencies>
 </project>
