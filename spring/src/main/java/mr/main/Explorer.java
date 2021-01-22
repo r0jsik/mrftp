@@ -18,7 +18,7 @@ public class Explorer extends Application
 	
 	public Explorer()
 	{
-		applicationContext = new AnnotationConfigApplicationContext(StageConfiguration.class, ExplorerConfiguration.class);
+		applicationContext = new AnnotationConfigApplicationContext("mr.init");
 	}
 	
 	@Override
@@ -27,7 +27,7 @@ public class Explorer extends Application
 		StageInitializer stageInitializer = applicationContext.getBean(StageInitializer.class);
 		stageInitializer.initialize(stage);
 		
-		Scene scene = applicationContext.getBean(Scene.class);
+		Scene scene = applicationContext.getBean("explorerScene", Scene.class);
 		stage.setScene(scene);
 		
 		stage.setMinWidth(640);
@@ -35,8 +35,5 @@ public class Explorer extends Application
 		stage.setWidth(640);
 		stage.setHeight(480);
 		stage.show();
-		
-		LocalEntriesContext localEntriesContext = applicationContext.getBean(LocalEntriesContext.class);
-		localEntriesContext.initialize();
 	}
 }

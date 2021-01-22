@@ -1,4 +1,4 @@
-package mr.main;
+package mr.init;
 
 import javafx.scene.Scene;
 import mr.entry.EntriesController;
@@ -14,9 +14,11 @@ import mr.scene.SceneFactoryException;
 import mr.walk.DequeWalk;
 import mr.walk.Walk;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ComponentScan(basePackageClasses = LocalEntriesContext.class)
 public class ExplorerConfiguration
 {
 	@Bean
@@ -59,11 +61,5 @@ public class ExplorerConfiguration
 	public Walk localWalk()
 	{
 		return new DequeWalk();
-	}
-	
-	@Bean
-	public LocalEntriesContext localEntriesContext(Walk localWalk, EntriesProjector localEntriesProjector, EntriesView localEntriesView, EntriesController localEntriesController)
-	{
-		return new LocalEntriesContext(localWalk, localEntriesProjector, localEntriesView, localEntriesController);
 	}
 }

@@ -20,7 +20,7 @@ public class Launcher extends Application
 	
 	public Launcher()
 	{
-		applicationContext = new AnnotationConfigApplicationContext(StageConfiguration.class, LauncherConfiguration.class, ExplorerConfiguration.class);
+		applicationContext = new AnnotationConfigApplicationContext("mr.init");
 	}
 	
 	@Override
@@ -33,10 +33,14 @@ public class Launcher extends Application
 		stage.setScene(scene);
 		
 		SimpleLauncherService simpleLauncherService = applicationContext.getBean(SimpleLauncherService.class);
-		simpleLauncherService.setOnFailure(Throwable::printStackTrace);
 		
 		simpleLauncherService.setOnSuccess(client -> {
 			startExplorer(stage, client);
+		});
+		
+		simpleLauncherService.setOnFailure(exception -> {
+			exception.printStackTrace();
+			stage.close();
 		});
 		
 		stage.show();

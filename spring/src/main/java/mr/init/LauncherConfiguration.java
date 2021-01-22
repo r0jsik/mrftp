@@ -1,4 +1,4 @@
-package mr.main;
+package mr.init;
 
 import javafx.scene.Scene;
 import mr.client.ApacheClientFactory;

@@ -1,4 +1,4 @@
-package mr.main;
+package mr.init;
 
 import mr.scene.FxmlSceneFactory;
 import mr.scene.SceneFactory;

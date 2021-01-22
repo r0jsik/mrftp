@@ -1,4 +1,4 @@
-package mr.main;
+package mr.init;
 
 import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesController;
@@ -6,18 +6,22 @@ import mr.entry.EntriesProjectionException;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.walk.Walk;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
+@DependsOn("explorerScene")
 @RequiredArgsConstructor
-public class LocalEntriesContext
+public class LocalEntriesContext implements InitializingBean
 {
 	private final Walk localWalk;
 	private final EntriesProjector localEntriesProjector;
 	private final EntriesView localEntriesView;
 	private final EntriesController localEntriesController;
 	
-	public void initialize()
+	@Override
+	public void afterPropertiesSet()
 	{
 		refresh();
 		
