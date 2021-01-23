@@ -4,7 +4,6 @@ import mr.client.Client;
 import mr.client.ClientFactory;
 import mr.client.ClientFactoryException;
 import mr.client.InsecureApacheClientFactory;
-import mr.mock.MockEntriesView;
 import mr.mock.MockServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -37,12 +36,12 @@ public class ApacheEntriesProjectorTest
 	@Test
 	public void testShow() throws EntriesProjectionException
 	{
-		MockEntriesView mockEntriesView = new MockEntriesView();
+		ListEntriesView listEntriesView = new ListEntriesView();
 		
 		EntriesProjector entriesProjector = client.entriesProjector();
-		entriesProjector.show("/MrFTP", mockEntriesView);
+		entriesProjector.show("/MrFTP", listEntriesView);
 		
-		boolean shown = mockEntriesView.isShown("existing-file");
+		boolean shown = listEntriesView.isShown("existing-file");
 		Assertions.assertTrue(shown);
 	}
 }

@@ -1,6 +1,5 @@
 package mr.entry;
 
-import mr.mock.MockEntriesView;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -22,22 +21,22 @@ public class FileEntriesProjectorTest
 		File file = File.createTempFile(".existing-file", "");
 		String path = file.getParent();
 		String name = file.getName();
-		MockEntriesView mockEntriesView = new MockEntriesView();
+		ListEntriesView listEntriesView = new ListEntriesView();
 		
-		entriesProjector.show(path, mockEntriesView);
+		entriesProjector.show(path, listEntriesView);
 		
-		boolean shown = mockEntriesView.isShown(name);
+		boolean shown = listEntriesView.isShown(name);
 		Assertions.assertTrue(shown);
 	}
 	
 	@Test
 	public void testNotShow() throws EntriesProjectionException
 	{
-		MockEntriesView mockEntriesView = new MockEntriesView();
+		ListEntriesView listEntriesView = new ListEntriesView();
 		
-		entriesProjector.show(".", mockEntriesView);
+		entriesProjector.show(".", listEntriesView);
 		
-		boolean shown = mockEntriesView.isShown("not existing file");
+		boolean shown = listEntriesView.isShown("not existing file");
 		Assertions.assertFalse(shown);
 	}
 }
