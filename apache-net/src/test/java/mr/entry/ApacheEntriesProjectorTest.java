@@ -30,18 +30,30 @@ public class ApacheEntriesProjectorTest
 	@AfterAll
 	public static void closeServer()
 	{
-		MockServer.stop();
+		MockServer.close();
 	}
 	
 	@Test
-	public void testShow() throws EntriesProjectionException
+	public void testShowExistingFile() throws EntriesProjectionException
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
-		
 		EntriesProjector entriesProjector = client.entriesProjector();
-		entriesProjector.show("/MrFTP", listEntriesView);
 		
+		entriesProjector.show("/MrFTP", listEntriesView);
 		boolean shown = listEntriesView.isShown("existing-file");
+		
 		Assertions.assertTrue(shown);
+	}
+	
+	@Test
+	public void testShowNotExistingFile() throws EntriesProjectionException
+	{
+		ListEntriesView listEntriesView = new ListEntriesView();
+		EntriesProjector entriesProjector = client.entriesProjector();
+		
+		entriesProjector.show("/MrFTP", listEntriesView);
+		boolean shown = listEntriesView.isShown("not-existing-file");
+		
+		Assertions.assertFalse(shown);
 	}
 }

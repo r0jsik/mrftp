@@ -18,7 +18,7 @@ public class MockServer
 		fakeFtpServer.start();
 	}
 	
-	public static void stop()
+	public static void close()
 	{
 		fakeFtpServer.stop();
 	}

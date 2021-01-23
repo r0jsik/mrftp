@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;
 import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
+import org.mockftpserver.fake.filesystem.Permissions;
 
 @RequiredArgsConstructor
 public class FakeFileSystemBuilder implements FileSystemBuilder
@@ -15,6 +16,16 @@ public class FakeFileSystemBuilder implements FileSystemBuilder
 	{
 		DirectoryEntry directoryEntry = new DirectoryEntry();
 		directoryEntry.setPath(path);
+		
+		fileSystem.add(directoryEntry);
+	}
+	
+	@Override
+	public void createInaccessibleDirectory(String path)
+	{
+		DirectoryEntry directoryEntry = new DirectoryEntry();
+		directoryEntry.setPath(path);
+		directoryEntry.setPermissions(Permissions.NONE);
 		
 		fileSystem.add(directoryEntry);
 	}
