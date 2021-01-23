@@ -29,6 +29,7 @@ public class ContextBuildTest
 	{
 		Assertions.assertDoesNotThrow(() -> {
 			applicationContext.getBean(LauncherController.class);
+			applicationContext.getBean("launcherScene");
 		});
 	}
 	
@@ -37,6 +38,7 @@ public class ContextBuildTest
 	{
 		Assertions.assertDoesNotThrow(() -> {
 			applicationContext.getBean(ExplorerController.class);
+			applicationContext.getBean("explorerScene");
 		});
 	}
 }

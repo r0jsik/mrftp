@@ -19,13 +19,15 @@ public class DequeWalk implements Walk
 	@Override
 	public void to(String entry)
 	{
-		if (entry.equals(".."))
+		path.addLast(entry);
+	}
+	
+	@Override
+	public void out()
+	{
+		if (path.size() > 0)
 		{
 			path.removeLast();
-		}
-		else
-		{
-			path.addLast(entry);
 		}
 	}
 	

@@ -8,13 +8,6 @@ import java.io.IOException;
 
 public class FileEntriesProjectorTest
 {
-	private final EntriesProjector entriesProjector;
-	
-	public FileEntriesProjectorTest()
-	{
-		this.entriesProjector = new FileEntriesProjector();
-	}
-	
 	@Test
 	public void testShow() throws EntriesProjectionException, IOException
 	{
@@ -23,6 +16,7 @@ public class FileEntriesProjectorTest
 		String name = file.getName();
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
+		EntriesProjector entriesProjector = new FileEntriesProjector();
 		entriesProjector.show(path, listEntriesView);
 		
 		boolean shown = listEntriesView.isShown(name);
@@ -34,9 +28,21 @@ public class FileEntriesProjectorTest
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
+		EntriesProjector entriesProjector = new FileEntriesProjector();
 		entriesProjector.show(".", listEntriesView);
 		
-		boolean shown = listEntriesView.isShown("not existing file");
+		boolean shown = listEntriesView.isShown("!@#$%^&*/");
 		Assertions.assertFalse(shown);
+	}
+	
+	@Test
+	public void testShowInvalidDirectory()
+	{
+		ListEntriesView listEntriesView = new ListEntriesView();
+		EntriesProjector entriesProjector = new FileEntriesProjector();
+		
+		Assertions.assertThrows(EntriesProjectionException.class, () -> {
+			entriesProjector.show("!@#$%^&*", listEntriesView);
+		});
 	}
 }
