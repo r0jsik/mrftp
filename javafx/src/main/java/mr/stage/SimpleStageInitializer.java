@@ -9,10 +9,14 @@ import lombok.RequiredArgsConstructor;
 public class SimpleStageInitializer implements StageInitializer
 {
 	private final String title;
-	private final Scene scene;
 	
 	@Override
-	public void initialize(Stage stage)
+	public void initializeLauncher(Stage stage, Scene scene)
+	{
+		initialize(stage, scene);
+	}
+	
+	private void initialize(Stage stage, Scene scene)
 	{
 		stage.setTitle(title);
 		stage.setScene(scene);
@@ -20,5 +24,16 @@ public class SimpleStageInitializer implements StageInitializer
 		stage.setOnCloseRequest(event -> {
 			Platform.exit();
 		});
+	}
+	
+	@Override
+	public void initializeExplorer(Stage stage, Scene scene)
+	{
+		stage.setMinWidth(640);
+		stage.setMinHeight(480);
+		stage.setWidth(640);
+		stage.setHeight(480);
+		
+		initialize(stage, scene);
 	}
 }

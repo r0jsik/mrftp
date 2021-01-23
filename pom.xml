@@ -19,6 +19,7 @@
 		<module>cli</module>
 		<module>gui</module>
 		<module>javafx</module>
+		<module>spring</module>
 	</modules>
 	
 	<packaging>pom</packaging>

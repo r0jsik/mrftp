@@ -4,5 +4,5 @@ import javafx.scene.Scene;
 
 public interface Theme
 {
-	void stylize(Scene scene);
+	void stylizeDark(Scene scene);
 }

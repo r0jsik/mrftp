@@ -8,14 +8,9 @@ public class StylesheetTheme implements Theme
 {
 	private static final String darkStylesheet = StylesheetTheme.class.getResource("/dark.css").toString();
 	
-	private final boolean isDark;
-	
 	@Override
-	public void stylize(Scene scene)
+	public void stylizeDark(Scene scene)
 	{
-		if (isDark)
-		{
-			scene.getStylesheets().add(darkStylesheet);
-		}
+		scene.getStylesheets().add(darkStylesheet);
 	}
 }
