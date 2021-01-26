@@ -3,8 +3,6 @@ package mr.explorer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-
 public class ResourcesIconLoaderTest
 {
 	private final IconLoader iconLoader;
@@ -17,16 +15,12 @@ public class ResourcesIconLoaderTest
 	@Test
 	public void testDirectoryIcon()
 	{
-		InputStream inputStream = iconLoader.loadDirectoryIcon();
-		
-		Assertions.assertNotNull(inputStream);
+		Assertions.assertNotNull(iconLoader.loadDirectoryIcon());
 	}
 	
 	@Test
 	public void testFileIcon()
 	{
-		InputStream inputStream = iconLoader.loadFileIcon();
-		
-		Assertions.assertNotNull(inputStream);
+		Assertions.assertNotNull(iconLoader.loadFileIcon());
 	}
 }

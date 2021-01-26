@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 
 public class MockInputStream extends ByteArrayInputStream
 {
-	public MockInputStream(String data)
+	public MockInputStream()
 	{
-		super(data.getBytes());
+		super("Mock content".getBytes());
 	}
 }

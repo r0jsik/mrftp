@@ -30,20 +30,29 @@ public class ApacheClientTest
 	@AfterAll
 	public static void closeServer()
 	{
-		MockServer.stop();
+		MockServer.close();
 	}
 	
 	@Test
 	public void testUpload() throws IOException
 	{
-		String sentText = "Mock content";
-		
-		try (MockInputStream inputStream = new MockInputStream(sentText))
+		try (MockInputStream inputStream = new MockInputStream())
 		{
 			client.upload("/MrFTP/mock-uploaded-file.txt", inputStream);
 			
 			boolean uploaded = MockServer.fileExists("/MrFTP/mock-uploaded-file.txt");
 			Assertions.assertTrue(uploaded);
+		}
+	}
+	
+	@Test
+	public void testUploadToPrivateDirectory() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream())
+		{
+			Assertions.assertThrows(IOException.class, () -> {
+				client.upload("/private/virus.php", inputStream);
+			});
 		}
 	}
 	
@@ -62,16 +71,13 @@ public class ApacheClientTest
 	}
 	
 	@Test
-	public void testDownloadNotExistingFile()
-	{
-		Assertions.assertThrows(IOException.class, this::downloadNotExistingFile);
-	}
-	
-	private void downloadNotExistingFile() throws IOException
+	public void testDownloadNotExistingFile() throws IOException
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/MrFTP/not-existing-file.txt", outputStream);
+			Assertions.assertThrows(IOException.class, () -> {
+				client.download("/MrFTP/not-existing-file.txt", outputStream);
+			});
 		}
 	}
 }

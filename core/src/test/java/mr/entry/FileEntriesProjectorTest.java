@@ -1,6 +1,5 @@
 package mr.entry;
 
-import mr.mock.MockEntriesView;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,35 +8,41 @@ import java.io.IOException;
 
 public class FileEntriesProjectorTest
 {
-	private final EntriesProjector entriesProjector;
-	
-	public FileEntriesProjectorTest()
-	{
-		this.entriesProjector = new FileEntriesProjector();
-	}
-	
 	@Test
 	public void testShow() throws EntriesProjectionException, IOException
 	{
 		File file = File.createTempFile(".existing-file", "");
 		String path = file.getParent();
 		String name = file.getName();
-		MockEntriesView mockEntriesView = new MockEntriesView();
+		ListEntriesView listEntriesView = new ListEntriesView();
 		
-		entriesProjector.show(path, mockEntriesView);
+		EntriesProjector entriesProjector = new FileEntriesProjector();
+		entriesProjector.show(path, listEntriesView);
 		
-		boolean shown = mockEntriesView.isShown(name);
+		boolean shown = listEntriesView.isShown(name);
 		Assertions.assertTrue(shown);
 	}
 	
 	@Test
 	public void testNotShow() throws EntriesProjectionException
 	{
-		MockEntriesView mockEntriesView = new MockEntriesView();
+		ListEntriesView listEntriesView = new ListEntriesView();
 		
-		entriesProjector.show(".", mockEntriesView);
+		EntriesProjector entriesProjector = new FileEntriesProjector();
+		entriesProjector.show(".", listEntriesView);
 		
-		boolean shown = mockEntriesView.isShown("not existing file");
+		boolean shown = listEntriesView.isShown("!@#$%^&*/");
 		Assertions.assertFalse(shown);
+	}
+	
+	@Test
+	public void testShowInvalidDirectory()
+	{
+		ListEntriesView listEntriesView = new ListEntriesView();
+		EntriesProjector entriesProjector = new FileEntriesProjector();
+		
+		Assertions.assertThrows(EntriesProjectionException.class, () -> {
+			entriesProjector.show("!@#$%^&*", listEntriesView);
+		});
 	}
 }

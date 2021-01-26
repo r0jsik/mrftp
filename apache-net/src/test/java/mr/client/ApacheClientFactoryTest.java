@@ -19,29 +19,46 @@ public class ApacheClientFactoryTest
 	@AfterAll
 	public static void closeServer()
 	{
-		MockServer.stop();
+		MockServer.close();
 	}
 	
 	@Test
-	public void testCreate() throws ClientFactoryException
+	public void testCreate()
 	{
-		Client client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
-		Assertions.assertNotNull(client);
-	}
-	
-	@Test
-	public void testCreateUsingInvalidServer()
-	{
-		Assertions.assertThrows(ClientFactoryException.class, () -> {
-			clientFactory.create("invalid-server", 7000, "MrFTP", "MrFTP");
+		Assertions.assertDoesNotThrow(() -> {
+			clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 		});
 	}
 	
 	@Test
-	public void testCreateUsingInvalidCredentials()
+	public void testCreateUsingInvalidHost()
+	{
+		Assertions.assertThrows(ClientFactoryException.class, () -> {
+			clientFactory.create("!@#$%^&*", 7000, "MrFTP", "MrFTP");
+		});
+	}
+	
+	@Test
+	public void testCreateUsingInvalidPort()
+	{
+		Assertions.assertThrows(ClientFactoryException.class, () -> {
+			clientFactory.create("localhost", 98765, "MrFTP", "MrFTP");
+		});
+	}
+	
+	@Test
+	public void testCreateUsingInvalidUsername()
 	{
 		Assertions.assertThrows(ClientFactoryException.class, () -> {
 			clientFactory.create("localhost", 7000, "Invalid user", "MrFTP");
+		});
+	}
+	
+	@Test
+	public void testCreateUsingInvalidPassword()
+	{
+		Assertions.assertThrows(ClientFactoryException.class, () -> {
+			clientFactory.create("localhost", 7000, "MrFTP", "!@#$%^&*");
 		});
 	}
 }

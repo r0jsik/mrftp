@@ -23,14 +23,6 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>mr.ftp</groupId>
-			<artifactId>core</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<scope>test</scope>
-			<type>test-jar</type>
-		</dependency>
-		
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
@@ -55,18 +47,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
-				
-				<configuration>
-					<useSystemClassLoader>false</useSystemClassLoader>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

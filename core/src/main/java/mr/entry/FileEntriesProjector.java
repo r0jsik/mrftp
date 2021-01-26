@@ -17,11 +17,11 @@ public class FileEntriesProjector implements EntriesProjector
 		
 		for (File file : files)
 		{
-			visit(file, entriesView);
+			show(file, entriesView);
 		}
 	}
 	
-	private void visit(File file, EntriesView entriesView)
+	private void show(File file, EntriesView entriesView)
 	{
 		String name = file.getName();
 		long size = file.length();

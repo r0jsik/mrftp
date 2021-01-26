@@ -12,7 +12,7 @@ public class SimpleLauncherServiceTest
 	private static final ClientFactory clientFactory = new MockClientFactory();
 	
 	@Test
-	public void testCreateValid()
+	public void testCreateWithSuccess()
 	{
 		AtomicBoolean clientAccepted = new AtomicBoolean();
 		SimpleLauncherService simpleLauncherService = new SimpleLauncherService(clientFactory);
@@ -27,7 +27,7 @@ public class SimpleLauncherServiceTest
 	}
 	
 	@Test
-	public void testCreateInvalid()
+	public void testCreateWithFailure()
 	{
 		AtomicBoolean exceptionAccepted = new AtomicBoolean();
 		SimpleLauncherService simpleLauncherService = new SimpleLauncherService(clientFactory);

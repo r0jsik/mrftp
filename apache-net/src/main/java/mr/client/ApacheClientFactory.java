@@ -14,7 +14,7 @@ public class ApacheClientFactory implements ClientFactory
 		{
 			return tryToCreate(hostname, port, username, password);
 		}
-		catch (IOException exception)
+		catch (IOException | IllegalArgumentException exception)
 		{
 			throw new ClientFactoryException(exception);
 		}
