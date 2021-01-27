@@ -29,6 +29,7 @@ public class StageExplorerController implements ExplorerController
 	private Label statusLabel;
 	
 	private final IconLoader iconLoader;
+	private final ExplorerService explorerService;
 	
 	@FXML
 	private void initialize()
@@ -43,6 +44,18 @@ public class StageExplorerController implements ExplorerController
 		DoubleProperty paneHeight = splitPane.prefHeightProperty();
 		
 		paneHeight.bind(rootHeight);
+	}
+	
+	@FXML
+	private void close()
+	{
+		explorerService.close();
+	}
+	
+	@FXML
+	private void refresh()
+	{
+		explorerService.refresh();
 	}
 	
 	@Override

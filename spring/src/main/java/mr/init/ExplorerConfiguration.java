@@ -5,10 +5,7 @@ import mr.entry.EntriesController;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.entry.FileEntriesProjector;
-import mr.explorer.ExplorerController;
-import mr.explorer.IconLoader;
-import mr.explorer.ResourcesIconLoader;
-import mr.explorer.StageExplorerController;
+import mr.explorer.*;
 import mr.scene.SceneFactory;
 import mr.scene.SceneFactoryException;
 import mr.walk.DequeWalk;
@@ -26,15 +23,21 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
-	public ExplorerController explorerController(IconLoader iconLoader)
+	public ExplorerController explorerController(IconLoader iconLoader, ExplorerService explorerService)
 	{
-		return new StageExplorerController(iconLoader);
+		return new StageExplorerController(iconLoader, explorerService);
 	}
 	
 	@Bean
 	public IconLoader iconLoader()
 	{
 		return new ResourcesIconLoader();
+	}
+	
+	@Bean
+	public ExplorerService explorerService()
+	{
+		return new SimpleExplorerService();
 	}
 	
 	@Bean
