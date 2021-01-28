@@ -13,10 +13,8 @@ public class SimpleStageInitializer implements StageInitializer
 	@Override
 	public void initializeLauncher(Stage stage, Scene scene)
 	{
-		stage.setMinWidth(320);
-		stage.setMinHeight(220);
-		stage.setWidth(320);
-		stage.setHeight(220);
+		stage.sizeToScene();
+		stage.setResizable(false);
 		
 		initialize(stage, scene);
 	}

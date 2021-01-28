@@ -12,7 +12,7 @@ public class TableEntriesController implements EntriesController
 	private final TableView<TableEntryView> tableView;
 	
 	@Override
-	public void setOnEnter(Consumer<String> callback)
+	public void setOnEntryOpened(Consumer<String> callback)
 	{
 		tableView.setOnMousePressed(event -> {
 			if (event.isPrimaryButtonDown() && event.getClickCount() == 2)
@@ -31,5 +31,11 @@ public class TableEntriesController implements EntriesController
 		{
 			callback.accept(selectedItem.getName());
 		}
+	}
+	
+	@Override
+	public void setOnEntryTransmitted(Consumer<String> callback)
+	{
+	
 	}
 }

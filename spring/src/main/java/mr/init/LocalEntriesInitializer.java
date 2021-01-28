@@ -25,7 +25,7 @@ public class LocalEntriesInitializer implements InitializingBean
 	{
 		refresh();
 		
-		localEntriesController.setOnEnter(entry -> {
+		localEntriesController.setOnEntryOpened(entry -> {
 			localWalk.to(entry);
 			refresh();
 		});
