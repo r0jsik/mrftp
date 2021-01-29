@@ -3,6 +3,7 @@ package mr.explorer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
@@ -23,7 +24,13 @@ public class StageExplorerController implements ExplorerController
 	private TableView<TableEntryView> remoteView;
 	
 	@FXML
+	private Button downloadButton;
+	
+	@FXML
 	private TableView<TableEntryView> localView;
+	
+	@FXML
+	private Button uploadButton;
 	
 	@FXML
 	private Label statusLabel;
@@ -73,7 +80,7 @@ public class StageExplorerController implements ExplorerController
 	@Override
 	public EntriesController remoteEntriesController()
 	{
-		return new TableEntriesController(remoteView);
+		return new TableEntriesController(remoteView, downloadButton);
 	}
 	
 	@Override
@@ -85,6 +92,6 @@ public class StageExplorerController implements ExplorerController
 	@Override
 	public EntriesController localEntriesController()
 	{
-		return new TableEntriesController(localView);
+		return new TableEntriesController(localView, uploadButton);
 	}
 }

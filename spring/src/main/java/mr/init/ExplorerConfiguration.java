@@ -49,15 +49,33 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
+	public EntriesView remoteEntriesView(ExplorerController explorerController)
+	{
+		return explorerController.remoteEntriesView();
+	}
+	
+	@Bean
 	public EntriesView localEntriesView(ExplorerController explorerController)
 	{
 		return explorerController.localEntriesView();
 	}
 	
 	@Bean
+	public EntriesController remoteEntriesController(ExplorerController explorerController)
+	{
+		return explorerController.remoteEntriesController();
+	}
+	
+	@Bean
 	public EntriesController localEntriesController(ExplorerController explorerController)
 	{
 		return explorerController.localEntriesController();
+	}
+	
+	@Bean
+	public Walk remoteWalk()
+	{
+		return new DequeWalk();
 	}
 	
 	@Bean

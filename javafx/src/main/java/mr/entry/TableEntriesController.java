@@ -1,5 +1,6 @@
 package mr.entry;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableView;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.function.Consumer;
 public class TableEntriesController implements EntriesController
 {
 	private final TableView<TableEntryView> tableView;
+	private final Button transmissionButton;
 	
 	@Override
 	public void setOnEntryOpened(Consumer<String> callback)
@@ -36,6 +38,8 @@ public class TableEntriesController implements EntriesController
 	@Override
 	public void setOnEntryTransmitted(Consumer<String> callback)
 	{
-	
+		transmissionButton.setOnAction(event -> {
+			withSelectedItem(callback);
+		});
 	}
 }
