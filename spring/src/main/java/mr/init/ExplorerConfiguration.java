@@ -5,12 +5,11 @@ import mr.entry.EntriesController;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.entry.FileEntriesProjector;
-import mr.explorer.ExplorerController;
-import mr.explorer.IconLoader;
-import mr.explorer.ResourcesIconLoader;
-import mr.explorer.StageExplorerController;
+import mr.explorer.*;
 import mr.scene.SceneFactory;
 import mr.scene.SceneFactoryException;
+import mr.transmitter.FileTransmitter;
+import mr.transmitter.Transmitter;
 import mr.walk.DequeWalk;
 import mr.walk.Walk;
 import org.springframework.context.annotation.Bean;
@@ -26,9 +25,9 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
-	public ExplorerController explorerController(IconLoader iconLoader)
+	public StageExplorerController explorerController(IconLoader iconLoader, ExplorerService explorerService)
 	{
-		return new StageExplorerController(iconLoader);
+		return new StageExplorerController(iconLoader, explorerService);
 	}
 	
 	@Bean
@@ -38,26 +37,56 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
+	public ExplorerService explorerService()
+	{
+		return new CallbackExplorerService();
+	}
+	
+	@Bean
 	public EntriesProjector localEntriesProjector()
 	{
 		return new FileEntriesProjector();
 	}
 	
 	@Bean
-	public EntriesView localEntriesView(ExplorerController explorerController)
+	public EntriesView remoteEntriesView(StageExplorerController explorerController)
+	{
+		return explorerController.remoteEntriesView();
+	}
+	
+	@Bean
+	public EntriesView localEntriesView(StageExplorerController explorerController)
 	{
 		return explorerController.localEntriesView();
 	}
 	
 	@Bean
-	public EntriesController localEntriesController(ExplorerController explorerController)
+	public EntriesController remoteEntriesController(StageExplorerController explorerController)
+	{
+		return explorerController.remoteEntriesController();
+	}
+	
+	@Bean
+	public EntriesController localEntriesController(StageExplorerController explorerController)
 	{
 		return explorerController.localEntriesController();
+	}
+	
+	@Bean
+	public Walk remoteWalk()
+	{
+		return new DequeWalk();
 	}
 	
 	@Bean
 	public Walk localWalk()
 	{
 		return new DequeWalk();
+	}
+	
+	@Bean
+	public Transmitter transmitter()
+	{
+		return new FileTransmitter();
 	}
 }

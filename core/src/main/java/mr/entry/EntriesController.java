@@ -4,5 +4,6 @@ import java.util.function.Consumer;
 
 public interface EntriesController
 {
-	void setOnEnter(Consumer<String> callback);
+	void setOnEntryOpened(Consumer<String> callback);
+	void setOnEntryTransmitted(Consumer<String> callback);
 }

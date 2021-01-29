@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 @Setter
-public class SimpleLauncherService implements LauncherService
+public class CallbackLauncherService implements LauncherService
 {
 	private final ClientFactory clientFactory;
 	

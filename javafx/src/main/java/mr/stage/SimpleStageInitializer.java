@@ -13,6 +13,9 @@ public class SimpleStageInitializer implements StageInitializer
 	@Override
 	public void initializeLauncher(Stage stage, Scene scene)
 	{
+		stage.sizeToScene();
+		stage.setResizable(false);
+		
 		initialize(stage, scene);
 	}
 	

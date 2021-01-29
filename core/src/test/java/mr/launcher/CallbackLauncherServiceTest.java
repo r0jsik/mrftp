@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SimpleLauncherServiceTest
+public class CallbackLauncherServiceTest
 {
 	private static final ClientFactory clientFactory = new MockClientFactory();
 	
@@ -15,13 +15,13 @@ public class SimpleLauncherServiceTest
 	public void testCreateWithSuccess()
 	{
 		AtomicBoolean clientAccepted = new AtomicBoolean();
-		SimpleLauncherService simpleLauncherService = new SimpleLauncherService(clientFactory);
+		CallbackLauncherService callbackLauncherService = new CallbackLauncherService(clientFactory);
 		
-		simpleLauncherService.setOnSuccess(client -> {
+		callbackLauncherService.setOnSuccess(client -> {
 			clientAccepted.set(true);
 		});
 		
-		simpleLauncherService.launch("", 0, "", "");
+		callbackLauncherService.launch("", 0, "", "");
 		
 		Assertions.assertTrue(clientAccepted.get());
 	}
@@ -30,13 +30,13 @@ public class SimpleLauncherServiceTest
 	public void testCreateWithFailure()
 	{
 		AtomicBoolean exceptionAccepted = new AtomicBoolean();
-		SimpleLauncherService simpleLauncherService = new SimpleLauncherService(clientFactory);
+		CallbackLauncherService callbackLauncherService = new CallbackLauncherService(clientFactory);
 		
-		simpleLauncherService.setOnFailure(exception -> {
+		callbackLauncherService.setOnFailure(exception -> {
 			exceptionAccepted.set(true);
 		});
 		
-		simpleLauncherService.launch("", 0, "invalid", "");
+		callbackLauncherService.launch("", 0, "invalid", "");
 		
 		Assertions.assertTrue(exceptionAccepted.get());
 	}
