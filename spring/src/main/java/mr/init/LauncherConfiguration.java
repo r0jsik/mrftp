@@ -5,7 +5,7 @@ import mr.client.ApacheClientFactory;
 import mr.client.ClientFactory;
 import mr.launcher.LauncherController;
 import mr.launcher.LauncherService;
-import mr.launcher.SimpleLauncherService;
+import mr.launcher.CallbackLauncherService;
 import mr.launcher.StageLauncherController;
 import mr.scene.SceneFactory;
 import mr.scene.SceneFactoryException;
@@ -30,7 +30,7 @@ public class LauncherConfiguration
 	@Bean
 	public LauncherService launcherService(ClientFactory clientFactory)
 	{
-		return new SimpleLauncherService(clientFactory);
+		return new CallbackLauncherService(clientFactory);
 	}
 	
 	@Bean

@@ -8,13 +8,15 @@ import mr.entry.EntriesController;
 import mr.entry.EntriesProjectionException;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
-import mr.explorer.SimpleExplorerService;
-import mr.launcher.SimpleLauncherService;
+import mr.explorer.CallbackExplorerService;
+import mr.launcher.CallbackLauncherService;
 import mr.stage.StageInitializer;
 import mr.transmitter.Transmitter;
 import mr.walk.Walk;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.function.BiConsumer;
 
 public class Launcher extends Application
 {
@@ -33,24 +35,18 @@ public class Launcher extends Application
 	@Override
 	public void start(Stage stage)
 	{
-		startLauncher(stage);
-	}
-	
-	private void startLauncher(Stage stage)
-	{
 		initializeLocalEntriesController();
-		
-		initializeLauncherService(stage);
-		showLauncher(stage);
+		startLauncher(stage);
 	}
 	
 	private void initializeLocalEntriesController()
 	{
 		EntriesController entriesController = applicationContext.getBean("localEntriesController", EntriesController.class);
-		Walk walk = applicationContext.getBean("localWalk", Walk.class);
 		
 		entriesController.setOnEntryOpened(entry -> {
+			Walk walk = applicationContext.getBean("localWalk", Walk.class);
 			walk.to(entry);
+			
 			refreshLocalEntriesView();
 		});
 	}
@@ -73,16 +69,22 @@ public class Launcher extends Application
 		}
 	}
 	
+	private void startLauncher(Stage stage)
+	{
+		initializeLauncherService(stage);
+		showLauncher(stage);
+	}
+	
 	private void initializeLauncherService(Stage stage)
 	{
-		SimpleLauncherService simpleLauncherService = applicationContext.getBean(SimpleLauncherService.class);
+		CallbackLauncherService callbackLauncherService = applicationContext.getBean(CallbackLauncherService.class);
 		
-		simpleLauncherService.setOnSuccess(client -> {
+		callbackLauncherService.setOnSuccess(client -> {
 			startExplorer(client, new Stage());
 			stage.close();
 		});
 		
-		simpleLauncherService.setOnFailure(exception -> {
+		callbackLauncherService.setOnFailure(exception -> {
 			exception.printStackTrace();
 			stage.close();
 		});
@@ -108,28 +110,16 @@ public class Launcher extends Application
 		showExplorer(stage);
 	}
 	
-	private void initializeLocalEntriesController(Client client)
-	{
-		EntriesController entriesController = applicationContext.getBean("localEntriesController", EntriesController.class);
-		Walk remoteWalk = applicationContext.getBean("remoteWalk", Walk.class);
-		Walk localWalk = applicationContext.getBean("localWalk", Walk.class);
-		Transmitter transmitter = applicationContext.getBean(Transmitter.class);
-		
-		entriesController.setOnEntryTransmitted(entry -> {
-			transmitter.upload(client, localWalk.toString() + "/" + entry, remoteWalk.toString() + "/" + entry);
-		});
-	}
-	
 	private void initializeExplorerService(Client client, Stage stage)
 	{
-		SimpleExplorerService simpleExplorerService = applicationContext.getBean(SimpleExplorerService.class);
+		CallbackExplorerService callbackExplorerService = applicationContext.getBean(CallbackExplorerService.class);
 		
-		simpleExplorerService.setOnRefresh(() -> {
+		callbackExplorerService.setOnRefresh(() -> {
 			refreshRemoteEntriesView(client);
 			refreshLocalEntriesView();
 		});
 		
-		simpleExplorerService.setOnClose(() -> {
+		callbackExplorerService.setOnClose(() -> {
 			// client.close()
 			startLauncher(new Stage());
 			stage.close();
@@ -157,17 +147,42 @@ public class Launcher extends Application
 	private void initializeRemoteEntriesController(Client client)
 	{
 		EntriesController entriesController = applicationContext.getBean("remoteEntriesController", EntriesController.class);
-		Walk walk = applicationContext.getBean("remoteWalk", Walk.class);
-		Walk localWalk = applicationContext.getBean("localWalk", Walk.class);
-		Transmitter transmitter = applicationContext.getBean(Transmitter.class);
 		
 		entriesController.setOnEntryOpened(entry -> {
+			Walk walk = applicationContext.getBean("remoteWalk", Walk.class);
 			walk.to(entry);
+			
 			refreshRemoteEntriesView(client);
 		});
 		
 		entriesController.setOnEntryTransmitted(entry -> {
-			transmitter.download(client, walk.toString() + "/" + entry, localWalk.toString() + "/" + entry);
+			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
+				Transmitter transmitter = applicationContext.getBean(Transmitter.class);
+				transmitter.download(client, remotePath, localPath);
+			});
+		});
+	}
+	
+	private void usingPathsWithAppendedEntry(String entry, BiConsumer<String, String> callback)
+	{
+		Walk remoteWalk = applicationContext.getBean("remoteWalk", Walk.class);
+		String remotePath = remoteWalk.toString() + "/" + entry;
+		
+		Walk localWalk = applicationContext.getBean("localWalk", Walk.class);
+		String localPath = localWalk.toString() + "/" + entry;
+		
+		callback.accept(remotePath, localPath);
+	}
+	
+	private void initializeLocalEntriesController(Client client)
+	{
+		EntriesController entriesController = applicationContext.getBean("localEntriesController", EntriesController.class);
+		
+		entriesController.setOnEntryTransmitted(entry -> {
+			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
+				Transmitter transmitter = applicationContext.getBean(Transmitter.class);
+				transmitter.upload(client, localPath, remotePath);
+			});
 		});
 	}
 	

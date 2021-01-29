@@ -3,7 +3,7 @@ package mr.explorer;
 import lombok.Setter;
 
 @Setter
-public class SimpleExplorerService implements ExplorerService
+public class CallbackExplorerService implements ExplorerService
 {
 	private Runnable onRefresh;
 	private Runnable onClose;

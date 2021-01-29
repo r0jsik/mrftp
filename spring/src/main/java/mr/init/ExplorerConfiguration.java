@@ -25,7 +25,7 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
-	public ExplorerController explorerController(IconLoader iconLoader, ExplorerService explorerService)
+	public StageExplorerController explorerController(IconLoader iconLoader, ExplorerService explorerService)
 	{
 		return new StageExplorerController(iconLoader, explorerService);
 	}
@@ -39,7 +39,7 @@ public class ExplorerConfiguration
 	@Bean
 	public ExplorerService explorerService()
 	{
-		return new SimpleExplorerService();
+		return new CallbackExplorerService();
 	}
 	
 	@Bean
@@ -49,25 +49,25 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
-	public EntriesView remoteEntriesView(ExplorerController explorerController)
+	public EntriesView remoteEntriesView(StageExplorerController explorerController)
 	{
 		return explorerController.remoteEntriesView();
 	}
 	
 	@Bean
-	public EntriesView localEntriesView(ExplorerController explorerController)
+	public EntriesView localEntriesView(StageExplorerController explorerController)
 	{
 		return explorerController.localEntriesView();
 	}
 	
 	@Bean
-	public EntriesController remoteEntriesController(ExplorerController explorerController)
+	public EntriesController remoteEntriesController(StageExplorerController explorerController)
 	{
 		return explorerController.remoteEntriesController();
 	}
 	
 	@Bean
-	public EntriesController localEntriesController(ExplorerController explorerController)
+	public EntriesController localEntriesController(StageExplorerController explorerController)
 	{
 		return explorerController.localEntriesController();
 	}

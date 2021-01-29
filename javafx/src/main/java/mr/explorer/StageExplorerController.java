@@ -71,25 +71,21 @@ public class StageExplorerController implements ExplorerController
 		statusLabel.setText(status);
 	}
 	
-	@Override
 	public TableEntriesView remoteEntriesView()
 	{
 		return new TableEntriesView(iconLoader, remoteView);
 	}
 	
-	@Override
 	public EntriesController remoteEntriesController()
 	{
 		return new TableEntriesController(remoteView, downloadButton);
 	}
 	
-	@Override
 	public TableEntriesView localEntriesView()
 	{
 		return new TableEntriesView(iconLoader, localView);
 	}
 	
-	@Override
 	public EntriesController localEntriesController()
 	{
 		return new TableEntriesController(localView, uploadButton);
