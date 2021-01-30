@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label ?>
 <?import javafx.scene.control.TextField ?>
 <?import javafx.scene.control.PasswordField ?>
+<?import javafx.scene.control.CheckBox ?>
 <?import javafx.scene.control.Button ?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
@@ -22,5 +23,6 @@
 		<PasswordField GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="passwordField" />
 	</GridPane>
 	
+	<CheckBox text="Zapamiętaj dane logowania" fx:id="settingsCheckbox" />
 	<Button text="Połącz" onAction="#launch" />
 </VBox>

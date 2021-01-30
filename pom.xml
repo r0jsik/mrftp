@@ -16,6 +16,7 @@
 	<modules>
 		<module>core</module>
 		<module>apache-net</module>
+		<module>ini4j</module>
 		<module>cli</module>
 		<module>gui</module>
 		<module>javafx</module>
