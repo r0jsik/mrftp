@@ -1,8 +1,8 @@
 package mr.client;
 
-import mr.mock.MockInputStream;
-import mr.mock.MockOutputStream;
-import mr.mock.MockServer;
+import mr.stream.MockInputStream;
+import mr.stream.MockOutputStream;
+import mr.server.MockServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

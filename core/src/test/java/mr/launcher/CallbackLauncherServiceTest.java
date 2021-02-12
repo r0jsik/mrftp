@@ -1,7 +1,7 @@
 package mr.launcher;
 
 import mr.client.ClientFactory;
-import mr.mock.MockClientFactory;
+import mr.client.MockClientFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

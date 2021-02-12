@@ -1,4 +1,4 @@
-package mr.mock;
+package mr.filesystem;
 
 public interface FileSystemDirector
 {

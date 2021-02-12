@@ -1,4 +1,4 @@
-package mr.mock;
+package mr.stream;
 
 import java.io.ByteArrayInputStream;
 

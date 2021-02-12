@@ -1,4 +1,6 @@
-package mr.mock;
+package mr.server;
+
+import mr.filesystem.FileSystemDirector;
 
 public interface ServerBuilder
 {

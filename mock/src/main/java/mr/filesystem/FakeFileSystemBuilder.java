@@ -1,4 +1,4 @@
-package mr.mock;
+package mr.filesystem;
 
 import lombok.RequiredArgsConstructor;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;

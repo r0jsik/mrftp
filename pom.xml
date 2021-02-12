@@ -15,6 +15,7 @@
 	
 	<modules>
 		<module>core</module>
+		<module>mock</module>
 		<module>apache-net</module>
 		<module>ini4j</module>
 		<module>cli</module>

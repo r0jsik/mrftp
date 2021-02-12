@@ -4,7 +4,7 @@ import mr.client.Client;
 import mr.client.ClientFactory;
 import mr.client.ClientFactoryException;
 import mr.client.InsecureApacheClientFactory;
-import mr.mock.MockServer;
+import mr.server.MockServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
