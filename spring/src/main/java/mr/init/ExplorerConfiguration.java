@@ -8,8 +8,6 @@ import mr.entry.FileEntriesProjector;
 import mr.explorer.*;
 import mr.scene.SceneFactory;
 import mr.scene.SceneFactoryException;
-import mr.transmitter.FileTransmitter;
-import mr.transmitter.Transmitter;
 import mr.walk.DequeWalk;
 import mr.walk.Walk;
 import org.springframework.context.annotation.Bean;
@@ -82,11 +80,5 @@ public class ExplorerConfiguration
 	public Walk localWalk()
 	{
 		return new DequeWalk();
-	}
-	
-	@Bean
-	public Transmitter transmitter()
-	{
-		return new FileTransmitter();
 	}
 }

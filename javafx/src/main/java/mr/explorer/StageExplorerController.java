@@ -24,13 +24,19 @@ public class StageExplorerController implements ExplorerController
 	private TableView<TableEntryView> remoteView;
 	
 	@FXML
-	private Button downloadButton;
+	private Button transmitRemoteFileButton;
+	
+	@FXML
+	private Button removeRemoteFileButton;
 	
 	@FXML
 	private TableView<TableEntryView> localView;
 	
 	@FXML
-	private Button uploadButton;
+	private Button transmitLocalFileButton;
+	
+	@FXML
+	private Button removeLocalFileButton;
 	
 	@FXML
 	private Label statusLabel;
@@ -78,7 +84,7 @@ public class StageExplorerController implements ExplorerController
 	
 	public EntriesController remoteEntriesController()
 	{
-		return new TableEntriesController(remoteView, downloadButton);
+		return new TableEntriesController(remoteView, transmitRemoteFileButton, removeRemoteFileButton);
 	}
 	
 	public TableEntriesView localEntriesView()
@@ -88,6 +94,6 @@ public class StageExplorerController implements ExplorerController
 	
 	public EntriesController localEntriesController()
 	{
-		return new TableEntriesController(localView, uploadButton);
+		return new TableEntriesController(localView, transmitLocalFileButton, removeLocalFileButton);
 	}
 }

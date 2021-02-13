@@ -42,6 +42,19 @@ public class JschClient implements Client
 	}
 	
 	@Override
+	public void remove(String path) throws IOException
+	{
+		try
+		{
+			channel.rm(path);
+		}
+		catch (SftpException exception)
+		{
+			throw new IOException(exception);
+		}
+	}
+	
+	@Override
 	public EntriesProjector entriesProjector()
 	{
 		return new JschEntriesProjector(channel);

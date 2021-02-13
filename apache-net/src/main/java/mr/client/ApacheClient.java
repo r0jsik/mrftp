@@ -37,6 +37,17 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
+	public void remove(String path) throws IOException
+	{
+		boolean done = ftpClient.deleteFile(path);
+		
+		if ( !done)
+		{
+			throw new IOException();
+		}
+	}
+	
+	@Override
 	public EntriesProjector entriesProjector()
 	{
 		return new ApacheEntriesProjector(ftpClient);

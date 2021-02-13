@@ -11,11 +11,14 @@ import mr.entry.EntriesView;
 import mr.explorer.CallbackExplorerService;
 import mr.launcher.CallbackLauncherService;
 import mr.stage.StageInitializer;
-import mr.transmitter.Transmitter;
 import mr.walk.Walk;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.function.BiConsumer;
 
 public class Launcher extends Application
@@ -157,10 +160,29 @@ public class Launcher extends Application
 		
 		entriesController.setOnEntryTransmitted(entry -> {
 			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
-				Transmitter transmitter = applicationContext.getBean(Transmitter.class);
-				transmitter.download(client, remotePath, localPath);
+				download(client, remotePath, localPath);
 			});
 		});
+		
+		entriesController.setOnEntryDeleted(entry -> {
+			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
+				remove(client, remotePath);
+			});
+		});
+	}
+	
+	private void remove(Client client, String remotePath)
+	{
+		try
+		{
+			client.remove(remotePath);
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace();
+		}
+		
+		refreshRemoteEntriesView(client);
 	}
 	
 	private void usingPathsWithAppendedEntry(String entry, BiConsumer<String, String> callback)
@@ -174,16 +196,77 @@ public class Launcher extends Application
 		callback.accept(remotePath, localPath);
 	}
 	
+	private void download(Client client, String remotePath, String localPath)
+	{
+		try
+		{
+			tryToDownload(client, remotePath, localPath);
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace();
+		}
+		
+		refreshLocalEntriesView();
+	}
+	
+	private void tryToDownload(Client client, String remotePath, String localPath) throws IOException
+	{
+		File file = new File(localPath);
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		
+		client.download(remotePath, fileOutputStream);
+	}
+	
 	private void initializeLocalEntriesController(Client client)
 	{
 		EntriesController entriesController = applicationContext.getBean("localEntriesController", EntriesController.class);
 		
+		entriesController.setOnEntryOpened(entry -> {
+		
+		});
+		
 		entriesController.setOnEntryTransmitted(entry -> {
 			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
-				Transmitter transmitter = applicationContext.getBean(Transmitter.class);
-				transmitter.upload(client, localPath, remotePath);
+				upload(client, remotePath, localPath);
 			});
 		});
+		
+		entriesController.setOnEntryDeleted(entry -> {
+			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
+				remove(localPath);
+			});
+		});
+	}
+	
+	private void remove(String localPath)
+	{
+		File file = new File(localPath);
+		file.delete();
+		
+		refreshLocalEntriesView();
+	}
+	
+	private void upload(Client client, String remotePath, String localPath)
+	{
+		try
+		{
+			tryToUpload(client, remotePath, localPath);
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace();
+		}
+		
+		refreshRemoteEntriesView(client);
+	}
+	
+	private void tryToUpload(Client client, String remotePath, String localPath) throws IOException
+	{
+		File file = new File(localPath);
+		FileInputStream fileInputStream = new FileInputStream(file);
+		
+		client.upload(remotePath, fileInputStream);
 	}
 	
 	private void showExplorer(Stage stage)

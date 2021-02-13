@@ -17,7 +17,8 @@
 			<fx:include source="entries-view.fxml" fx:id="remoteView" />
 			
 			<TilePane styleClass="tile-pane">
-				<Button text="Pobierz" fx:id="downloadButton" />
+				<Button text="Pobierz" fx:id="transmitRemoteFileButton" />
+				<Button text="Usuń" fx:id="removeRemoteFileButton" />
 			</TilePane>
 		</VBox>
 		
@@ -25,7 +26,8 @@
 			<fx:include source="entries-view.fxml" fx:id="localView" />
 			
 			<TilePane styleClass="tile-pane">
-				<Button text="Wyślij" fx:id="uploadButton" />
+				<Button text="Wyślij" fx:id="transmitLocalFileButton" />
+				<Button text="Usuń" fx:id="removeLocalFileButton" />
 			</TilePane>
 		</VBox>
 	</SplitPane>

@@ -11,7 +11,8 @@ import java.util.function.Consumer;
 public class TableEntriesController implements EntriesController
 {
 	private final TableView<TableEntryView> tableView;
-	private final Button transmissionButton;
+	private final Button transmitFileButton;
+	private final Button removeFileButton;
 	
 	@Override
 	public void setOnEntryOpened(Consumer<String> callback)
@@ -38,7 +39,15 @@ public class TableEntriesController implements EntriesController
 	@Override
 	public void setOnEntryTransmitted(Consumer<String> callback)
 	{
-		transmissionButton.setOnAction(event -> {
+		transmitFileButton.setOnAction(event -> {
+			withSelectedItem(callback);
+		});
+	}
+	
+	@Override
+	public void setOnEntryDeleted(Consumer<String> callback)
+	{
+		removeFileButton.setOnAction(event -> {
 			withSelectedItem(callback);
 		});
 	}
