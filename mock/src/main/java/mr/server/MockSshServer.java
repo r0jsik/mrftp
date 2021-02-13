@@ -12,12 +12,13 @@ import java.util.Collections;
 
 public class MockSshServer
 {
-	private static final SshServer sshServer = SshServer.setUpDefaultServer();
+	private static SshServer sshServer;
 	
 	public static void start()
 	{
 		try
 		{
+			sshServer = SshServer.setUpDefaultServer();
 			sshServer.setPort(7000);
 			sshServer.setHost("127.0.0.1");
 			sshServer.setKeyPairProvider(new FileKeyPairProvider(Paths.get("./src/test/resources/key")));

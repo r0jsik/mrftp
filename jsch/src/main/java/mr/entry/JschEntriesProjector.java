@@ -1,6 +1,8 @@
 package mr.entry;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Vector;
@@ -8,22 +10,17 @@ import java.util.Vector;
 @RequiredArgsConstructor
 public class JschEntriesProjector implements EntriesProjector
 {
-	private final Session session;
+	private final ChannelSftp channel;
 	
 	@Override
 	public void show(String path, EntriesView entriesView) throws EntriesProjectionException
 	{
 		try
 		{
-			ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-			channel.connect();
-			
 			Vector<ChannelSftp.LsEntry> vector = channel.ls(path);
 			vector.forEach(entry -> show(entry, entriesView));
-			
-			channel.exit();
 		}
-		catch (JSchException | SftpException exception)
+		catch (SftpException exception)
 		{
 			throw new EntriesProjectionException();
 		}

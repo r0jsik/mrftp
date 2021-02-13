@@ -18,7 +18,7 @@ public class JschClientTest
 	
 	public JschClientTest() throws ClientFactoryException
 	{
-		this.client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
+		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
 	
 	@BeforeAll
@@ -36,13 +36,14 @@ public class JschClientTest
 	@Test
 	public void testUpload() throws IOException
 	{
-		try (MockInputStream inputStream = new MockInputStream())
+		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			client.upload("./src/test/resources/upload-test.txt", inputStream);
-			
-			boolean uploaded = MockSshServer.fileExists("./src/test/resources/upload-test.txt");
-			Assertions.assertTrue(uploaded);
+			client.upload("./src/test/resources/upload.txt", inputStream);
 		}
+		
+		Assertions.assertTrue(() -> (
+			MockSshServer.fileExists("./src/test/resources/upload.txt")
+		));
 	}
 	
 	@Test
@@ -50,12 +51,40 @@ public class JschClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("./src/test/resources/download-test.txt", outputStream);
+			client.download("./src/test/resources/download.txt", outputStream);
 			
-			byte[] expected = "Mock content".getBytes();
-			byte[] actual = outputStream.toByteArray();
+			Assertions.assertTrue(() -> (
+				outputStream.hasContent("Download test")
+			));
+		}
+	}
+	
+	@Test
+	public void testDownloadNotExistingFile() throws IOException
+	{
+		try (MockOutputStream outputStream = new MockOutputStream())
+		{
+			Assertions.assertThrows(IOException.class, () -> {
+				client.download("./src/test/resources/not-existing-file", outputStream);
+			});
+		}
+	}
+	
+	@Test
+	public void testUploadAndThenDownload() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload and download test"))
+		{
+			client.upload("./src/test/resources/upload-and-download.txt", inputStream);
+		}
+		
+		try (MockOutputStream outputStream = new MockOutputStream())
+		{
+			client.download("./src/test/resources/upload-and-download.txt", outputStream);
 			
-			Assertions.assertArrayEquals(expected, actual);
+			Assertions.assertTrue(() -> (
+				outputStream.hasContent("Upload and download test")
+			));
 		}
 	}
 }

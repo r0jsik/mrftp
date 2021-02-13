@@ -1,5 +1,6 @@
 package mr.client;
 
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -19,7 +20,10 @@ public class JschClientFactory implements ClientFactory
 			session.setPassword(password);
 			session.connect();
 			
-			return new JschClient(session);
+			ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
+			channel.connect();
+			
+			return new JschClient(channel);
 		}
 		catch (JSchException exception)
 		{

@@ -1,8 +1,6 @@
 package mr.client;
 
 import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesProjector;
@@ -15,19 +13,16 @@ import java.io.OutputStream;
 @RequiredArgsConstructor
 public class JschClient implements Client
 {
-	private final Session session;
+	private final ChannelSftp channel;
 	
 	@Override
 	public void upload(String path, InputStream inputStream) throws IOException
 	{
 		try
 		{
-			ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-			channel.connect();
 			channel.put(inputStream, path);
-			channel.exit();
 		}
-		catch (JSchException | SftpException exception)
+		catch (SftpException exception)
 		{
 			throw new IOException(exception);
 		}
@@ -38,12 +33,9 @@ public class JschClient implements Client
 	{
 		try
 		{
-			ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-			channel.connect();
 			channel.get(path, outputStream);
-			channel.exit();
 		}
-		catch (JSchException | SftpException exception)
+		catch (SftpException exception)
 		{
 			throw new IOException(exception);
 		}
@@ -52,6 +44,6 @@ public class JschClient implements Client
 	@Override
 	public EntriesProjector entriesProjector()
 	{
-		return new JschEntriesProjector(session);
+		return new JschEntriesProjector(channel);
 	}
 }

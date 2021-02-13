@@ -30,7 +30,7 @@ public class FakeServerBuilder implements ServerBuilder
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUsername(username);
 		userAccount.setPassword(password);
-		userAccount.setHomeDirectory("/" + username);
+		userAccount.setHomeDirectory("/public");
 		
 		fakeFtpServer.addUserAccount(userAccount);
 	}

@@ -34,26 +34,28 @@ public class JschEntriesProjectorTest
 	}
 	
 	@Test
-	public void testShowExistingFile() throws EntriesProjectionException
+	public void testIsExistingFileShown() throws EntriesProjectionException
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
+		
 		EntriesProjector entriesProjector = client.entriesProjector();
-		
 		entriesProjector.show("./src/test/resources", listEntriesView);
-		boolean shown = listEntriesView.isShown("existing-file");
 		
-		Assertions.assertTrue(shown);
+		Assertions.assertTrue(() -> (
+			listEntriesView.isShown("existing-file")
+		));
 	}
 	
 	@Test
-	public void testShowNotExistingFile() throws EntriesProjectionException
+	public void testIsNotExistingFileNotShown() throws EntriesProjectionException
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
+		
 		EntriesProjector entriesProjector = client.entriesProjector();
-		
 		entriesProjector.show("./src/test/resources", listEntriesView);
-		boolean shown = listEntriesView.isShown("not-existing-file");
 		
-		Assertions.assertFalse(shown);
+		Assertions.assertFalse(() -> (
+			listEntriesView.isShown("not-existing-file")
+		));
 	}
 }
