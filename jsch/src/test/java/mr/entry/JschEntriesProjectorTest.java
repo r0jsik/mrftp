@@ -3,34 +3,34 @@ package mr.entry;
 import mr.client.Client;
 import mr.client.ClientFactory;
 import mr.client.ClientFactoryException;
-import mr.client.InsecureApacheClientFactory;
-import mr.server.MockFtpServer;
+import mr.client.JschClientFactory;
+import mr.server.MockSshServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ApacheEntriesProjectorTest
+public class JschEntriesProjectorTest
 {
-	private static final ClientFactory clientFactory = new InsecureApacheClientFactory();
+	private static final ClientFactory clientFactory = new JschClientFactory();
 	
 	private final Client client;
 	
-	public ApacheEntriesProjectorTest() throws ClientFactoryException
+	public JschEntriesProjectorTest() throws ClientFactoryException
 	{
-		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
+		this.client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
 	
 	@BeforeAll
 	public static void startServer()
 	{
-		MockFtpServer.start();
+		MockSshServer.start();
 	}
 	
 	@AfterAll
 	public static void closeServer()
 	{
-		MockFtpServer.close();
+		MockSshServer.close();
 	}
 	
 	@Test
@@ -39,7 +39,7 @@ public class ApacheEntriesProjectorTest
 		ListEntriesView listEntriesView = new ListEntriesView();
 		EntriesProjector entriesProjector = client.entriesProjector();
 		
-		entriesProjector.show("/MrFTP", listEntriesView);
+		entriesProjector.show("./src/test/resources", listEntriesView);
 		boolean shown = listEntriesView.isShown("existing-file");
 		
 		Assertions.assertTrue(shown);
@@ -51,7 +51,7 @@ public class ApacheEntriesProjectorTest
 		ListEntriesView listEntriesView = new ListEntriesView();
 		EntriesProjector entriesProjector = client.entriesProjector();
 		
-		entriesProjector.show("/MrFTP", listEntriesView);
+		entriesProjector.show("./src/test/resources", listEntriesView);
 		boolean shown = listEntriesView.isShown("not-existing-file");
 		
 		Assertions.assertFalse(shown);

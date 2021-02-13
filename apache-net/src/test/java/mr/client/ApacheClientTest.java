@@ -2,7 +2,7 @@ package mr.client;
 
 import mr.stream.MockInputStream;
 import mr.stream.MockOutputStream;
-import mr.server.MockServer;
+import mr.server.MockFtpServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,13 +24,13 @@ public class ApacheClientTest
 	@BeforeAll
 	public static void startServer()
 	{
-		MockServer.start();
+		MockFtpServer.start();
 	}
 	
 	@AfterAll
 	public static void closeServer()
 	{
-		MockServer.close();
+		MockFtpServer.close();
 	}
 	
 	@Test
@@ -40,7 +40,7 @@ public class ApacheClientTest
 		{
 			client.upload("/MrFTP/mock-uploaded-file.txt", inputStream);
 			
-			boolean uploaded = MockServer.fileExists("/MrFTP/mock-uploaded-file.txt");
+			boolean uploaded = MockFtpServer.fileExists("/MrFTP/mock-uploaded-file.txt");
 			Assertions.assertTrue(uploaded);
 		}
 	}

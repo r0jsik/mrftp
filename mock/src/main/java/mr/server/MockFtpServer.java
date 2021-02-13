@@ -4,7 +4,7 @@ import mr.filesystem.FileSystemDirector;
 import mr.filesystem.SimpleFileSystemDirector;
 import org.mockftpserver.fake.FakeFtpServer;
 
-public class MockServer
+public class MockFtpServer
 {
 	private static final FakeFtpServer fakeFtpServer = new FakeFtpServer();
 	

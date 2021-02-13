@@ -11,6 +11,10 @@
 	
 	<artifactId>mock</artifactId>
 	
+	<properties>
+		<slf4j.version>1.7.30</slf4j.version>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>mr.ftp</groupId>
@@ -19,9 +23,27 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.mockftpserver</groupId>
 			<artifactId>MockFtpServer</artifactId>
 			<version>2.7.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-sftp</artifactId>
+			<version>2.6.0</version>
 		</dependency>
 	</dependencies>
 </project>
