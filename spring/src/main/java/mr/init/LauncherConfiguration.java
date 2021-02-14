@@ -2,7 +2,7 @@ package mr.init;
 
 import javafx.scene.Scene;
 import mr.client.ApacheClientFactory;
-import mr.client.ClientFactory;
+import mr.client.JschClientFactory;
 import mr.launcher.CallbackLauncherService;
 import mr.launcher.LauncherController;
 import mr.launcher.LauncherService;
@@ -34,15 +34,9 @@ public class LauncherConfiguration
 	}
 	
 	@Bean
-	public LauncherService launcherService(ClientFactory clientFactory)
+	public LauncherService launcherService()
 	{
-		return new CallbackLauncherService(clientFactory);
-	}
-	
-	@Bean
-	public ClientFactory clientFactory()
-	{
-		return new ApacheClientFactory();
+		return new CallbackLauncherService(new JschClientFactory(), new ApacheClientFactory());
 	}
 	
 	@Bean

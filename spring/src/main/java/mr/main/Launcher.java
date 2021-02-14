@@ -10,6 +10,8 @@ import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.explorer.CallbackExplorerService;
 import mr.launcher.CallbackLauncherService;
+import mr.launcher.LauncherController;
+import mr.settings.Settings;
 import mr.stage.StageInitializer;
 import mr.walk.Walk;
 import org.springframework.context.ApplicationContext;
@@ -74,8 +76,23 @@ public class Launcher extends Application
 	
 	private void startLauncher(Stage stage)
 	{
+		initializeLauncherController();
 		initializeLauncherService(stage);
 		showLauncher(stage);
+	}
+	
+	private void initializeLauncherController()
+	{
+		Settings settings = applicationContext.getBean(Settings.class);
+		
+		LauncherController launcherController = applicationContext.getBean(LauncherController.class);
+		launcherController.showAvailableProtocols("SFTP", "FTP");
+		launcherController.setProtocol("SFTP");
+		
+		launcherController.setHostname(settings.getHostname());
+		launcherController.setPort(settings.getPort());
+		launcherController.setUsername(settings.getUsername());
+		launcherController.setPassword(settings.getPassword());
 	}
 	
 	private void initializeLauncherService(Stage stage)

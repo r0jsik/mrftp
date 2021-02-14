@@ -15,13 +15,13 @@ public class CallbackLauncherServiceTest
 	public void testCreateWithSuccess()
 	{
 		AtomicBoolean clientAccepted = new AtomicBoolean();
-		CallbackLauncherService callbackLauncherService = new CallbackLauncherService(clientFactory);
+		CallbackLauncherService callbackLauncherService = new CallbackLauncherService(clientFactory, clientFactory);
 		
 		callbackLauncherService.setOnSuccess(client -> {
 			clientAccepted.set(true);
 		});
 		
-		callbackLauncherService.launch("", 0, "", "");
+		callbackLauncherService.launch("", "", 0, "", "");
 		
 		Assertions.assertTrue(clientAccepted.get());
 	}
@@ -30,13 +30,13 @@ public class CallbackLauncherServiceTest
 	public void testCreateWithFailure()
 	{
 		AtomicBoolean exceptionAccepted = new AtomicBoolean();
-		CallbackLauncherService callbackLauncherService = new CallbackLauncherService(clientFactory);
+		CallbackLauncherService callbackLauncherService = new CallbackLauncherService(clientFactory, clientFactory);
 		
 		callbackLauncherService.setOnFailure(exception -> {
 			exceptionAccepted.set(true);
 		});
 		
-		callbackLauncherService.launch("", 0, "invalid", "");
+		callbackLauncherService.launch("", "", 0, "invalid", "");
 		
 		Assertions.assertTrue(exceptionAccepted.get());
 	}

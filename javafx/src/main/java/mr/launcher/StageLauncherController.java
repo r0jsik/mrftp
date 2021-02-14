@@ -2,6 +2,7 @@ package mr.launcher;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,9 @@ import mr.settings.Settings;
 @RequiredArgsConstructor
 public class StageLauncherController implements LauncherController
 {
+	@FXML
+	private ComboBox<String> protocolChooser;
+	
 	@FXML
 	private TextField hostnameField;
 	
@@ -28,13 +32,16 @@ public class StageLauncherController implements LauncherController
 	private final LauncherService launcherService;
 	private final Settings settings;
 	
-	@FXML
-	private void initialize()
+	@Override
+	public void showAvailableProtocols(String... options)
 	{
-		setHostname(settings.getHostname());
-		setPort(settings.getPort());
-		setUsername(settings.getUsername());
-		setPassword(settings.getPassword());
+		protocolChooser.getItems().setAll(options);
+	}
+	
+	@Override
+	public void setProtocol(String protocol)
+	{
+		protocolChooser.getSelectionModel().select(protocol);
 	}
 	
 	@Override
@@ -64,6 +71,7 @@ public class StageLauncherController implements LauncherController
 	@FXML
 	private void launch()
 	{
+		String protocol = protocolChooser.getSelectionModel().getSelectedItem();
 		String hostname = hostnameField.getText();
 		int port = Integer.parseInt(portField.getText());
 		String username = usernameField.getText();
@@ -78,6 +86,6 @@ public class StageLauncherController implements LauncherController
 			settings.commit();
 		}
 		
-		launcherService.launch(hostname, port, username, password);
+		launcherService.launch(protocol, hostname, port, username, password);
 	}
 }
