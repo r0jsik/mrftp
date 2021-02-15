@@ -10,5 +10,6 @@ public interface Client
 {
 	void upload(String path, InputStream inputStream) throws IOException;
 	void download(String path, OutputStream outputStream) throws IOException;
+	void remove(String path) throws IOException;
 	EntriesProjector entriesProjector();
 }

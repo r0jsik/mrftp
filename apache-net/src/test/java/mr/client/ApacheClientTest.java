@@ -1,8 +1,8 @@
 package mr.client;
 
-import mr.mock.MockInputStream;
-import mr.mock.MockOutputStream;
-import mr.mock.MockServer;
+import mr.stream.MockInputStream;
+import mr.stream.MockOutputStream;
+import mr.server.MockFtpServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class ApacheClientTest
 {
-	private static final ClientFactory clientFactory = new InsecureApacheClientFactory();
+	private static final ClientFactory clientFactory = new MockApacheClientFactory();
 	
 	private final Client client;
 	
@@ -24,31 +24,32 @@ public class ApacheClientTest
 	@BeforeAll
 	public static void startServer()
 	{
-		MockServer.start();
+		MockFtpServer.start();
 	}
 	
 	@AfterAll
 	public static void closeServer()
 	{
-		MockServer.close();
+		MockFtpServer.close();
 	}
 	
 	@Test
 	public void testUpload() throws IOException
 	{
-		try (MockInputStream inputStream = new MockInputStream())
+		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			client.upload("/MrFTP/mock-uploaded-file.txt", inputStream);
-			
-			boolean uploaded = MockServer.fileExists("/MrFTP/mock-uploaded-file.txt");
-			Assertions.assertTrue(uploaded);
+			client.upload("/public/upload.txt", inputStream);
 		}
+		
+		Assertions.assertTrue(() -> (
+			MockFtpServer.fileExists("/public/upload.txt")
+		));
 	}
 	
 	@Test
 	public void testUploadToPrivateDirectory() throws IOException
 	{
-		try (MockInputStream inputStream = new MockInputStream())
+		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
 			Assertions.assertThrows(IOException.class, () -> {
 				client.upload("/private/virus.php", inputStream);
@@ -61,12 +62,22 @@ public class ApacheClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/MrFTP/mock-file.txt", outputStream);
+			client.download("/public/download.txt", outputStream);
 			
-			byte[] expected = "Mock content".getBytes();
-			byte[] actual = outputStream.toByteArray();
-			
-			Assertions.assertArrayEquals(expected, actual);
+			Assertions.assertTrue(() -> (
+				outputStream.hasContent("Download test")
+			));
+		}
+	}
+	
+	@Test
+	public void testDownloadFromPrivateDirectory() throws IOException
+	{
+		try (MockOutputStream outputStream = new MockOutputStream())
+		{
+			Assertions.assertThrows(IOException.class, () -> {
+				client.download("/private/auth", outputStream);
+			});
 		}
 	}
 	
@@ -76,8 +87,59 @@ public class ApacheClientTest
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
 			Assertions.assertThrows(IOException.class, () -> {
-				client.download("/MrFTP/not-existing-file.txt", outputStream);
+				client.download("/public/not-existing-file", outputStream);
 			});
 		}
+	}
+	
+	@Test
+	public void testUploadAndThenDownload() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload and download test"))
+		{
+			client.upload("/public/upload-and-download.txt", inputStream);
+		}
+		
+		try (MockOutputStream outputStream = new MockOutputStream())
+		{
+			client.download("/public/upload-and-download.txt", outputStream);
+			
+			Assertions.assertTrue(() -> (
+				outputStream.hasContent("Upload and download test")
+			));
+		}
+	}
+	
+	@Test
+	public void testRemove() throws IOException
+	{
+		client.remove("/public/remove.txt");
+		
+		Assertions.assertFalse(() -> (
+			MockFtpServer.fileExists("/public/remove.txt")
+		));
+	}
+	
+	@Test
+	public void testUploadAndRemove() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
+		{
+			client.upload("/public/upload-and-remove.txt", inputStream);
+		}
+		
+		client.remove("/public/upload-and-remove.txt");
+		
+		Assertions.assertFalse(() -> (
+			MockFtpServer.fileExists("/public/upload-and-remove.txt")
+		));
+	}
+	
+	@Test
+	public void testRemoveNotExistingFile()
+	{
+		Assertions.assertThrows(IOException.class, () -> {
+			client.remove("/public/not-existing-file");
+		});
 	}
 }

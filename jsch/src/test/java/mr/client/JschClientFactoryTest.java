@@ -1,25 +1,25 @@
 package mr.client;
 
-import mr.server.MockFtpServer;
+import mr.server.MockSshServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ApacheClientFactoryTest
+public class JschClientFactoryTest
 {
-	private static final ClientFactory clientFactory = new MockApacheClientFactory();
+	private static final ClientFactory clientFactory = new MockJschClientFactory();
 	
 	@BeforeAll
 	public static void startServer()
 	{
-		MockFtpServer.start();
+		MockSshServer.start();
 	}
 	
 	@AfterAll
 	public static void closeServer()
 	{
-		MockFtpServer.close();
+		MockSshServer.close();
 	}
 	
 	@Test

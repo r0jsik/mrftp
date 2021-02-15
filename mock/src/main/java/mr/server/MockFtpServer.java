@@ -1,20 +1,24 @@
-package mr.mock;
+package mr.server;
 
 import org.mockftpserver.fake.FakeFtpServer;
 
-public class MockServer
+import mr.filesystem.director.FileSystemDirector;
+import mr.filesystem.director.MockFileSystemDirector;
+import mr.server.builder.FakeServerBuilder;
+import mr.server.builder.ServerBuilder;
+
+public class MockFtpServer
 {
-	private static final FakeFtpServer fakeFtpServer = new FakeFtpServer();
+	private final static FakeFtpServer fakeFtpServer = new FakeFtpServer();
+	private final static FileSystemDirector fileSystemDirector = new MockFileSystemDirector();
 	
 	public static void start()
 	{
-		FileSystemDirector fileSystemDirector = new SimpleFileSystemDirector();
-		
 		ServerBuilder serverBuilder = new FakeServerBuilder(fakeFtpServer);
 		serverBuilder.createFileSystem(fileSystemDirector);
 		serverBuilder.createUser("MrFTP", "MrFTP");
+		serverBuilder.initialize(7000);
 		
-		fakeFtpServer.setServerControlPort(7000);
 		fakeFtpServer.start();
 	}
 	

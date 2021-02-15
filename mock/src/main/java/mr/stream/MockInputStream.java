@@ -1,11 +1,11 @@
-package mr.mock;
+package mr.stream;
 
 import java.io.ByteArrayInputStream;
 
 public class MockInputStream extends ByteArrayInputStream
 {
-	public MockInputStream()
+	public MockInputStream(String content)
 	{
-		super("Mock content".getBytes());
+		super(content.getBytes());
 	}
 }

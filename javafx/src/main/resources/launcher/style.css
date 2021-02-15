@@ -16,13 +16,13 @@
 	-fx-font-size: 13px;
 }
 
-.text-field, .check-box, .button
+.combo-box, .text-field, .check-box, .button
 {
 	-fx-focus-color: silver;
 	-fx-faint-focus-color: transparent;
 }
 
-.text-field
+.combo-box, .text-field
 {
 	-fx-border-radius: 3;
 	-fx-border-color: silver;

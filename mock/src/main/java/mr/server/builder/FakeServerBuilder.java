@@ -1,6 +1,9 @@
-package mr.mock;
+package mr.server.builder;
 
 import lombok.RequiredArgsConstructor;
+import mr.filesystem.builder.FakeFileSystemBuilder;
+import mr.filesystem.builder.FileSystemBuilder;
+import mr.filesystem.director.FileSystemDirector;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
 import org.mockftpserver.fake.filesystem.FileSystem;
@@ -27,8 +30,14 @@ public class FakeServerBuilder implements ServerBuilder
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUsername(username);
 		userAccount.setPassword(password);
-		userAccount.setHomeDirectory("/" + username);
+		userAccount.setHomeDirectory("/public");
 		
 		fakeFtpServer.addUserAccount(userAccount);
+	}
+	
+	@Override
+	public void initialize(int port)
+	{
+		fakeFtpServer.setServerControlPort(port);
 	}
 }

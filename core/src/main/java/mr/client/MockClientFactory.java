@@ -1,8 +1,4 @@
-package mr.mock;
-
-import mr.client.Client;
-import mr.client.ClientFactory;
-import mr.client.ClientFactoryException;
+package mr.client;
 
 public class MockClientFactory implements ClientFactory
 {
