@@ -36,7 +36,7 @@ public class LauncherConfiguration
 	@Bean
 	public LauncherService launcherService()
 	{
-		return new CallbackLauncherService(new JschClientFactory(), new ApacheClientFactory());
+		return new CallbackLauncherService(new JschClientFactory("", "", null), new ApacheClientFactory());
 	}
 	
 	@Bean

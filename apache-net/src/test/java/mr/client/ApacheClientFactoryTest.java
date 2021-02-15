@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class ApacheClientFactoryTest
 {
-	private static final ClientFactory clientFactory = new InsecureApacheClientFactory();
+	private static final ClientFactory clientFactory = new MockApacheClientFactory();
 	
 	@BeforeAll
 	public static void startServer()

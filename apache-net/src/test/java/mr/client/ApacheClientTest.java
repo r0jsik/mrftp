@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class ApacheClientTest
 {
-	private static final ClientFactory clientFactory = new InsecureApacheClientFactory();
+	private static final ClientFactory clientFactory = new MockApacheClientFactory();
 	
 	private final Client client;
 	
