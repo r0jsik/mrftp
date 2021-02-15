@@ -109,4 +109,37 @@ public class ApacheClientTest
 			));
 		}
 	}
+	
+	@Test
+	public void testRemove() throws IOException
+	{
+		client.remove("/public/remove.txt");
+		
+		Assertions.assertFalse(() -> (
+			MockFtpServer.fileExists("/public/remove.txt")
+		));
+	}
+	
+	@Test
+	public void testUploadAndRemove() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
+		{
+			client.upload("/public/upload-and-remove.txt", inputStream);
+		}
+		
+		client.remove("/public/upload-and-remove.txt");
+		
+		Assertions.assertFalse(() -> (
+			MockFtpServer.fileExists("/public/upload-and-remove.txt")
+		));
+	}
+	
+	@Test
+	public void testRemoveNotExistingFile()
+	{
+		Assertions.assertThrows(IOException.class, () -> {
+			client.remove("/public/not-existing-file");
+		});
+	}
 }

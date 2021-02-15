@@ -1,4 +1,4 @@
-package mr.filesystem;
+package mr.filesystem.builder;
 
 public interface FileSystemBuilder
 {

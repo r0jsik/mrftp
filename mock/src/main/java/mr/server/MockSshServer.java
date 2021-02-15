@@ -1,30 +1,36 @@
 package mr.server;
 
-import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
-import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.shell.ProcessShellCommandFactory;
-import org.apache.sshd.sftp.server.SftpSubsystemFactory;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Collections;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.apache.sshd.server.SshServer;
+
+import mr.filesystem.director.FileSystemDirector;
+import mr.filesystem.director.MockFileSystemDirector;
+import mr.server.builder.ServerBuilder;
+import mr.server.builder.SshdServerBuilder;
 
 public class MockSshServer
 {
+	private static final FileSystemDirector fileSystemDirector = new MockFileSystemDirector();
+	
 	private static SshServer sshServer;
+	private static Path directory;
 	
 	public static void start()
 	{
 		try
 		{
 			sshServer = SshServer.setUpDefaultServer();
-			sshServer.setPort(7000);
-			sshServer.setHost("127.0.0.1");
-			sshServer.setKeyPairProvider(new FileKeyPairProvider(Paths.get("./src/test/resources/key")));
-			sshServer.setPasswordAuthenticator((username, password, session) -> username.equals("MrFTP") && password.equals("MrFTP"));
-			sshServer.setSubsystemFactories(Collections.singletonList(new SftpSubsystemFactory()));
-			sshServer.setCommandFactory(new ProcessShellCommandFactory());
+			directory = Files.createTempDirectory("MrFTP");
+			
+			ServerBuilder serverBuilder = new SshdServerBuilder(sshServer, directory);
+			serverBuilder.createFileSystem(fileSystemDirector);
+			serverBuilder.createUser("MrFTP", "MrFTP");
+			serverBuilder.initialize(7000);
+			
 			sshServer.start();
 		}
 		catch (IOException exception)
@@ -47,6 +53,6 @@ public class MockSshServer
 	
 	public static boolean fileExists(String path)
 	{
-		return new File(path).exists();
+		return new File(directory.toString() + path).exists();
 	}
 }

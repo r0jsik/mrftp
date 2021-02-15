@@ -18,7 +18,7 @@ public class JschEntriesProjectorTest
 	
 	public JschEntriesProjectorTest() throws ClientFactoryException
 	{
-		this.client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
+		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
 	
 	@BeforeAll
@@ -39,7 +39,7 @@ public class JschEntriesProjectorTest
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
 		EntriesProjector entriesProjector = client.entriesProjector();
-		entriesProjector.show("./src/test/resources", listEntriesView);
+		entriesProjector.show("/public", listEntriesView);
 		
 		Assertions.assertTrue(() -> (
 			listEntriesView.isShown("existing-file")
@@ -52,7 +52,7 @@ public class JschEntriesProjectorTest
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
 		EntriesProjector entriesProjector = client.entriesProjector();
-		entriesProjector.show("./src/test/resources", listEntriesView);
+		entriesProjector.show("/public", listEntriesView);
 		
 		Assertions.assertFalse(() -> (
 			listEntriesView.isShown("not-existing-file")

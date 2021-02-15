@@ -1,12 +1,15 @@
-package mr.filesystem;
+package mr.filesystem.director;
 
-public class SimpleFileSystemDirector implements FileSystemDirector
+import mr.filesystem.builder.FileSystemBuilder;
+
+public class MockFileSystemDirector implements FileSystemDirector
 {
 	@Override
 	public void build(FileSystemBuilder fileSystemBuilder)
 	{
 		fileSystemBuilder.createDirectory("/public");
 		fileSystemBuilder.createFile("/public/download.txt", "Download test");
+		fileSystemBuilder.createFile("/public/remove.txt", "Remove test");
 		fileSystemBuilder.createFile("/public/existing-file", "");
 		fileSystemBuilder.createInaccessibleDirectory("/private");
 		fileSystemBuilder.createFile("/private/auth", "secret-password");

@@ -1,4 +1,6 @@
-package mr.filesystem;
+package mr.filesystem.director;
+
+import mr.filesystem.builder.FileSystemBuilder;
 
 public interface FileSystemDirector
 {

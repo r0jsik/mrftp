@@ -38,11 +38,11 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			client.upload("./src/test/resources/upload.txt", inputStream);
+			client.upload("/public/upload.txt", inputStream);
 		}
 		
 		Assertions.assertTrue(() -> (
-			MockSshServer.fileExists("./src/test/resources/upload.txt")
+			MockSshServer.fileExists("/public/upload.txt")
 		));
 	}
 	
@@ -51,7 +51,7 @@ public class JschClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("./src/test/resources/download.txt", outputStream);
+			client.download("/public/download.txt", outputStream);
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Download test")
@@ -65,7 +65,7 @@ public class JschClientTest
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
 			Assertions.assertThrows(IOException.class, () -> {
-				client.download("./src/test/resources/not-existing-file", outputStream);
+				client.download("/public/not-existing-file", outputStream);
 			});
 		}
 	}
@@ -75,16 +75,49 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and download test"))
 		{
-			client.upload("./src/test/resources/upload-and-download.txt", inputStream);
+			client.upload("/public/upload-and-download.txt", inputStream);
 		}
 		
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("./src/test/resources/upload-and-download.txt", outputStream);
+			client.download("/public/upload-and-download.txt", outputStream);
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Upload and download test")
 			));
 		}
+	}
+	
+	@Test
+	public void testRemove() throws IOException
+	{
+		client.remove("/public/remove.txt");
+		
+		Assertions.assertFalse(() -> (
+			MockSshServer.fileExists("/public/remove.txt")
+		));
+	}
+	
+	@Test
+	public void testUploadAndRemove() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
+		{
+			client.upload("/public/upload-and-remove.txt", inputStream);
+		}
+		
+		client.remove("/public/upload-and-remove.txt");
+		
+		Assertions.assertFalse(() -> (
+			MockSshServer.fileExists("/public/upload-and-remove.txt")
+		));
+	}
+	
+	@Test
+	public void testRemoveNotExistingFile()
+	{
+		Assertions.assertThrows(IOException.class, () -> {
+			client.remove("/public/not-existing-file");
+		});
 	}
 }
