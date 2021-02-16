@@ -25,4 +25,10 @@ public class DotsOptimizingWalk implements Walk
 	{
 		walk.out();
 	}
+	
+	@Override
+	public String toString()
+	{
+		return walk.toString();
+	}
 }
