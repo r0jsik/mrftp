@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class JschClientTest
 {
-	private static final ClientFactory clientFactory = new MockJschClientFactory();
+	private static final ClientFactory clientFactory = new JschClientFactory("./src/test/resources/hosts");
 	
 	private final Client client;
 	

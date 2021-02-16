@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesController;
@@ -19,6 +20,12 @@ public class StageExplorerController implements ExplorerController
 {
 	@FXML
 	private SplitPane splitPane;
+	
+	@FXML
+	private Button closeButton;
+	
+	@FXML
+	private Button refreshButton;
 	
 	@FXML
 	private TableView<TableEntryView> remoteView;
@@ -41,8 +48,8 @@ public class StageExplorerController implements ExplorerController
 	@FXML
 	private Label statusLabel;
 	
-	private final IconLoader iconLoader;
-	private final ExplorerService explorerService;
+	private final Image fileIcon;
+	private final Image directoryIcon;
 	
 	@FXML
 	private void initialize()
@@ -59,16 +66,28 @@ public class StageExplorerController implements ExplorerController
 		paneHeight.bind(rootHeight);
 	}
 	
-	@FXML
-	private void close()
+	@Override
+	public void setOnRefresh(Runnable runnable)
 	{
-		explorerService.close();
+		refreshButton.setOnAction(event -> runnable.run());
 	}
 	
-	@FXML
-	private void refresh()
+	@Override
+	public void setOnClose(Runnable runnable)
 	{
-		explorerService.refresh();
+		closeButton.setOnAction(event -> runnable.run());
+	}
+	
+	@Override
+	public void setRefreshLabel(String label)
+	{
+		refreshButton.setText(label);
+	}
+	
+	@Override
+	public void setCloseLabel(String label)
+	{
+		closeButton.setText(label);
 	}
 	
 	@Override
@@ -79,7 +98,7 @@ public class StageExplorerController implements ExplorerController
 	
 	public TableEntriesView remoteEntriesView()
 	{
-		return new TableEntriesView(iconLoader, remoteView);
+		return new TableEntriesView(fileIcon, directoryIcon, remoteView);
 	}
 	
 	public EntriesController remoteEntriesController()
@@ -89,7 +108,7 @@ public class StageExplorerController implements ExplorerController
 	
 	public TableEntriesView localEntriesView()
 	{
-		return new TableEntriesView(iconLoader, localView);
+		return new TableEntriesView(fileIcon, directoryIcon, localView);
 	}
 	
 	public EntriesController localEntriesController()

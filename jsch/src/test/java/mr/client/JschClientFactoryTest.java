@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class JschClientFactoryTest
 {
-	private static final ClientFactory clientFactory = new MockJschClientFactory();
+	private static final ClientFactory clientFactory = new JschClientFactory("./src/test/resources/hosts");
 	
 	@BeforeAll
 	public static void startServer()

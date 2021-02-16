@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 public class JschClientFactory implements ClientFactory
 {
 	private final String knownHostsFile;
-	private final String privateKeyFile;
-	private final byte[] passphrase;
 	
 	@Override
 	public Client create(String hostname, int port, String username, String password) throws ClientFactoryException
@@ -20,7 +18,6 @@ public class JschClientFactory implements ClientFactory
 		{
 			JSch jsch = new JSch();
 			jsch.setKnownHosts(knownHostsFile);
-			jsch.addIdentity(privateKeyFile, passphrase);
 			
 			Session session = jsch.getSession(username, hostname, port);
 			session.setPassword(password);

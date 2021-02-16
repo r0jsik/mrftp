@@ -4,12 +4,13 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import mr.client.Client;
+import mr.client.ClientFactory;
+import mr.client.ClientFactoryException;
 import mr.entry.EntriesController;
 import mr.entry.EntriesProjectionException;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
-import mr.explorer.CallbackExplorerService;
-import mr.launcher.CallbackLauncherService;
+import mr.explorer.ExplorerController;
 import mr.launcher.LauncherController;
 import mr.settings.Settings;
 import mr.stage.StageInitializer;
@@ -76,24 +77,42 @@ public class Launcher extends Application
 	
 	private void startLauncher(Stage stage)
 	{
-		initializeLauncherController();
-		initializeLauncherService(stage);
+		initializeLauncherController(stage);
 		showLauncher(stage);
 	}
 	
-	private void initializeLauncherController()
+	private void initializeLauncherController(Stage stage)
+	{
+		LauncherController launcherController = applicationContext.getBean(LauncherController.class);
+		
+		initializeLauncherForm(launcherController);
+		initializeLauncherLabels(launcherController);
+		
+		launcherController.setOnLaunched((protocol, hostname, port, username, password, remember) -> {
+			if (remember)
+			{
+				rememberSettings(protocol, hostname, port, username, password);
+			}
+			
+			startExplorer(protocol, hostname, port, username, password);
+			stage.close();
+		});
+	}
+	
+	private void initializeLauncherForm(LauncherController launcherController)
 	{
 		Settings settings = applicationContext.getBean(Settings.class);
 		
-		LauncherController launcherController = applicationContext.getBean(LauncherController.class);
 		launcherController.setAvailableProtocols("SFTP", "FTP");
 		launcherController.setProtocol("SFTP");
-		
 		launcherController.setHostname(settings.getHostname());
 		launcherController.setPort(settings.getPort());
 		launcherController.setUsername(settings.getUsername());
 		launcherController.setPassword(settings.getPassword());
-		
+	}
+	
+	private void initializeLauncherLabels(LauncherController launcherController)
+	{
 		launcherController.setProtocolLabel("Protokół");
 		launcherController.setHostnameLabel("Adres serwera");
 		launcherController.setPortLabel("Port");
@@ -103,19 +122,43 @@ public class Launcher extends Application
 		launcherController.setStartLabel("Połącz");
 	}
 	
-	private void initializeLauncherService(Stage stage)
+	private void rememberSettings(String protocol, String hostname, int port, String username, String password)
 	{
-		CallbackLauncherService callbackLauncherService = applicationContext.getBean(CallbackLauncherService.class);
+		Settings settings = applicationContext.getBean(Settings.class);
 		
-		callbackLauncherService.setOnSuccess(client -> {
+		settings.setHostname(hostname);
+		settings.setPort(port);
+		settings.setUsername(username);
+		settings.setPassword(password);
+		settings.commit();
+	}
+	
+	private void startExplorer(String protocol, String hostname, int port, String username, String password)
+	{
+		try
+		{
+			ClientFactory clientFactory = getClientFactory(protocol);
+			Client client = clientFactory.create(hostname, port, username, password);
+			
 			startExplorer(client, new Stage());
-			stage.close();
-		});
-		
-		callbackLauncherService.setOnFailure(exception -> {
+		}
+		catch (ClientFactoryException exception)
+		{
 			exception.printStackTrace();
-			stage.close();
-		});
+		}
+	}
+	
+	private ClientFactory getClientFactory(String protocol)
+	{
+		switch (protocol)
+		{
+			case "SFTP":
+				return applicationContext.getBean("sshClientFactory", ClientFactory.class);
+			case "FTP":
+				return applicationContext.getBean("ftpClientFactory", ClientFactory.class);
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 	
 	private void showLauncher(Stage stage)
@@ -130,7 +173,7 @@ public class Launcher extends Application
 	
 	private void startExplorer(Client client, Stage stage)
 	{
-		initializeExplorerService(client, stage);
+		initializeExplorerController(client, stage);
 		initializeRemoteEntriesController(client);
 		initializeLocalEntriesController(client);
 		refreshRemoteEntriesView(client);
@@ -138,16 +181,18 @@ public class Launcher extends Application
 		showExplorer(stage);
 	}
 	
-	private void initializeExplorerService(Client client, Stage stage)
+	private void initializeExplorerController(Client client, Stage stage)
 	{
-		CallbackExplorerService callbackExplorerService = applicationContext.getBean(CallbackExplorerService.class);
+		ExplorerController explorerController = applicationContext.getBean(ExplorerController.class);
+		explorerController.setCloseLabel("Zamknij");
+		explorerController.setRefreshLabel("Odśwież");
 		
-		callbackExplorerService.setOnRefresh(() -> {
+		explorerController.setOnRefresh(() -> {
 			refreshRemoteEntriesView(client);
 			refreshLocalEntriesView();
 		});
 		
-		callbackExplorerService.setOnClose(() -> {
+		explorerController.setOnClose(() -> {
 			// client.close()
 			startLauncher(new Stage());
 			stage.close();

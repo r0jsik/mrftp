@@ -2,10 +2,9 @@ package mr.init;
 
 import javafx.scene.Scene;
 import mr.client.ApacheClientFactory;
+import mr.client.ClientFactory;
 import mr.client.JschClientFactory;
-import mr.launcher.CallbackLauncherService;
 import mr.launcher.LauncherController;
-import mr.launcher.LauncherService;
 import mr.launcher.StageLauncherController;
 import mr.scene.SceneFactory;
 import mr.scene.SceneFactoryException;
@@ -28,15 +27,21 @@ public class LauncherConfiguration
 	}
 	
 	@Bean
-	public LauncherController launcherController(LauncherService launcherService, Settings settings)
+	public LauncherController launcherController()
 	{
-		return new StageLauncherController(launcherService, settings);
+		return new StageLauncherController();
 	}
 	
 	@Bean
-	public LauncherService launcherService()
+	public ClientFactory sshClientFactory()
 	{
-		return new CallbackLauncherService(new JschClientFactory("", "", null), new ApacheClientFactory());
+		return new JschClientFactory("");
+	}
+	
+	@Bean
+	public ClientFactory ftpClientFactory()
+	{
+		return new ApacheClientFactory();
 	}
 	
 	@Bean
@@ -45,8 +50,7 @@ public class LauncherConfiguration
 		File file = new File("settings.ini");
 		Ini ini = new Ini(file);
 		ini.store();
-		Settings settings = new Ini4jSettings(ini, IOException::printStackTrace);
 		
-		return settings;
+		return new Ini4jSettings(ini, IOException::printStackTrace);
 	}
 }
