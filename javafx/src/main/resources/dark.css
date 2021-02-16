@@ -1,31 +1,32 @@
 .root
 {
 	-fx-focus-color: -fx-accent;
-	-fx-base: #373e43;
+	-fx-base: #373E43;
 	-fx-control-inner-background: derive(-fx-base, 35%);
 }
 
-.label
+.combo-box-popup .list-cell
 {
-	-fx-text-fill: silver;
+	-fx-text-fill: #EEEEEE !important;
 }
 
-.text-field, .password-field
+.combo-box-popup .list-cell:hover
 {
-	-fx-prompt-text-fill: silver;
+	-fx-background-color: #525A60 !important;
+}
+
+.combo-box-popup .list-cell:selected
+{
+	-fx-background-color: #424A50 !important;
 }
 
 .check-box:selected .mark
 {
-	-fx-background-color: white;
+	-fx-background-color: #DDDDDD !important;
 }
 
-.button
+.table-view
 {
-	-fx-focus-traversable: false;
-}
-
-.button:hover
-{
-	-fx-text-fill: white;
+	-fx-selection-bar-non-focused: #424A50 !important;
+	-fx-selection-bar: #424A50 !important;
 }

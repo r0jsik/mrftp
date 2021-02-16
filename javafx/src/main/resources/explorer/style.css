@@ -1,3 +1,5 @@
+@import "../main.css";
+
 .tile-pane
 {
 	-fx-hgap: 10px;
@@ -6,10 +8,10 @@
 
 .tile-pane .button
 {
-	-fx-pref-width: 70px;
+	-fx-pref-width: 72px;
 }
 
-#statusLabel
+.label
 {
 	-fx-padding: 5px 10px;
 }

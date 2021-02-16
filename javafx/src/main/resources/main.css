@@ -1,0 +1,41 @@
+.combo-box,
+.text-field,
+.check-box,
+.button,
+.table-view
+{
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-focus-traversable: false;
+}
+
+.combo-box-popup .list-cell
+{
+	-fx-text-fill: #333333;
+}
+
+.combo-box-popup .list-cell:hover
+{
+	-fx-background-color: #EEEEEE;
+}
+
+.combo-box-popup .list-cell:selected
+{
+	-fx-background-color: #DDDDDD;
+}
+
+.text-field:focused
+{
+	-fx-background-color:
+			linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+			linear-gradient(from 0 0 to 0 5, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+	-fx-background-insets: 0, 1;
+	-fx-background-radius: 3, 2;
+}
+
+.table-view
+{
+	-fx-selection-bar-non-focused: #DDDDDD;
+	-fx-selection-bar: #DDDDDD;
+	-fx-background-insets: 0;
+}

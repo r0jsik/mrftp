@@ -13,13 +13,13 @@
 			</cellValueFactory>
 		</TableColumn>
 		
-		<TableColumn minWidth="144" reorderable="false" text="Nazwa">
+		<TableColumn minWidth="130" reorderable="false" text="Nazwa">
 			<cellValueFactory>
 				<PropertyValueFactory property="name" />
 			</cellValueFactory>
 		</TableColumn>
 		
-		<TableColumn minWidth="72" reorderable="false" text="Rozmiar">
+		<TableColumn minWidth="86" reorderable="false" text="Rozmiar">
 			<cellValueFactory>
 				<PropertyValueFactory property="size" />
 			</cellValueFactory>

@@ -86,13 +86,21 @@ public class Launcher extends Application
 		Settings settings = applicationContext.getBean(Settings.class);
 		
 		LauncherController launcherController = applicationContext.getBean(LauncherController.class);
-		launcherController.showAvailableProtocols("SFTP", "FTP");
+		launcherController.setAvailableProtocols("SFTP", "FTP");
 		launcherController.setProtocol("SFTP");
 		
 		launcherController.setHostname(settings.getHostname());
 		launcherController.setPort(settings.getPort());
 		launcherController.setUsername(settings.getUsername());
 		launcherController.setPassword(settings.getPassword());
+		
+		launcherController.setProtocolLabel("Protokół");
+		launcherController.setHostnameLabel("Adres serwera");
+		launcherController.setPortLabel("Port");
+		launcherController.setUsernameLabel("Nazwa użytkownika");
+		launcherController.setPasswordLabel("Hasło");
+		launcherController.setSettingsLabel("Zapamiętaj dane logowania");
+		launcherController.setStartLabel("Połącz");
 	}
 	
 	private void initializeLauncherService(Stage stage)
