@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import lombok.RequiredArgsConstructor;
-import mr.settings.Settings;
 
 @RequiredArgsConstructor
 public class StageLauncherController implements LauncherController
@@ -48,33 +47,22 @@ public class StageLauncherController implements LauncherController
 	@FXML
 	private Button launchButton;
 	
-	private final LauncherService launcherService;
-	private final Settings settings;
-	
-	@FXML
-	private void initialize()
+	@Override
+	public void setOnLaunched(LauncherEvent launcherEvent)
 	{
-		launchButton.setOnAction(event -> launch());
+		launchButton.setOnAction(event -> launch(launcherEvent));
 	}
 	
-	private void launch()
+	private void launch(LauncherEvent launcherEvent)
 	{
 		String protocol = protocolField.getSelectionModel().getSelectedItem();
 		String hostname = hostnameField.getText();
 		int port = Integer.parseInt(portField.getText());
 		String username = usernameField.getText();
 		String password = passwordField.getText();
+		boolean remember = settingsCheckbox.isSelected();
 		
-		if (settingsCheckbox.isSelected())
-		{
-			settings.setHostname(hostname);
-			settings.setPort(port);
-			settings.setUsername(username);
-			settings.setPassword(password);
-			settings.commit();
-		}
-		
-		launcherService.launch(protocol, hostname, port, username, password);
+		launcherEvent.call(protocol, hostname, port, username, password, remember);
 	}
 	
 	@Override

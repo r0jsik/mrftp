@@ -15,4 +15,5 @@ public interface LauncherController
 	void setPasswordLabel(String label);
 	void setSettingsLabel(String label);
 	void setStartLabel(String label);
+	void setOnLaunched(LauncherEvent launcherEvent);
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 public class FileEntriesProjectorTest
 {
 	@Test
-	public void testShow() throws EntriesProjectionException, IOException
+	public void testIsExistingFileShown() throws EntriesProjectionException, IOException
 	{
 		File file = File.createTempFile(".existing-file", "");
 		String path = file.getParent();
@@ -19,24 +19,26 @@ public class FileEntriesProjectorTest
 		EntriesProjector entriesProjector = new FileEntriesProjector();
 		entriesProjector.show(path, listEntriesView);
 		
-		boolean shown = listEntriesView.isShown(name);
-		Assertions.assertTrue(shown);
+		Assertions.assertTrue(() -> (
+			listEntriesView.isShown(name)
+		));
 	}
 	
 	@Test
-	public void testNotShow() throws EntriesProjectionException
+	public void testIsNotExistingFileNotShown() throws EntriesProjectionException
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
 		EntriesProjector entriesProjector = new FileEntriesProjector();
 		entriesProjector.show(".", listEntriesView);
 		
-		boolean shown = listEntriesView.isShown("!@#$%^&*/");
-		Assertions.assertFalse(shown);
+		Assertions.assertFalse(() -> (
+			listEntriesView.isShown("!@#$%^&*/")
+		));
 	}
 	
 	@Test
-	public void testShowInvalidDirectory()
+	public void testIsInvalidDirectoryNotShown()
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		EntriesProjector entriesProjector = new FileEntriesProjector();

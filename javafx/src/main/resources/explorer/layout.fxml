@@ -8,8 +8,8 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
 	<TilePane styleClass="tile-pane">
-		<Button onAction="#close" text="Zamknij" />
-		<Button onAction="#refresh" text="Odśwież" />
+		<Button fx:id="closeButton" text="Zamknij" />
+		<Button fx:id="refreshButton" text="Odśwież" />
 	</TilePane>
 	
 	<SplitPane fx:id="splitPane">
