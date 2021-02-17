@@ -8,11 +8,11 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
-public class DequeWalkTest
+public class DotsOptimizingWalkTest
 {
 	private final List<String> initialPath;
 	
-	public DequeWalkTest()
+	public DotsOptimizingWalkTest()
 	{
 		initialPath = Arrays.asList(".", "directory-name", "other-dir");
 	}
@@ -24,6 +24,7 @@ public class DequeWalkTest
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
+		walk = new DotsOptimizingWalk(walk);
 		walk.to("last-dir");
 		
 		Assertions.assertIterableEquals(expectedPath, path);
@@ -36,7 +37,8 @@ public class DequeWalkTest
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
-		walk.out();
+		walk = new DotsOptimizingWalk(walk);
+		walk.to("..");
 		
 		Assertions.assertIterableEquals(expectedPath, path);
 	}
@@ -47,8 +49,9 @@ public class DequeWalkTest
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
+		walk = new DotsOptimizingWalk(walk);
 		walk.to("last-dir");
-		walk.out();
+		walk.to("..");
 		
 		Assertions.assertIterableEquals(initialPath, path);
 	}
@@ -60,7 +63,8 @@ public class DequeWalkTest
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
-		walk.out();
+		walk = new DotsOptimizingWalk(walk);
+		walk.to("..");
 		walk.to("last-dir");
 		
 		Assertions.assertIterableEquals(expectedPath, path);
@@ -72,9 +76,9 @@ public class DequeWalkTest
 		Walk walk = new DequeWalk();
 		
 		Assertions.assertDoesNotThrow(() -> {
-			walk.out();
-			walk.out();
-			walk.out();
+			walk.to("..");
+			walk.to("..");
+			walk.to("..");
 		});
 	}
 	
@@ -83,6 +87,7 @@ public class DequeWalkTest
 	{
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		Walk walk = new DequeWalk(path);
+		walk = new DotsOptimizingWalk(walk);
 		
 		String expectedPath = "./directory-name/other-dir";
 		String actualPath = walk.toString();
@@ -95,6 +100,7 @@ public class DequeWalkTest
 	{
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		Walk walk = new DequeWalk(path);
+		walk = new DotsOptimizingWalk(walk);
 		
 		String expectedPath = "./directory-name/other-dir/last-dir";
 		String resolvedPath = walk.resolve("last-dir");
@@ -107,6 +113,7 @@ public class DequeWalkTest
 	{
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		Walk walk = new DequeWalk(path);
+		walk = new DotsOptimizingWalk(walk);
 		walk.resolve("last-dir");
 		
 		Assertions.assertIterableEquals(initialPath, path);

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.function.BiConsumer;
 
 @Component
 @RequiredArgsConstructor
@@ -38,26 +37,19 @@ public class LocalEntriesControllerLogic implements ApplicationListener<ClientCh
 		});
 		
 		localEntriesController.setOnEntryTransmitted(entry -> {
-			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
-				upload(client, remotePath, localPath);
-				applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
-			});
+			String remotePath = remoteWalk.resolve(entry);
+			String localPath = localWalk.resolve(entry);
+			
+			upload(client, remotePath, localPath);
+			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 		});
 		
 		localEntriesController.setOnEntryDeleted(entry -> {
-			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
-				remove(localPath);
-				applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
-			});
+			String localPath = localWalk.resolve(entry);
+			
+			remove(localPath);
+			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 		});
-	}
-	
-	private void usingPathsWithAppendedEntry(String entry, BiConsumer<String, String> callback)
-	{
-		String remotePath = remoteWalk.toString() + "/" + entry;
-		String localPath = localWalk.toString() + "/" + entry;
-		
-		callback.accept(remotePath, localPath);
 	}
 	
 	private void upload(Client client, String remotePath, String localPath)

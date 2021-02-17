@@ -23,6 +23,12 @@ public class DequeWalk implements Walk
 	}
 	
 	@Override
+	public String resolve(String entry)
+	{
+		return String.join("", this.toString(), "/", entry);
+	}
+	
+	@Override
 	public void out()
 	{
 		if (path.size() > 0)

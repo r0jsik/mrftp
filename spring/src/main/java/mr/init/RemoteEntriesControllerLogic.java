@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.function.BiConsumer;
 
 @Component
 @RequiredArgsConstructor
@@ -36,26 +35,19 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 		});
 		
 		remoteEntriesController.setOnEntryTransmitted(entry -> {
-			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
-				download(client, remotePath, localPath);
-				applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
-			});
+			String remotePath = remoteWalk.resolve(entry);
+			String localPath = localWalk.resolve(entry);
+			
+			download(client, remotePath, localPath);
+			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 		});
 		
 		remoteEntriesController.setOnEntryDeleted(entry -> {
-			usingPathsWithAppendedEntry(entry, (remotePath, localPath) -> {
-				remove(client, remotePath);
-				applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
-			});
+			String remotePath = remoteWalk.resolve(entry);
+			
+			remove(client, remotePath);
+			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 		});
-	}
-	
-	private void usingPathsWithAppendedEntry(String entry, BiConsumer<String, String> callback)
-	{
-		String remotePath = remoteWalk.toString() + "/" + entry;
-		String localPath = localWalk.toString() + "/" + entry;
-		
-		callback.accept(remotePath, localPath);
 	}
 	
 	private void download(Client client, String remotePath, String localPath)
