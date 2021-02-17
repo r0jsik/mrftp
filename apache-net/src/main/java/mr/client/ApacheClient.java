@@ -48,6 +48,13 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
+	public void close() throws IOException
+	{
+		ftpClient.logout();
+		ftpClient.disconnect();
+	}
+	
+	@Override
 	public EntriesProjector entriesProjector()
 	{
 		return new ApacheEntriesProjector(ftpClient);

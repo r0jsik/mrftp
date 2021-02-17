@@ -16,6 +16,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 @RequiredArgsConstructor
 public class ExplorerLogic implements InitializingBean, ApplicationListener<StartExplorerEvent>
@@ -63,7 +65,7 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 	private void initializeExplorerController(Client client, Stage stage)
 	{
 		explorerController.setOnClose(() -> {
-			// client.close();
+			close(client);
 			
 			StartLauncherEvent startLauncherEvent = new StartLauncherEvent(this, new Stage());
 			applicationEventPublisher.publishEvent(startLauncherEvent);
@@ -74,6 +76,18 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		explorerController.setOnRefresh(() -> {
 			refreshEntryViews(client);
 		});
+	}
+	
+	private void close(Client client)
+	{
+		try
+		{
+			client.close();
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace();
+		}
 	}
 	
 	private void showExplorer(Stage stage)

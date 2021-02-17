@@ -1,6 +1,7 @@
 package mr.client;
 
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesProjector;
@@ -49,6 +50,19 @@ public class JschClient implements Client
 			channel.rm(path);
 		}
 		catch (SftpException exception)
+		{
+			throw new IOException(exception);
+		}
+	}
+	
+	@Override
+	public void close() throws IOException
+	{
+		try
+		{
+			channel.getSession().disconnect();
+		}
+		catch (JSchException exception)
 		{
 			throw new IOException(exception);
 		}

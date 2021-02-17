@@ -142,4 +142,13 @@ public class ApacheClientTest
 			client.remove("/public/not-existing-file");
 		});
 	}
+	
+	@Test
+	public void testActionOnClosedClient()
+	{
+		Assertions.assertThrows(IOException.class, () -> {
+			client.close();
+			client.close();
+		});
+	}
 }

@@ -120,4 +120,17 @@ public class JschClientTest
 			client.remove("/public/not-existing-file");
 		});
 	}
+	
+	@Test
+	public void testActionOnClosedClient() throws IOException
+	{
+		client.close();
+		
+		try (MockInputStream inputStream = new MockInputStream("Close test"))
+		{
+			Assertions.assertThrows(IOException.class, () -> {
+				client.upload("/public/close.txt", inputStream);
+			});
+		}
+	}
 }
