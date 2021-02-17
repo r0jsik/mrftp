@@ -9,7 +9,7 @@ public class ResourcesIconLoaderTest
 	
 	public ResourcesIconLoaderTest()
 	{
-		this.iconLoader = new ResourcesIconLoader();
+		iconLoader = new ResourcesIconLoader();
 	}
 	
 	@Test

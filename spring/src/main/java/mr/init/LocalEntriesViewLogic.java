@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class LocalEntriesViewRefresher implements ApplicationListener<LocalEntriesViewRefreshEvent>
+public class LocalEntriesViewLogic implements ApplicationListener<LocalEntriesViewRefreshEvent>
 {
 	private final Walk localWalk;
 	private final EntriesView localEntriesView;

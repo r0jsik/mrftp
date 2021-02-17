@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mr.client.Client;
 import mr.entry.EntriesController;
 import mr.event.ClientChangedEvent;
+import mr.event.LocalEntriesViewRefreshEvent;
 import mr.event.RemoteEntriesViewRefreshEvent;
 import mr.walk.Walk;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,6 +29,7 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 	{
 		Client client = clientChangedEvent.getClient();
 		RemoteEntriesViewRefreshEvent remoteEntriesViewRefreshEvent = new RemoteEntriesViewRefreshEvent(this, client);
+		LocalEntriesViewRefreshEvent localEntriesViewRefreshEvent = new LocalEntriesViewRefreshEvent(this);
 		
 		remoteEntriesController.setOnEntryOpened(entry -> {
 			remoteWalk.to(entry);
@@ -39,7 +41,9 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 			String localPath = localWalk.resolve(entry);
 			
 			download(client, remotePath, localPath);
+			
 			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
+			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 		});
 		
 		remoteEntriesController.setOnEntryDeleted(entry -> {

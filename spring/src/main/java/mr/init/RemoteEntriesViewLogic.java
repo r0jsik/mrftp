@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RemoteEntriesViewRefresher implements ApplicationListener<RemoteEntriesViewRefreshEvent>
+public class RemoteEntriesViewLogic implements ApplicationListener<RemoteEntriesViewRefreshEvent>
 {
 	private final EntriesView remoteEntriesView;
 	private final Walk remoteWalk;
