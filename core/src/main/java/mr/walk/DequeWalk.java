@@ -3,7 +3,6 @@ package mr.walk;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
 
 @RequiredArgsConstructor
@@ -13,7 +12,7 @@ public class DequeWalk implements Walk
 	
 	public DequeWalk()
 	{
-		path = new ArrayDeque<>(Collections.singletonList("."));
+		path = new ArrayDeque<>();
 	}
 	
 	@Override
@@ -35,6 +34,13 @@ public class DequeWalk implements Walk
 		{
 			path.removeLast();
 		}
+	}
+	
+	@Override
+	public void home()
+	{
+		path.clear();
+		path.add(".");
 	}
 	
 	@Override

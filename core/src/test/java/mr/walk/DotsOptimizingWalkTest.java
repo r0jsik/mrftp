@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
@@ -117,5 +118,17 @@ public class DotsOptimizingWalkTest
 		walk.resolve("last-dir");
 		
 		Assertions.assertIterableEquals(initialPath, path);
+	}
+	
+	@Test
+	public void testHome()
+	{
+		Iterable<CharSequence> expectedPath = Collections.singletonList(".");
+		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
+		Walk walk = new DequeWalk(path);
+		walk = new DotsOptimizingWalk(walk);
+		walk.home();
+		
+		Assertions.assertIterableEquals(expectedPath, path);
 	}
 }

@@ -33,6 +33,12 @@ public class DotsOptimizingWalk implements Walk
 	}
 	
 	@Override
+	public void home()
+	{
+		walk.home();
+	}
+	
+	@Override
 	public String toString()
 	{
 		return walk.toString();
