@@ -49,8 +49,7 @@ public class LauncherConfiguration
 	{
 		File file = new File("settings.ini");
 		Ini ini = new Ini(file);
-		ini.store();
 		
-		return new Ini4jSettings(ini, IOException::printStackTrace);
+		return new Ini4jSettings(ini);
 	}
 }

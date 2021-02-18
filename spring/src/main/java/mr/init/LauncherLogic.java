@@ -49,11 +49,14 @@ public class LauncherLogic implements InitializingBean, ApplicationListener<Star
 	private void initializeForm()
 	{
 		launcherController.setAvailableProtocols("SFTP", "FTP");
-		launcherController.setProtocol("SFTP");
-		launcherController.setHostname(settings.getHostname());
-		launcherController.setPort(settings.getPort());
-		launcherController.setUsername(settings.getUsername());
-		launcherController.setPassword(settings.getPassword());
+		
+		settings.select(context -> {
+			launcherController.setProtocol(context.getProtocol());
+			launcherController.setHostname(context.getHostname());
+			launcherController.setPort(context.getPort());
+			launcherController.setUsername(context.getUsername());
+			launcherController.setPassword(context.getPassword());
+		});
 	}
 	
 	@Override
@@ -67,24 +70,20 @@ public class LauncherLogic implements InitializingBean, ApplicationListener<Star
 	
 	private void initializeLauncherController(Stage stage)
 	{
-		launcherController.setOnLaunched((protocol, hostname, port, username, password, remember) -> {
-			if (remember)
-			{
-				rememberSettings(protocol, hostname, port, username, password);
-			}
-			
+		launcherController.setOnRemember((protocol, hostname, port, username, password) -> {
+			settings.update(context -> {
+				context.setProtocol(protocol);
+				context.setHostname(hostname);
+				context.setPort(port);
+				context.setUsername(username);
+				context.setPassword(password);
+			});
+		});
+		
+		launcherController.setOnLaunched((protocol, hostname, port, username, password) -> {
 			startExplorer(protocol, hostname, port, username, password);
 			stage.close();
 		});
-	}
-	
-	private void rememberSettings(String protocol, String hostname, int port, String username, String password)
-	{
-		settings.setHostname(hostname);
-		settings.setPort(port);
-		settings.setUsername(username);
-		settings.setPassword(password);
-		settings.commit();
 	}
 	
 	private void startExplorer(String protocol, String hostname, int port, String username, String password)

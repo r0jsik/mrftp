@@ -16,4 +16,5 @@ public interface LauncherController
 	void setSettingsLabel(String label);
 	void setStartLabel(String label);
 	void setOnLaunched(LauncherEvent launcherEvent);
+	void setOnRemember(LauncherEvent launcherEvent);
 }

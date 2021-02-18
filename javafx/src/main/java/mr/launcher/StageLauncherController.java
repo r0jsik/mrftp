@@ -1,14 +1,12 @@
 package mr.launcher;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class StageLauncherController implements LauncherController
 {
 	@FXML
@@ -47,6 +45,19 @@ public class StageLauncherController implements LauncherController
 	@FXML
 	private Button launchButton;
 	
+	private LauncherEvent onRemember;
+	
+	public StageLauncherController()
+	{
+		onRemember = (protocol, hostname, port, username, password) -> {};
+	}
+	
+	@Override
+	public void setOnRemember(LauncherEvent launcherEvent)
+	{
+		onRemember = launcherEvent;
+	}
+	
 	@Override
 	public void setOnLaunched(LauncherEvent launcherEvent)
 	{
@@ -62,7 +73,12 @@ public class StageLauncherController implements LauncherController
 		String password = passwordField.getText();
 		boolean remember = settingsCheckbox.isSelected();
 		
-		launcherEvent.call(protocol, hostname, port, username, password, remember);
+		if (remember)
+		{
+			onRemember.call(protocol, hostname, port, username, password);
+		}
+		
+		launcherEvent.call(protocol, hostname, port, username, password);
 	}
 	
 	@Override

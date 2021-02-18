@@ -1,14 +1,9 @@
 package mr.settings;
 
+import java.util.function.Consumer;
+
 public interface Settings
 {
-	void setHostname(String value);
-	void setPort(int value);
-	void setUsername(String value);
-	void setPassword(String value);
-	String getHostname();
-	int getPort();
-	String getUsername();
-	String getPassword();
-	void commit();
+	void update(Consumer<SettingsContext> callback);
+	void select(Consumer<SettingsContext> callback);
 }
