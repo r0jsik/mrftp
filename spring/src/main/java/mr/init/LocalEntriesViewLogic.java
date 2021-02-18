@@ -26,6 +26,7 @@ public class LocalEntriesViewLogic implements ApplicationListener<LocalEntriesVi
 		{
 			localEntriesView.hideAll();
 			localEntriesProjector.show(path, localEntriesView);
+			localEntriesView.onShown();
 		}
 		catch (EntriesProjectionException exception)
 		{

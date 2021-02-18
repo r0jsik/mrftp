@@ -1,6 +1,5 @@
 package mr.entry;
 
-import javafx.application.Platform;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,9 +40,11 @@ public class TableEntriesView implements EntriesView
 	public void hideAll()
 	{
 		tableView.getItems().clear();
-		
-		Platform.runLater(() -> {
-			tableView.sort();
-		});
+	}
+	
+	@Override
+	public void onShown()
+	{
+		tableView.sort();
 	}
 }

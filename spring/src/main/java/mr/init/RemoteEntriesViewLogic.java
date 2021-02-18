@@ -27,6 +27,8 @@ public class RemoteEntriesViewLogic implements ApplicationListener<RemoteEntries
 			
 			EntriesProjector entriesProjector = remoteEntriesViewRefreshEvent.getEntriesProjector();
 			entriesProjector.show(path, remoteEntriesView);
+			
+			remoteEntriesView.onShown();
 		}
 		catch (EntriesProjectionException exception)
 		{

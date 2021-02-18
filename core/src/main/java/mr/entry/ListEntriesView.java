@@ -30,6 +30,12 @@ public class ListEntriesView implements EntriesView
 		entries.clear();
 	}
 	
+	@Override
+	public void onShown()
+	{
+	
+	}
+	
 	public boolean isShown(String name)
 	{
 		return entries.stream().anyMatch(name::equals);

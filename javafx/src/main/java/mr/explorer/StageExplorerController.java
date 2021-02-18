@@ -55,6 +55,7 @@ public class StageExplorerController implements ExplorerController
 	private void initialize()
 	{
 		bindSplitPaneHeight();
+		initDefaultEntryViewsSorting();
 	}
 	
 	private void bindSplitPaneHeight()
@@ -64,6 +65,17 @@ public class StageExplorerController implements ExplorerController
 		DoubleProperty paneHeight = splitPane.prefHeightProperty();
 		
 		paneHeight.bind(rootHeight);
+	}
+	
+	private void initDefaultEntryViewsSorting()
+	{
+		sortByColumn(localView, 1);
+		sortByColumn(remoteView, 1);
+	}
+	
+	private void sortByColumn(TableView<TableEntryView> tableView, int columnIndex)
+	{
+		tableView.getSortOrder().add(tableView.getColumns().get(columnIndex));
 	}
 	
 	@Override
