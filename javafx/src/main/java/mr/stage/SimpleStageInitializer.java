@@ -13,9 +13,6 @@ public class SimpleStageInitializer implements StageInitializer
 	@Override
 	public void initializeLauncher(Stage stage, Scene scene)
 	{
-		stage.sizeToScene();
-		stage.setResizable(false);
-		
 		initialize(stage, scene);
 	}
 	
@@ -23,20 +20,18 @@ public class SimpleStageInitializer implements StageInitializer
 	{
 		stage.setTitle(title);
 		stage.setScene(scene);
+		stage.sizeToScene();
+		stage.setResizable(false);
 		
 		stage.setOnCloseRequest(event -> {
 			Platform.exit();
+			System.exit(0);
 		});
 	}
 	
 	@Override
 	public void initializeExplorer(Stage stage, Scene scene)
 	{
-		stage.setMinWidth(640);
-		stage.setMinHeight(480);
-		stage.setWidth(640);
-		stage.setHeight(480);
-		
 		initialize(stage, scene);
 	}
 }

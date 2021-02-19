@@ -1,10 +1,17 @@
-@import "../main.css";
-
 .root
 {
 	-fx-hgap: 20;
 	-fx-vgap: 5;
 	-fx-padding: 10;
+}
+
+.label,
+.combo-box,
+.text-field,
+.check-box,
+.button
+{
+	-fx-font-size: larger;
 }
 
 .combo-box,

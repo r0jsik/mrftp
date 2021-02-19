@@ -2,7 +2,7 @@ package mr.init;
 
 import mr.scene.FxmlSceneFactory;
 import mr.scene.SceneFactory;
-import mr.scene.theme.StylesheetTheme;
+import mr.scene.theme.JMetroTheme;
 import mr.scene.theme.Theme;
 import mr.stage.SimpleStageInitializer;
 import mr.stage.StageInitializer;
@@ -27,6 +27,6 @@ public class StageConfiguration
 	@Bean
 	public Theme theme()
 	{
-		return new StylesheetTheme();
+		return new JMetroTheme();
 	}
 }

@@ -1,14 +1,11 @@
 package mr.explorer;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesController;
 import mr.entry.TableEntriesController;
@@ -54,17 +51,7 @@ public class StageExplorerController implements ExplorerController
 	@FXML
 	private void initialize()
 	{
-		bindSplitPaneHeight();
 		initDefaultEntryViewsSorting();
-	}
-	
-	private void bindSplitPaneHeight()
-	{
-		Region root = (Region) splitPane.getParent();
-		ReadOnlyDoubleProperty rootHeight = root.heightProperty();
-		DoubleProperty paneHeight = splitPane.prefHeightProperty();
-		
-		paneHeight.bind(rootHeight);
 	}
 	
 	private void initDefaultEntryViewsSorting()
