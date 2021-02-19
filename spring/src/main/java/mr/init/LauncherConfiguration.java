@@ -35,13 +35,22 @@ public class LauncherConfiguration
 	@Bean
 	public ClientFactory sshClientFactory()
 	{
-		return new JschClientFactory("");
+		String userHome = System.getProperty("user.home");
+		String sshHosts = String.join("/", userHome, ".ssh", "known_hosts");
+		
+		return new JschClientFactory(sshHosts);
 	}
 	
 	@Bean
 	public ClientFactory ftpClientFactory()
 	{
-		return new ApacheClientFactory();
+		return new ApacheClientFactory(true);
+	}
+	
+	@Bean
+	public ClientFactory insecureFtpClientFactory()
+	{
+		return new ApacheClientFactory(false);
 	}
 	
 	@Bean

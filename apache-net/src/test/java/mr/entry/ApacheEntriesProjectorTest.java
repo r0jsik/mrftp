@@ -1,9 +1,9 @@
 package mr.entry;
 
+import mr.client.ApacheClientFactory;
 import mr.client.Client;
 import mr.client.ClientFactory;
 import mr.client.ClientFactoryException;
-import mr.client.MockApacheClientFactory;
 import mr.server.MockFtpServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class ApacheEntriesProjectorTest
 {
-	private static final ClientFactory clientFactory = new MockApacheClientFactory();
+	private static final ClientFactory clientFactory = new ApacheClientFactory(false);
 	
 	private final Client client;
 	

@@ -25,6 +25,7 @@ public class LauncherLogic implements InitializingBean, ApplicationListener<Star
 	private final Settings settings;
 	private final ClientFactory sshClientFactory;
 	private final ClientFactory ftpClientFactory;
+	private final ClientFactory insecureFtpClientFactory;
 	private final Scene launcherScene;
 	private final StageInitializer stageInitializer;
 	
@@ -48,7 +49,7 @@ public class LauncherLogic implements InitializingBean, ApplicationListener<Star
 	
 	private void initializeForm()
 	{
-		launcherController.setAvailableProtocols("SFTP", "FTP");
+		launcherController.setAvailableProtocols("SFTP", "FTP", "FTP (bez szyfrowania)");
 		
 		settings.select(context -> {
 			launcherController.setProtocol(context.getProtocol());
@@ -112,7 +113,7 @@ public class LauncherLogic implements InitializingBean, ApplicationListener<Star
 			case "FTP":
 				return ftpClientFactory;
 			default:
-				throw new IllegalArgumentException();
+				return insecureFtpClientFactory;
 		}
 	}
 	

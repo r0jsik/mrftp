@@ -1,12 +1,16 @@
 package mr.client;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPSClient;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class ApacheClientFactory implements ClientFactory
 {
+	private final boolean secure;
+	
 	@Override
 	public Client create(String hostname, int port, String username, String password) throws ClientFactoryException
 	{
@@ -35,8 +39,15 @@ public class ApacheClientFactory implements ClientFactory
 		}
 	}
 	
-	protected FTPClient createFtpClient()
+	private FTPClient createFtpClient()
 	{
-		return new FTPSClient();
+		if (secure)
+		{
+			return new FTPSClient();
+		}
+		else
+		{
+			return new FTPClient();
+		}
 	}
 }
