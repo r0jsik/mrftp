@@ -1,7 +1,5 @@
 package mr.init;
 
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import mr.client.Client;
 import mr.event.ClientChangedEvent;
@@ -10,22 +8,21 @@ import mr.event.RemoteEntriesViewRefreshEvent;
 import mr.event.StartExplorerEvent;
 import mr.event.StartLauncherEvent;
 import mr.explorer.ExplorerController;
-import mr.stage.StageInitializer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
+@DependsOn("explorerScene")
 @RequiredArgsConstructor
 public class ExplorerLogic implements InitializingBean, ApplicationListener<StartExplorerEvent>
 {
 	private final ApplicationEventPublisher applicationEventPublisher;
 	private final ExplorerController explorerController;
-	private final Scene explorerScene;
-	private final StageInitializer stageInitializer;
 	
 	@Override
 	public void afterPropertiesSet()
@@ -44,14 +41,12 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 	{
 		Client client = startExplorerEvent.getClient();
 		ClientChangedEvent clientChangedEvent = new ClientChangedEvent(this, client);
-		Stage stage = startExplorerEvent.getStage();
 		String status = startExplorerEvent.getStatus();
 		
 		applicationEventPublisher.publishEvent(clientChangedEvent);
 		
 		refreshEntryViews(client);
-		initializeExplorerController(client, stage, status);
-		showExplorer(stage);
+		initializeExplorerController(client, status);
 	}
 	
 	private void refreshEntryViews(Client client)
@@ -63,15 +58,13 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 	}
 	
-	private void initializeExplorerController(Client client, Stage stage, String status)
+	private void initializeExplorerController(Client client, String status)
 	{
 		explorerController.setOnClose(() -> {
 			close(client);
 			
-			StartLauncherEvent startLauncherEvent = new StartLauncherEvent(this, new Stage());
+			StartLauncherEvent startLauncherEvent = new StartLauncherEvent(this);
 			applicationEventPublisher.publishEvent(startLauncherEvent);
-			
-			stage.close();
 		});
 		
 		explorerController.setOnRefresh(() -> {
@@ -91,11 +84,5 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		{
 			exception.printStackTrace();
 		}
-	}
-	
-	private void showExplorer(Stage stage)
-	{
-		stageInitializer.initializeExplorer(stage, explorerScene);
-		stage.show();
 	}
 }

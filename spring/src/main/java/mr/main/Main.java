@@ -3,19 +3,20 @@ package mr.main;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import mr.event.StartLauncherEvent;
+import mr.init.StageLogic;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class Launcher extends Application
+public class Main extends Application
 {
 	private final ApplicationContext applicationContext;
 	
 	public static void main(String[] args)
 	{
-		Application.launch(Launcher.class, args);
+		Application.launch(Main.class, args);
 	}
 	
-	public Launcher()
+	public Main()
 	{
 		applicationContext = new AnnotationConfigApplicationContext("mr.init");
 	}
@@ -23,7 +24,10 @@ public class Launcher extends Application
 	@Override
 	public void start(Stage stage)
 	{
-		StartLauncherEvent startLauncherEvent = new StartLauncherEvent(this, stage);
+		StageLogic stageLogic = applicationContext.getBean(StageLogic.class);
+		stageLogic.setStage(stage);
+		
+		StartLauncherEvent startLauncherEvent = new StartLauncherEvent(this);
 		applicationContext.publishEvent(startLauncherEvent);
 	}
 }

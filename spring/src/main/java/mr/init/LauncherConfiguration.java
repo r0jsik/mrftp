@@ -3,7 +3,9 @@ package mr.init;
 import javafx.scene.Scene;
 import mr.client.ApacheClientFactory;
 import mr.client.ClientFactory;
+import mr.client.ClientFactoryProvider;
 import mr.client.JschClientFactory;
+import mr.client.StaticClientFactoryProvider;
 import mr.launcher.LauncherController;
 import mr.launcher.StageLauncherController;
 import mr.scene.SceneFactory;
@@ -30,6 +32,12 @@ public class LauncherConfiguration
 	public LauncherController launcherController()
 	{
 		return new StageLauncherController();
+	}
+	
+	@Bean
+	public ClientFactoryProvider clientFactoryProvider(ClientFactory sshClientFactory, ClientFactory ftpClientFactory, ClientFactory insecureFtpClientFactory)
+	{
+		return new StaticClientFactoryProvider(sshClientFactory, ftpClientFactory, insecureFtpClientFactory);
 	}
 	
 	@Bean
