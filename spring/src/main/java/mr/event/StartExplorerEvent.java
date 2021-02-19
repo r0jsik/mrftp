@@ -8,13 +8,15 @@ public class StartExplorerEvent extends ApplicationEvent
 {
 	private final Client client;
 	private final Stage stage;
+	private final String status;
 	
-	public StartExplorerEvent(Object source, Client client, Stage stage)
+	public StartExplorerEvent(Object source, Client client, Stage stage, String status)
 	{
 		super(source);
 		
 		this.client = client;
 		this.stage = stage;
+		this.status = status;
 	}
 	
 	public Client getClient()
@@ -25,5 +27,10 @@ public class StartExplorerEvent extends ApplicationEvent
 	public Stage getStage()
 	{
 		return stage;
+	}
+	
+	public String getStatus()
+	{
+		return status;
 	}
 }

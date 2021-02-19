@@ -92,8 +92,9 @@ public class LauncherLogic implements InitializingBean, ApplicationListener<Star
 		{
 			ClientFactory clientFactory = getClientFactory(protocol);
 			Client client = clientFactory.create(hostname, port, username, password);
+			String status = String.join("", username, "@", hostname, ":", String.valueOf(port));
 			
-			StartExplorerEvent startExplorerEvent = new StartExplorerEvent(this, client, new Stage());
+			StartExplorerEvent startExplorerEvent = new StartExplorerEvent(this, client, new Stage(), status);
 			applicationEventPublisher.publishEvent(startExplorerEvent);
 		}
 		catch (ClientFactoryException exception)

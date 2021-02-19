@@ -2,7 +2,7 @@ package mr.explorer;
 
 public interface ExplorerController
 {
-	void showStatus(String status);
+	void setStatus(String status);
 	void setRefreshLabel(String label);
 	void setCloseLabel(String label);
 	void setOnRefresh(Runnable runnable);

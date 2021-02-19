@@ -45,11 +45,12 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		Client client = startExplorerEvent.getClient();
 		ClientChangedEvent clientChangedEvent = new ClientChangedEvent(this, client);
 		Stage stage = startExplorerEvent.getStage();
+		String status = startExplorerEvent.getStatus();
 		
 		applicationEventPublisher.publishEvent(clientChangedEvent);
 		
 		refreshEntryViews(client);
-		initializeExplorerController(client, stage);
+		initializeExplorerController(client, stage, status);
 		showExplorer(stage);
 	}
 	
@@ -62,7 +63,7 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 	}
 	
-	private void initializeExplorerController(Client client, Stage stage)
+	private void initializeExplorerController(Client client, Stage stage, String status)
 	{
 		explorerController.setOnClose(() -> {
 			close(client);
@@ -76,6 +77,8 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		explorerController.setOnRefresh(() -> {
 			refreshEntryViews(client);
 		});
+		
+		explorerController.setStatus(status);
 	}
 	
 	private void close(Client client)

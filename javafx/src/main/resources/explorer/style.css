@@ -9,6 +9,11 @@
 	-fx-pref-width: 80px;
 }
 
+.label
+{
+	-fx-padding: 5px;
+}
+
 .label,
 .table-view,
 .button

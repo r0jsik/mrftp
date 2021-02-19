@@ -12,6 +12,8 @@
 		<Button fx:id="refreshButton" text="Odśwież" />
 	</TilePane>
 	
+	<Label fx:id="statusLabel" />
+	
 	<SplitPane fx:id="splitPane">
 		<VBox>
 			<fx:include source="entries-view.fxml" fx:id="remoteView" />
@@ -31,6 +33,4 @@
 			</TilePane>
 		</VBox>
 	</SplitPane>
-	
-	<Label fx:id="statusLabel" />
 </VBox>

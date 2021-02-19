@@ -90,7 +90,7 @@ public class StageExplorerController implements ExplorerController
 	}
 	
 	@Override
-	public void showStatus(String status)
+	public void setStatus(String status)
 	{
 		statusLabel.setText(status);
 	}
