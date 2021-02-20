@@ -13,7 +13,7 @@ public class JschEntriesProjector implements EntriesProjector
 	private final ChannelSftp channel;
 	
 	@Override
-	public void show(String path, EntriesView entriesView) throws EntriesProjectionException
+	public void show(String path, EntriesView entriesView)
 	{
 		try
 		{

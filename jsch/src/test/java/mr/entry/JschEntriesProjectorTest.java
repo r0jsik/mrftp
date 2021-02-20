@@ -2,7 +2,6 @@ package mr.entry;
 
 import mr.client.Client;
 import mr.client.ClientFactory;
-import mr.client.ClientFactoryException;
 import mr.client.JschClientFactory;
 import mr.server.MockSshServer;
 import org.junit.jupiter.api.AfterAll;
@@ -16,7 +15,7 @@ public class JschEntriesProjectorTest
 	
 	private final Client client;
 	
-	public JschEntriesProjectorTest() throws ClientFactoryException
+	public JschEntriesProjectorTest()
 	{
 		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
@@ -34,7 +33,7 @@ public class JschEntriesProjectorTest
 	}
 	
 	@Test
-	public void testIsExistingFileShown() throws EntriesProjectionException
+	public void testIsExistingFileShown()
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
@@ -47,7 +46,7 @@ public class JschEntriesProjectorTest
 	}
 	
 	@Test
-	public void testIsNotExistingFileNotShown() throws EntriesProjectionException
+	public void testIsNotExistingFileNotShown()
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		

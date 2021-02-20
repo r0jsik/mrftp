@@ -1,7 +1,6 @@
 package mr.init;
 
 import lombok.RequiredArgsConstructor;
-import mr.entry.EntriesProjectionException;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.event.RemoteEntriesViewRefreshEvent;
@@ -19,20 +18,12 @@ public class RemoteEntriesViewLogic implements ApplicationListener<RemoteEntries
 	@Override
 	public void onApplicationEvent(RemoteEntriesViewRefreshEvent remoteEntriesViewRefreshEvent)
 	{
-		String path = remoteWalk.toString();
+		remoteEntriesView.hideAll();
 		
-		try
-		{
-			remoteEntriesView.hideAll();
-			
-			EntriesProjector entriesProjector = remoteEntriesViewRefreshEvent.getEntriesProjector();
-			entriesProjector.show(path, remoteEntriesView);
-			
-			remoteEntriesView.onShown();
-		}
-		catch (EntriesProjectionException exception)
-		{
-			exception.printStackTrace();
-		}
+		String path = remoteWalk.toString();
+		EntriesProjector entriesProjector = remoteEntriesViewRefreshEvent.getEntriesProjector();
+		entriesProjector.show(path, remoteEntriesView);
+		
+		remoteEntriesView.onShown();
 	}
 }

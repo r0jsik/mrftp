@@ -1,7 +1,6 @@
 package mr.init;
 
 import lombok.RequiredArgsConstructor;
-import mr.entry.EntriesProjectionException;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
 import mr.event.LocalEntriesViewRefreshEvent;
@@ -22,15 +21,8 @@ public class LocalEntriesViewLogic implements ApplicationListener<LocalEntriesVi
 	{
 		String path = localWalk.toString();
 		
-		try
-		{
-			localEntriesView.hideAll();
-			localEntriesProjector.show(path, localEntriesView);
-			localEntriesView.onShown();
-		}
-		catch (EntriesProjectionException exception)
-		{
-			exception.printStackTrace();
-		}
+		localEntriesView.hideAll();
+		localEntriesProjector.show(path, localEntriesView);
+		localEntriesView.onShown();
 	}
 }

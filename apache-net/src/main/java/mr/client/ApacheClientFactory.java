@@ -12,7 +12,7 @@ public class ApacheClientFactory implements ClientFactory
 	private final boolean secure;
 	
 	@Override
-	public Client create(String hostname, int port, String username, String password) throws ClientFactoryException
+	public Client create(String hostname, int port, String username, String password)
 	{
 		try
 		{
@@ -24,7 +24,7 @@ public class ApacheClientFactory implements ClientFactory
 		}
 	}
 	
-	private Client tryToCreate(String hostname, int port, String username, String password) throws IOException, ClientFactoryException
+	private Client tryToCreate(String hostname, int port, String username, String password) throws IOException
 	{
 		FTPClient ftpClient = createFtpClient();
 		ftpClient.connect(hostname, port);

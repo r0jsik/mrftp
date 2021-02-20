@@ -14,8 +14,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 @DependsOn("explorerScene")
 @RequiredArgsConstructor
@@ -61,9 +59,9 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 	private void initializeExplorerController(Client client, String status)
 	{
 		explorerController.setOnClose(() -> {
-			close(client);
-			
 			StartLauncherEvent startLauncherEvent = new StartLauncherEvent(this);
+			
+			client.close();
 			applicationEventPublisher.publishEvent(startLauncherEvent);
 		});
 		
@@ -72,17 +70,5 @@ public class ExplorerLogic implements InitializingBean, ApplicationListener<Star
 		});
 		
 		explorerController.setStatus(status);
-	}
-	
-	private void close(Client client)
-	{
-		try
-		{
-			client.close();
-		}
-		catch (IOException exception)
-		{
-			exception.printStackTrace();
-		}
 	}
 }

@@ -12,7 +12,7 @@ public class JschClientFactory implements ClientFactory
 	private final String knownHostsFile;
 	
 	@Override
-	public Client create(String hostname, int port, String username, String password) throws ClientFactoryException
+	public Client create(String hostname, int port, String username, String password)
 	{
 		try
 		{

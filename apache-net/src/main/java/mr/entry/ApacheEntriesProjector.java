@@ -13,7 +13,7 @@ public class ApacheEntriesProjector implements EntriesProjector
 	private final FTPClient ftpClient;
 	
 	@Override
-	public void show(String path, EntriesView entriesView) throws EntriesProjectionException
+	public void show(String path, EntriesView entriesView)
 	{
 		try
 		{

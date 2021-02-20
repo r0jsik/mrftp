@@ -14,7 +14,7 @@ public class FxmlSceneFactory implements SceneFactory
 	private final String fileName;
 	
 	@Override
-	public Scene create(String sceneName, Object controller) throws SceneFactoryException
+	public Scene create(String sceneName, Object controller)
 	{
 		try
 		{

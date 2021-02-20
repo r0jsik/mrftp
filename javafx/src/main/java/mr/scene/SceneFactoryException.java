@@ -1,6 +1,6 @@
 package mr.scene;
 
-public class SceneFactoryException extends Exception
+public class SceneFactoryException extends RuntimeException
 {
 	public SceneFactoryException(Exception exception)
 	{

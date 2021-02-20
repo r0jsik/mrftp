@@ -16,7 +16,7 @@ public class JschClientTest
 	
 	private final Client client;
 	
-	public JschClientTest() throws ClientFactoryException
+	public JschClientTest()
 	{
 		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
@@ -64,7 +64,7 @@ public class JschClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			Assertions.assertThrows(IOException.class, () -> {
+			Assertions.assertThrows(ClientActionException.class, () -> {
 				client.download("/public/not-existing-file", outputStream);
 			});
 		}
@@ -116,7 +116,7 @@ public class JschClientTest
 	@Test
 	public void testRemoveNotExistingFile()
 	{
-		Assertions.assertThrows(IOException.class, () -> {
+		Assertions.assertThrows(ClientActionException.class, () -> {
 			client.remove("/public/not-existing-file");
 		});
 	}
@@ -128,7 +128,7 @@ public class JschClientTest
 		
 		try (MockInputStream inputStream = new MockInputStream("Close test"))
 		{
-			Assertions.assertThrows(IOException.class, () -> {
+			Assertions.assertThrows(ClientActionException.class, () -> {
 				client.upload("/public/close.txt", inputStream);
 			});
 		}

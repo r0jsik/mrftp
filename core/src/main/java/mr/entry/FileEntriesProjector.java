@@ -5,7 +5,7 @@ import java.io.File;
 public class FileEntriesProjector implements EntriesProjector
 {
 	@Override
-	public void show(String path, EntriesView entriesView) throws EntriesProjectionException
+	public void show(String path, EntriesView entriesView)
 	{
 		File parent = new File(path);
 		File[] files = parent.listFiles();

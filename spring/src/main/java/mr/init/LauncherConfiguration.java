@@ -9,7 +9,6 @@ import mr.client.StaticClientFactoryProvider;
 import mr.launcher.LauncherController;
 import mr.launcher.StageLauncherController;
 import mr.scene.SceneFactory;
-import mr.scene.SceneFactoryException;
 import mr.settings.Ini4jSettings;
 import mr.settings.Settings;
 import org.ini4j.Ini;
@@ -23,7 +22,7 @@ import java.io.IOException;
 public class LauncherConfiguration
 {
 	@Bean
-	public Scene launcherScene(SceneFactory sceneFactory, LauncherController launcherController) throws SceneFactoryException
+	public Scene launcherScene(SceneFactory sceneFactory, LauncherController launcherController)
 	{
 		return sceneFactory.create("launcher", launcherController);
 	}

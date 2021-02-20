@@ -11,7 +11,6 @@ import mr.explorer.IconLoader;
 import mr.explorer.ResourcesIconLoader;
 import mr.explorer.StageExplorerController;
 import mr.scene.SceneFactory;
-import mr.scene.SceneFactoryException;
 import mr.walk.DequeWalk;
 import mr.walk.DotsOptimizingWalk;
 import mr.walk.Walk;
@@ -22,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 public class ExplorerConfiguration
 {
 	@Bean
-	public Scene explorerScene(SceneFactory sceneFactory, ExplorerController explorerController) throws SceneFactoryException
+	public Scene explorerScene(SceneFactory sceneFactory, ExplorerController explorerController)
 	{
 		return sceneFactory.create("explorer", explorerController);
 	}

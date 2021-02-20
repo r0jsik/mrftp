@@ -49,7 +49,7 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 		remoteEntriesController.setOnEntryDeleted(entry -> {
 			String remotePath = remoteWalk.resolve(entry);
 			
-			remove(client, remotePath);
+			client.remove(remotePath);
 			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 		});
 	}
@@ -62,18 +62,6 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			
 			client.download(remotePath, fileOutputStream);
-		}
-		catch (IOException exception)
-		{
-			exception.printStackTrace();
-		}
-	}
-	
-	private void remove(Client client, String remotePath)
-	{
-		try
-		{
-			client.remove(remotePath);
 		}
 		catch (IOException exception)
 		{

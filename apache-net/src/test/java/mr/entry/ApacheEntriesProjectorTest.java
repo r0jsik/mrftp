@@ -3,7 +3,6 @@ package mr.entry;
 import mr.client.ApacheClientFactory;
 import mr.client.Client;
 import mr.client.ClientFactory;
-import mr.client.ClientFactoryException;
 import mr.server.MockFtpServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +15,7 @@ public class ApacheEntriesProjectorTest
 	
 	private final Client client;
 	
-	public ApacheEntriesProjectorTest() throws ClientFactoryException
+	public ApacheEntriesProjectorTest()
 	{
 		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
@@ -34,7 +33,7 @@ public class ApacheEntriesProjectorTest
 	}
 	
 	@Test
-	public void testIsExistingFileShown() throws EntriesProjectionException
+	public void testIsExistingFileShown()
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		
@@ -47,7 +46,7 @@ public class ApacheEntriesProjectorTest
 	}
 	
 	@Test
-	public void testIsNotExistingFileNotShown() throws EntriesProjectionException
+	public void testIsNotExistingFileNotShown()
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		

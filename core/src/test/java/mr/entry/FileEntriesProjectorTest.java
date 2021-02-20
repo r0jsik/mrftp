@@ -9,7 +9,7 @@ import java.io.IOException;
 public class FileEntriesProjectorTest
 {
 	@Test
-	public void testIsExistingFileShown() throws EntriesProjectionException, IOException
+	public void testIsExistingFileShown() throws IOException
 	{
 		File file = File.createTempFile(".existing-file", "");
 		String path = file.getParent();
@@ -25,7 +25,7 @@ public class FileEntriesProjectorTest
 	}
 	
 	@Test
-	public void testIsNotExistingFileNotShown() throws EntriesProjectionException
+	public void testIsNotExistingFileNotShown()
 	{
 		ListEntriesView listEntriesView = new ListEntriesView();
 		

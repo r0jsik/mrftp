@@ -1,6 +1,6 @@
 package mr.entry;
 
-public class EntriesProjectionException extends Exception
+public class EntriesProjectionException extends RuntimeException
 {
 
 }

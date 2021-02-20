@@ -16,7 +16,7 @@ public class ApacheClientTest
 	
 	private final Client client;
 	
-	public ApacheClientTest() throws ClientFactoryException
+	public ApacheClientTest()
 	{
 		client = clientFactory.create("localhost", 7000, "MrFTP", "MrFTP");
 	}
@@ -51,7 +51,7 @@ public class ApacheClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			Assertions.assertThrows(IOException.class, () -> {
+			Assertions.assertThrows(ClientActionException.class, () -> {
 				client.upload("/private/virus.php", inputStream);
 			});
 		}
@@ -75,7 +75,7 @@ public class ApacheClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			Assertions.assertThrows(IOException.class, () -> {
+			Assertions.assertThrows(ClientActionException.class, () -> {
 				client.download("/private/auth", outputStream);
 			});
 		}
@@ -86,7 +86,7 @@ public class ApacheClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			Assertions.assertThrows(IOException.class, () -> {
+			Assertions.assertThrows(ClientActionException.class, () -> {
 				client.download("/public/not-existing-file", outputStream);
 			});
 		}
@@ -111,7 +111,7 @@ public class ApacheClientTest
 	}
 	
 	@Test
-	public void testRemove() throws IOException
+	public void testRemove()
 	{
 		client.remove("/public/remove.txt");
 		
@@ -138,7 +138,7 @@ public class ApacheClientTest
 	@Test
 	public void testRemoveNotExistingFile()
 	{
-		Assertions.assertThrows(IOException.class, () -> {
+		Assertions.assertThrows(ClientActionException.class, () -> {
 			client.remove("/public/not-existing-file");
 		});
 	}
@@ -146,7 +146,7 @@ public class ApacheClientTest
 	@Test
 	public void testActionOnClosedClient()
 	{
-		Assertions.assertThrows(IOException.class, () -> {
+		Assertions.assertThrows(ClientActionException.class, () -> {
 			client.close();
 			client.close();
 		});

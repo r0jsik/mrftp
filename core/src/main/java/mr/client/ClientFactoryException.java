@@ -1,6 +1,6 @@
 package mr.client;
 
-public class ClientFactoryException extends Exception
+public class ClientFactoryException extends RuntimeException
 {
 	public ClientFactoryException()
 	{

@@ -17,7 +17,7 @@ public class JschClient implements Client
 	private final ChannelSftp channel;
 	
 	@Override
-	public void upload(String path, InputStream inputStream) throws IOException
+	public void upload(String path, InputStream inputStream)
 	{
 		try
 		{
@@ -25,12 +25,12 @@ public class JschClient implements Client
 		}
 		catch (SftpException exception)
 		{
-			throw new IOException(exception);
+			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void download(String path, OutputStream outputStream) throws IOException
+	public void download(String path, OutputStream outputStream)
 	{
 		try
 		{
@@ -38,12 +38,12 @@ public class JschClient implements Client
 		}
 		catch (SftpException exception)
 		{
-			throw new IOException(exception);
+			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void remove(String path) throws IOException
+	public void remove(String path)
 	{
 		try
 		{
@@ -51,12 +51,12 @@ public class JschClient implements Client
 		}
 		catch (SftpException exception)
 		{
-			throw new IOException(exception);
+			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void close() throws IOException
+	public void close()
 	{
 		try
 		{
@@ -64,7 +64,7 @@ public class JschClient implements Client
 		}
 		catch (JSchException exception)
 		{
-			throw new IOException(exception);
+			throw new ClientActionException(exception);
 		}
 	}
 	

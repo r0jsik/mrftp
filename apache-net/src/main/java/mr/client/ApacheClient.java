@@ -15,43 +15,65 @@ public class ApacheClient implements Client
 	private final FTPClient ftpClient;
 	
 	@Override
-	public void upload(String path, InputStream inputStream) throws IOException
+	public void upload(String path, InputStream inputStream)
 	{
-		boolean done = ftpClient.storeFile(path, inputStream);
-		
-		if ( !done)
+		try
 		{
-			throw new IOException();
+			if ( !ftpClient.storeFile(path, inputStream))
+			{
+				throw new ClientActionException();
+			}
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void download(String path, OutputStream outputStream) throws IOException
+	public void download(String path, OutputStream outputStream)
 	{
-		boolean done = ftpClient.retrieveFile(path, outputStream);
-		
-		if ( !done)
+		try
 		{
-			throw new IOException();
+			if ( !ftpClient.retrieveFile(path, outputStream))
+			{
+				throw new ClientActionException();
+			}
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void remove(String path) throws IOException
+	public void remove(String path)
 	{
-		boolean done = ftpClient.deleteFile(path);
-		
-		if ( !done)
+		try
 		{
-			throw new IOException();
+			if ( !ftpClient.deleteFile(path))
+			{
+				throw new ClientActionException();
+			}
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void close() throws IOException
+	public void close()
 	{
-		ftpClient.logout();
-		ftpClient.disconnect();
+		try
+		{
+			ftpClient.logout();
+			ftpClient.disconnect();
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
+		}
 	}
 	
 	@Override

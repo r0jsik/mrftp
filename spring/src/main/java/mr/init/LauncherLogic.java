@@ -3,7 +3,6 @@ package mr.init;
 import lombok.RequiredArgsConstructor;
 import mr.client.Client;
 import mr.client.ClientFactory;
-import mr.client.ClientFactoryException;
 import mr.client.ClientFactoryProvider;
 import mr.event.StartExplorerEvent;
 import mr.launcher.LauncherController;
@@ -72,19 +71,12 @@ public class LauncherLogic implements InitializingBean
 	private void initializeOnLaunched()
 	{
 		launcherController.setOnLaunched((protocol, hostname, port, username, password) -> {
-			try
-			{
-				ClientFactory clientFactory = clientFactoryProvider.getByProtocol(protocol);
-				Client client = clientFactory.create(hostname, port, username, password);
-				String status = String.join("", username, "@", hostname, ":", String.valueOf(port));
-				StartExplorerEvent startExplorerEvent = new StartExplorerEvent(this, client, status);
-				
-				applicationEventPublisher.publishEvent(startExplorerEvent);
-			}
-			catch (ClientFactoryException exception)
-			{
-				exception.printStackTrace();
-			}
+			ClientFactory clientFactory = clientFactoryProvider.getByProtocol(protocol);
+			Client client = clientFactory.create(hostname, port, username, password);
+			String status = String.join("", username, "@", hostname, ":", String.valueOf(port));
+			StartExplorerEvent startExplorerEvent = new StartExplorerEvent(this, client, status);
+			
+			applicationEventPublisher.publishEvent(startExplorerEvent);
 		});
 	}
 }
