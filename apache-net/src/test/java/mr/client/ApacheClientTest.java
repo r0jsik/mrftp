@@ -62,7 +62,7 @@ public class ApacheClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/download.txt", outputStream);
+			client.download("/public/download.txt", path -> outputStream);
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Download test")
@@ -76,7 +76,7 @@ public class ApacheClientTest
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
 			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.download("/private/auth", outputStream);
+				client.download("/private/auth", path -> outputStream);
 			});
 		}
 	}
@@ -87,7 +87,7 @@ public class ApacheClientTest
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
 			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.download("/public/not-existing-file", outputStream);
+				client.download("/public/not-existing-file", path -> outputStream);
 			});
 		}
 	}
@@ -102,7 +102,7 @@ public class ApacheClientTest
 		
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/upload-and-download.txt", outputStream);
+			client.download("/public/upload-and-download.txt", path -> outputStream);
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Upload and download test")
@@ -153,6 +153,18 @@ public class ApacheClientTest
 	}
 	
 	@Test
+	public void testDownloadDirectory()
+	{
+		MockOutputStream mockOutputStream = new MockOutputStream();
+		
+		client.download("/public-download-dir", path -> mockOutputStream);
+		
+		Assertions.assertTrue(() -> (
+			mockOutputStream.hasContent("ABC")
+		));
+	}
+	
+	@Test
 	public void testRemoveDirectory()
 	{
 		client.remove("/public-remove-dir");
@@ -160,5 +172,13 @@ public class ApacheClientTest
 		Assertions.assertFalse(() -> (
 			MockFtpServer.fileExists("/public-remove-dir")
 		));
+	}
+	
+	@Test
+	public void testDownloadPrivateDirectory()
+	{
+		Assertions.assertThrows(ClientActionException.class, () -> {
+			client.download("/private-download-dir", path -> new MockOutputStream());
+		});
 	}
 }
