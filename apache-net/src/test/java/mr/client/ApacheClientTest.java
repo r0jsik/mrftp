@@ -151,4 +151,14 @@ public class ApacheClientTest
 			client.close();
 		});
 	}
+	
+	@Test
+	public void testRemoveDirectory()
+	{
+		client.remove("/public-remove-dir");
+		
+		Assertions.assertFalse(() -> (
+			MockFtpServer.fileExists("/public-remove-dir")
+		));
+	}
 }

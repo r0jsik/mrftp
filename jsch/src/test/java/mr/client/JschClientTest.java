@@ -89,7 +89,7 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testRemove() throws IOException
+	public void testRemove()
 	{
 		client.remove("/public/remove.txt");
 		
@@ -132,5 +132,15 @@ public class JschClientTest
 				client.upload("/public/close.txt", inputStream);
 			});
 		}
+	}
+	
+	@Test
+	public void testRemoveDirectory()
+	{
+		client.remove("/public-remove-dir");
+		
+		Assertions.assertFalse(() -> (
+			MockSshServer.fileExists("/public-remove-dir")
+		));
 	}
 }

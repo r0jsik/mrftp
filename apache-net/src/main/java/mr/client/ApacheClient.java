@@ -51,14 +51,19 @@ public class ApacheClient implements Client
 	{
 		try
 		{
-			if ( !ftpClient.deleteFile(path))
-			{
-				throw new ClientActionException();
-			}
+			tryToRemove(path);
 		}
 		catch (IOException exception)
 		{
 			throw new ClientActionException(exception);
+		}
+	}
+	
+	private void tryToRemove(String path) throws IOException
+	{
+		if ( !ftpClient.deleteFile(path) && !ftpClient.removeDirectory(path))
+		{
+			throw new ClientActionException();
 		}
 	}
 	

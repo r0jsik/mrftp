@@ -2,12 +2,12 @@ package mr.client;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesProjector;
 import mr.entry.JschEntriesProjector;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -47,11 +47,25 @@ public class JschClient implements Client
 	{
 		try
 		{
-			channel.rm(path);
+			tryToRemove(path);
 		}
 		catch (SftpException exception)
 		{
 			throw new ClientActionException(exception);
+		}
+	}
+	
+	private void tryToRemove(String path) throws SftpException
+	{
+		SftpATTRS attr = channel.lstat(path);
+		
+		if (attr.isDir())
+		{
+			channel.rmdir(path);
+		}
+		else
+		{
+			channel.rm(path);
 		}
 	}
 	
