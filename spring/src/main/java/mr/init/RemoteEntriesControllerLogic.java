@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -36,7 +37,10 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 		});
 		
 		remoteEntriesController.setOnEntryTransmitted(entry -> {
-			download(client, entry);
+			String remotePath = remoteWalk.resolve(entry);
+			String localPath = localWalk.resolve(entry);
+			
+			download(client, remotePath, localPath);
 			
 			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
@@ -50,15 +54,18 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 		});
 	}
 	
-	private void download(Client client, String entry)
+	private void download(Client client, String remotePath, String localPath)
 	{
-		String remotePath = remoteWalk.resolve(entry);
-		
-		client.download(remotePath, relativePath -> {
-			String localPath = localWalk.resolve(relativePath);
+		try
+		{
 			File file = new File(localPath);
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			
-			return new FileOutputStream(file);
-		});
+			client.download(remotePath, fileOutputStream);
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace();
+		}
 	}
 }

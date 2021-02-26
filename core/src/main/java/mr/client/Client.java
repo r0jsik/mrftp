@@ -8,7 +8,7 @@ import java.io.OutputStream;
 public interface Client
 {
 	void upload(String path, InputStream inputStream);
-	void download(String path, StreamProvider<OutputStream> streamProvider);
+	void download(String path, OutputStream outputStream);
 	void remove(String path);
 	void close();
 	EntriesProjector entriesProjector();

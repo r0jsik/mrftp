@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import mr.entry.EntriesProjector;
 import mr.entry.JschEntriesProjector;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Vector;
 
 @RequiredArgsConstructor
 public class JschClient implements Client
@@ -32,64 +30,15 @@ public class JschClient implements Client
 	}
 	
 	@Override
-	public void download(String path, StreamProvider<OutputStream> streamProvider)
+	public void download(String path, OutputStream outputStream)
 	{
 		try
-		{
-			tryToDownload(path, "", streamProvider);
-		}
-		catch (SftpException | IOException exception)
-		{
-			throw new ClientActionException(exception);
-		}
-	}
-	
-	private void tryToDownload(String path, String relativePath, StreamProvider<OutputStream> streamProvider) throws SftpException, IOException
-	{
-		SftpATTRS attr = channel.lstat(path);
-		
-		if (attr.isDir())
-		{
-			tryToDownloadDirectory(path, relativePath, streamProvider);
-		}
-		else
-		{
-			tryToDownloadFile(path, relativePath, streamProvider);
-		}
-	}
-	
-	private void tryToDownloadDirectory(String path, String relativePath, StreamProvider<OutputStream> streamProvider) throws SftpException, IOException
-	{
-		String initialDirectory = channel.pwd();
-		
-		try
-		{
-			channel.cd(path);
-			Vector<ChannelSftp.LsEntry> entries = channel.ls(".");
-			
-			for (ChannelSftp.LsEntry entry : entries)
-			{
-				String fileName = entry.getFilename();
-				String newPath = String.join("/", path, fileName);
-				String newRelativePath = String.join("/", relativePath, fileName);
-				
-				if ( !fileName.equals(".") && !fileName.equals(".."))
-				{
-					tryToDownload(newPath, newRelativePath, streamProvider);
-				}
-			}
-		}
-		finally
-		{
-			channel.cd(initialDirectory);
-		}
-	}
-	
-	private void tryToDownloadFile(String path, String relativePath, StreamProvider<OutputStream> streamProvider) throws SftpException, IOException
-	{
-		try (OutputStream outputStream = streamProvider.open(relativePath))
 		{
 			channel.get(path, outputStream);
+		}
+		catch (SftpException exception)
+		{
+			throw new ClientActionException(exception);
 		}
 	}
 	

@@ -31,60 +31,18 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
-	public void download(String path, StreamProvider<OutputStream> streamProvider)
+	public void download(String path, OutputStream outputStream)
 	{
 		try
-		{
-			tryToDownload(path, "", streamProvider);
-		}
-		catch (IOException exception)
-		{
-			throw new ClientActionException(exception);
-		}
-	}
-	
-	private void tryToDownload(String path, String relativePath, StreamProvider<OutputStream> streamProvider) throws IOException
-	{
-		String initialDirectory = ftpClient.printWorkingDirectory();
-		
-		try
-		{
-			boolean isDirectory = ftpClient.changeWorkingDirectory(path);
-			
-			if (isDirectory)
-			{
-				tryToDownloadDirectory(path, relativePath, streamProvider);
-			}
-			else
-			{
-				tryToDownloadFile(path, relativePath, streamProvider);
-			}
-		}
-		finally
-		{
-			ftpClient.changeWorkingDirectory(initialDirectory);
-		}
-	}
-	
-	private void tryToDownloadDirectory(String path, String relativePath, StreamProvider<OutputStream> streamProvider) throws IOException
-	{
-		for (String fileName : ftpClient.listNames(path))
-		{
-			String newPath = String.join("/", path, fileName);
-			String newRelativePath = String.join("/", relativePath, fileName);
-			
-			tryToDownload(newPath, newRelativePath, streamProvider);
-		}
-	}
-	
-	private void tryToDownloadFile(String path, String relativePath, StreamProvider<OutputStream> streamProvider) throws IOException
-	{
-		try (OutputStream outputStream = streamProvider.open(relativePath))
 		{
 			if ( !ftpClient.retrieveFile(path, outputStream))
 			{
 				throw new ClientActionException();
 			}
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
 		}
 	}
 	
