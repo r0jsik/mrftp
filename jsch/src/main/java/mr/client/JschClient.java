@@ -96,22 +96,16 @@ public class JschClient implements Client
 	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws SftpException
 	{
 		String absolutePath = walk.relate(from);
-		Vector<ChannelSftp.LsEntry> lsEntries = channel.ls(absolutePath);
+		SftpATTRS attributes = channel.lstat(absolutePath);
 		
-		for (ChannelSftp.LsEntry lsEntry : lsEntries)
+		if (attributes.isDir())
 		{
-			String fileName = lsEntry.getFilename();
+			Vector<ChannelSftp.LsEntry> lsEntries = channel.ls(absolutePath + "/*");
 			
-			if (fileName.equals(".") || fileName.equals(".."))
+			for (ChannelSftp.LsEntry lsEntry : lsEntries)
 			{
-				continue;
-			}
-			
-			String relativePath = walk.resolve(fileName);
-			SftpATTRS attr = channel.lstat(relativePath);
-			
-			if (attr.isDir())
-			{
+				String fileName = lsEntry.getFilename();
+				
 				try
 				{
 					walk.to(fileName);
@@ -122,10 +116,10 @@ public class JschClient implements Client
 					walk.out();
 				}
 			}
-			else
-			{
-				callback.accept(relativePath);
-			}
+		}
+		else
+		{
+			callback.accept(walk.toString());
 		}
 	}
 	

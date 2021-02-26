@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class JschClientTest
 {
@@ -149,9 +150,11 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testWalk()
+	public void testWalkDirectory()
 	{
 		List<String> resolvedPaths = new ArrayList<>();
+		
+		client.walk("/walk", resolvedPaths::add);
 		
 		List<String> expectedPaths = Arrays.asList(
 			"walk/file-A",
@@ -165,9 +168,35 @@ public class JschClientTest
 			"walk/walk-Q/walk-R/file-I"
 		);
 		
-		client.walk("/walk", resolvedPaths::add);
+		Collections.sort(resolvedPaths);
+		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
+	}
+	
+	@Test
+	public void testWalkNestedDirectory()
+	{
+		List<String> resolvedPaths = new ArrayList<>();
+		
+		client.walk("/walk/walk-Q", resolvedPaths::add);
+		
+		List<String> expectedPaths = Arrays.asList(
+			"walk-Q/file-F",
+			"walk-Q/walk-R/file-G",
+			"walk-Q/walk-R/file-H",
+			"walk-Q/walk-R/file-I"
+		);
 		
 		Collections.sort(resolvedPaths);
 		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
+	}
+	
+	@Test
+	public void testWalkFile()
+	{
+		AtomicReference<String> resolvedPath = new AtomicReference<>();
+		
+		client.walk("/walk/file-B", resolvedPath::set);
+		
+		Assertions.assertEquals("file-B", resolvedPath.get());
 	}
 }

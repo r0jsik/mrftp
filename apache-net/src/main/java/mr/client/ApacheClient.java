@@ -94,27 +94,35 @@ public class ApacheClient implements Client
 	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws IOException
 	{
 		String absolutePath = walk.relate(from);
+		FTPFile[] ftpFiles = ftpClient.listFiles(absolutePath + "/*");
 		
-		for (FTPFile ftpFile : ftpClient.listFiles(absolutePath))
+		if (ftpFiles.length == 0)
 		{
-			String fileName = ftpFile.getName();
-			String relativePath = walk.resolve(fileName);
-			
-			if (ftpFile.isDirectory())
+			callback.accept(walk.toString());
+		}
+		else
+		{
+			for (FTPFile ftpFile : ftpFiles)
 			{
-				try
+				String fileName = ftpFile.getName();
+				String relativePath = walk.resolve(fileName);
+				
+				if (ftpFile.isDirectory())
 				{
-					walk.to(fileName);
-					tryToWalk(from, walk, callback);
+					try
+					{
+						walk.to(fileName);
+						tryToWalk(from, walk, callback);
+					}
+					finally
+					{
+						walk.out();
+					}
 				}
-				finally
+				else
 				{
-					walk.out();
+					callback.accept(relativePath);
 				}
-			}
-			else
-			{
-				callback.accept(relativePath);
 			}
 		}
 	}
