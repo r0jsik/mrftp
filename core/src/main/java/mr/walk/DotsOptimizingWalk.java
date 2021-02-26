@@ -21,9 +21,15 @@ public class DotsOptimizingWalk implements Walk
 	}
 	
 	@Override
-	public String resolve(String entry)
+	public String resolve(String path)
 	{
-		return walk.resolve(entry);
+		return walk.resolve(path);
+	}
+	
+	@Override
+	public String relate(String path)
+	{
+		return walk.relate(path);
 	}
 	
 	@Override

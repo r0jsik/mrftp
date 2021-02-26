@@ -3,11 +3,15 @@ package mr.client;
 import lombok.RequiredArgsConstructor;
 import mr.entry.ApacheEntriesProjector;
 import mr.entry.EntriesProjector;
+import mr.walk.DequeWalk;
+import mr.walk.Walk;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class ApacheClient implements Client
@@ -64,6 +68,54 @@ public class ApacheClient implements Client
 		if ( !ftpClient.deleteFile(path) && !ftpClient.removeDirectory(path))
 		{
 			throw new ClientActionException();
+		}
+	}
+	
+	@Override
+	public void walk(String path, Consumer<String> callback)
+	{
+		int delimiterIndex = path.lastIndexOf('/');
+		String home = path.substring(delimiterIndex + 1);
+		String from = path.substring(0, delimiterIndex);
+		
+		Walk walk = new DequeWalk();
+		walk.to(home);
+		
+		try
+		{
+			tryToWalk(from, walk, callback);
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
+		}
+	}
+	
+	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws IOException
+	{
+		String absolutePath = walk.relate(from);
+		
+		for (FTPFile ftpFile : ftpClient.listFiles(absolutePath))
+		{
+			String fileName = ftpFile.getName();
+			String relativePath = walk.resolve(fileName);
+			
+			if (ftpFile.isDirectory())
+			{
+				try
+				{
+					walk.to(fileName);
+					tryToWalk(from, walk, callback);
+				}
+				finally
+				{
+					walk.out();
+				}
+			}
+			else
+			{
+				callback.accept(relativePath);
+			}
 		}
 	}
 	

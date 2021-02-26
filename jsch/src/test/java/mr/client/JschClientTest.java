@@ -9,6 +9,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class JschClientTest
 {
@@ -142,5 +146,28 @@ public class JschClientTest
 		Assertions.assertFalse(() -> (
 			MockSshServer.fileExists("/public-remove-dir")
 		));
+	}
+	
+	@Test
+	public void testWalk()
+	{
+		List<String> resolvedPaths = new ArrayList<>();
+		
+		List<String> expectedPaths = Arrays.asList(
+			"walk/file-A",
+			"walk/file-B",
+			"walk/file-C",
+			"walk/walk-P/file-D",
+			"walk/walk-P/file-E",
+			"walk/walk-Q/file-F",
+			"walk/walk-Q/walk-R/file-G",
+			"walk/walk-Q/walk-R/file-H",
+			"walk/walk-Q/walk-R/file-I"
+		);
+		
+		client.walk("/walk", resolvedPaths::add);
+		
+		Collections.sort(resolvedPaths);
+		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
 	}
 }
