@@ -15,13 +15,13 @@ public class DotsOptimizingWalkTest
 	
 	public DotsOptimizingWalkTest()
 	{
-		initialPath = Arrays.asList(".", "directory-name", "other-dir");
+		initialPath = Arrays.asList("directory-name", "other-dir");
 	}
 	
 	@Test
 	public void testWalkTo()
 	{
-		Iterable<CharSequence> expectedPath = Arrays.asList(".", "directory-name", "other-dir", "last-dir");
+		Iterable<CharSequence> expectedPath = Arrays.asList("directory-name", "other-dir", "last-dir");
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
@@ -34,7 +34,7 @@ public class DotsOptimizingWalkTest
 	@Test
 	public void testWalkOut()
 	{
-		Iterable<CharSequence> expectedPath = Arrays.asList(".", "directory-name");
+		Iterable<CharSequence> expectedPath = Collections.singletonList("directory-name");
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
@@ -60,7 +60,7 @@ public class DotsOptimizingWalkTest
 	@Test
 	public void testWalkOutAndThenTo()
 	{
-		Iterable<CharSequence> expectedPath = Arrays.asList(".", "directory-name", "last-dir");
+		Iterable<CharSequence> expectedPath = Arrays.asList("directory-name", "last-dir");
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
 		
 		Walk walk = new DequeWalk(path);
@@ -90,7 +90,7 @@ public class DotsOptimizingWalkTest
 		Walk walk = new DequeWalk(path);
 		walk = new DotsOptimizingWalk(walk);
 		
-		String expectedPath = "./directory-name/other-dir";
+		String expectedPath = "directory-name/other-dir";
 		String actualPath = walk.toString();
 		
 		Assertions.assertEquals(expectedPath, actualPath);
@@ -103,8 +103,20 @@ public class DotsOptimizingWalkTest
 		Walk walk = new DequeWalk(path);
 		walk = new DotsOptimizingWalk(walk);
 		
-		String expectedPath = "./directory-name/other-dir/last-dir";
+		String expectedPath = "directory-name/other-dir/last-dir";
 		String resolvedPath = walk.resolve("last-dir");
+		
+		Assertions.assertEquals(expectedPath, resolvedPath);
+	}
+	
+	@Test
+	public void testRelate()
+	{
+		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
+		Walk walk = new DequeWalk(path);
+		
+		String expectedPath = "first-dir/directory-name/other-dir";
+		String resolvedPath = walk.relate("first-dir");
 		
 		Assertions.assertEquals(expectedPath, resolvedPath);
 	}

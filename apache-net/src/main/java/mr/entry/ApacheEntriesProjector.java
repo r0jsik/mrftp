@@ -5,7 +5,6 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class ApacheEntriesProjector implements EntriesProjector
@@ -17,7 +16,10 @@ public class ApacheEntriesProjector implements EntriesProjector
 	{
 		try
 		{
-			Arrays.stream(ftpClient.listFiles(path)).forEach(ftpFile -> show(ftpFile, entriesView));
+			for (FTPFile ftpFile : ftpClient.listFiles(path))
+			{
+				show(ftpFile, entriesView);
+			}
 		}
 		catch (IOException exception)
 		{

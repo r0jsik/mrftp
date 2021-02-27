@@ -17,8 +17,12 @@ public class JschEntriesProjector implements EntriesProjector
 	{
 		try
 		{
-			Vector<ChannelSftp.LsEntry> vector = channel.ls(path);
-			vector.forEach(entry -> show(entry, entriesView));
+			Vector<ChannelSftp.LsEntry> lsEntries = channel.ls(path);
+			
+			for (ChannelSftp.LsEntry lsEntry : lsEntries)
+			{
+				show(lsEntry, entriesView);
+			}
 		}
 		catch (SftpException exception)
 		{
@@ -28,15 +32,17 @@ public class JschEntriesProjector implements EntriesProjector
 	
 	private void show(ChannelSftp.LsEntry entry, EntriesView entriesView)
 	{
-		SftpATTRS attrs = entry.getAttrs();
+		String fileName = entry.getFilename();
+		SftpATTRS attributes = entry.getAttrs();
+		long size = attributes.getSize();
 		
-		if (attrs.isDir())
+		if (attributes.isDir())
 		{
-			entriesView.showDirectory(entry.getFilename(), attrs.getSize());
+			entriesView.showDirectory(fileName, size);
 		}
 		else
 		{
-			entriesView.showFile(entry.getFilename(), attrs.getSize());
+			entriesView.showFile(fileName, size);
 		}
 	}
 }

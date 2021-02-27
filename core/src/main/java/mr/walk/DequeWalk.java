@@ -22,9 +22,15 @@ public class DequeWalk implements Walk
 	}
 	
 	@Override
-	public String resolve(String entry)
+	public String resolve(String path)
 	{
-		return String.join("", this.toString(), "/", entry);
+		return String.join("/", toString(), path);
+	}
+	
+	@Override
+	public String relate(String path)
+	{
+		return String.join("/", path, toString());
 	}
 	
 	@Override

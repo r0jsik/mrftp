@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
@@ -57,28 +61,63 @@ public class LocalEntriesControllerLogic implements InitializingBean, Applicatio
 		LocalEntriesViewRefreshEvent localEntriesViewRefreshEvent = new LocalEntriesViewRefreshEvent(this);
 		
 		localEntriesController.setOnEntryTransmitted(entry -> {
-			String remotePath = remoteWalk.resolve(entry);
 			String localPath = localWalk.resolve(entry);
 			
-			upload(client, remotePath, localPath);
+			upload(client, localPath);
 			
 			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 		});
 	}
 	
-	private void upload(Client client, String remotePath, String localPath)
+	private void upload(Client client, String localPath)
+	{
+		walk(localPath, relativePath -> {
+			try
+			{
+				tryToUpload(client, relativePath);
+			}
+			catch (IOException exception)
+			{
+				exception.printStackTrace();
+			}
+		});
+	}
+	
+	private void walk(String path, Consumer<String> callback)
 	{
 		try
 		{
-			File file = new File(localPath);
-			FileInputStream fileInputStream = new FileInputStream(file);
-			
-			client.upload(remotePath, fileInputStream);
+			tryToWalk(path, callback);
 		}
 		catch (IOException exception)
 		{
 			exception.printStackTrace();
+		}
+	}
+	
+	private void tryToWalk(String path, Consumer<String> callback) throws IOException
+	{
+		int elementsToSkip = Paths.get(path).getNameCount() - 1;
+		
+		Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(resolvedPath -> {
+			int elements = resolvedPath.getNameCount();
+			String string = resolvedPath.subpath(elementsToSkip, elements).toString();
+			string = string.replaceAll("\\\\", "/");
+			
+			callback.accept(string);
+		});
+	}
+	
+	private void tryToUpload(Client client, String relativePath) throws IOException
+	{
+		String remotePath = remoteWalk.resolve(relativePath);
+		String localPath = localWalk.resolve(relativePath);
+		File file = new File(localPath);
+		
+		try (InputStream inputStream = new FileInputStream(file))
+		{
+			client.upload(remotePath, inputStream);
 		}
 	}
 }

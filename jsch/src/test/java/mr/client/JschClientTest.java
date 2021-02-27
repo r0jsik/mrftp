@@ -9,6 +9,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class JschClientTest
 {
@@ -89,7 +94,7 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testRemove() throws IOException
+	public void testRemove()
 	{
 		client.remove("/public/remove.txt");
 		
@@ -132,5 +137,66 @@ public class JschClientTest
 				client.upload("/public/close.txt", inputStream);
 			});
 		}
+	}
+	
+	@Test
+	public void testRemoveDirectory()
+	{
+		client.remove("/public-remove-dir");
+		
+		Assertions.assertFalse(() -> (
+			MockSshServer.fileExists("/public-remove-dir")
+		));
+	}
+	
+	@Test
+	public void testWalkDirectory()
+	{
+		List<String> resolvedPaths = new ArrayList<>();
+		
+		client.walk("", "walk", resolvedPaths::add);
+		
+		List<String> expectedPaths = Arrays.asList(
+			"walk/file-A",
+			"walk/file-B",
+			"walk/file-C",
+			"walk/walk-P/file-D",
+			"walk/walk-P/file-E",
+			"walk/walk-Q/file-F",
+			"walk/walk-Q/walk-R/file-G",
+			"walk/walk-Q/walk-R/file-H",
+			"walk/walk-Q/walk-R/file-I"
+		);
+		
+		Collections.sort(resolvedPaths);
+		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
+	}
+	
+	@Test
+	public void testWalkNestedDirectory()
+	{
+		List<String> resolvedPaths = new ArrayList<>();
+		
+		client.walk("/walk", "walk-Q", resolvedPaths::add);
+		
+		List<String> expectedPaths = Arrays.asList(
+			"walk-Q/file-F",
+			"walk-Q/walk-R/file-G",
+			"walk-Q/walk-R/file-H",
+			"walk-Q/walk-R/file-I"
+		);
+		
+		Collections.sort(resolvedPaths);
+		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
+	}
+	
+	@Test
+	public void testWalkFile()
+	{
+		AtomicReference<String> resolvedPath = new AtomicReference<>();
+		
+		client.walk("/walk", "file-B", resolvedPath::set);
+		
+		Assertions.assertEquals("file-B", resolvedPath.get());
 	}
 }
