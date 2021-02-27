@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import mr.client.Client;
 import mr.client.FileClient;
+import mr.entry.DotsEntriesProjector;
 import mr.entry.EntriesController;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
@@ -13,7 +14,6 @@ import mr.explorer.ResourcesIconLoader;
 import mr.explorer.StageExplorerController;
 import mr.scene.SceneFactory;
 import mr.walk.DequeWalk;
-import mr.walk.DotsOptimizingWalk;
 import mr.walk.Walk;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +45,7 @@ public class ExplorerConfiguration
 	@Bean
 	public EntriesProjector localEntriesProjector(Client localClient)
 	{
-		return localClient.entriesProjector();
+		return new DotsEntriesProjector(localClient.entriesProjector());
 	}
 	
 	@Bean
@@ -75,7 +75,7 @@ public class ExplorerConfiguration
 	@Bean
 	public Walk remoteWalk()
 	{
-		return new DotsOptimizingWalk(new DequeWalk());
+		return new DequeWalk();
 	}
 	
 	@Bean

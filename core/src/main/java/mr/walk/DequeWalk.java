@@ -18,7 +18,14 @@ public class DequeWalk implements Walk
 	@Override
 	public void to(String entry)
 	{
-		path.addLast(entry);
+		if (entry.equals(".."))
+		{
+			out();
+		}
+		else if ( !entry.equals("."))
+		{
+			path.addLast(entry);
+		}
 	}
 	
 	@Override
@@ -36,7 +43,7 @@ public class DequeWalk implements Walk
 	@Override
 	public void out()
 	{
-		if (path.size() > 0)
+		if (path.size() > 1)
 		{
 			path.removeLast();
 		}
