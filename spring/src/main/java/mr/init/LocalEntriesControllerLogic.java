@@ -98,11 +98,11 @@ public class LocalEntriesControllerLogic implements InitializingBean, Applicatio
 	
 	private void tryToWalk(String path, Consumer<String> callback) throws IOException
 	{
-		int charsToSkip = path.length();
+		int elementsToSkip = Paths.get(path).getNameCount() - 1;
 		
-		Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(realPath -> {
-			String string = realPath.toString();
-			string = string.substring(charsToSkip);
+		Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(resolvedPath -> {
+			int elements = resolvedPath.getNameCount();
+			String string = resolvedPath.subpath(elementsToSkip, elements).toString();
 			string = string.replaceAll("\\\\", "/");
 			
 			callback.accept(string);

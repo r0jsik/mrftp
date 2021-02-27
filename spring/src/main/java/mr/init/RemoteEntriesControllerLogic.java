@@ -38,9 +38,7 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 		});
 		
 		remoteEntriesController.setOnEntryTransmitted(entry -> {
-			String remotePath = remoteWalk.resolve(entry);
-			
-			download(client, remotePath);
+			download(client, entry);
 			
 			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
@@ -54,9 +52,11 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 		});
 	}
 	
-	private void download(Client client, String remotePath)
+	private void download(Client client, String entry)
 	{
-		client.walk(remotePath, relativePath -> {
+		String remotePath = remoteWalk.toString();
+		
+		client.walk(remotePath, entry, relativePath -> {
 			try
 			{
 				tryToDownload(client, relativePath);

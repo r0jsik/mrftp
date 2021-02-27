@@ -11,7 +11,7 @@ public interface Client
 	void upload(String path, InputStream inputStream);
 	void download(String path, OutputStream outputStream);
 	void remove(String path);
-	void walk(String path, Consumer<String> callback);
+	void walk(String from, String entry, Consumer<String> callback);
 	void close();
 	EntriesProjector entriesProjector();
 }

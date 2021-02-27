@@ -51,7 +51,16 @@ public class JschClient implements Client
 	{
 		try
 		{
-			tryToRemove(path);
+			SftpATTRS attributes = channel.lstat(path);
+			
+			if (attributes.isDir())
+			{
+				channel.rmdir(path);
+			}
+			else
+			{
+				channel.rm(path);
+			}
 		}
 		catch (SftpException exception)
 		{
@@ -59,29 +68,11 @@ public class JschClient implements Client
 		}
 	}
 	
-	private void tryToRemove(String path) throws SftpException
-	{
-		SftpATTRS attr = channel.lstat(path);
-		
-		if (attr.isDir())
-		{
-			channel.rmdir(path);
-		}
-		else
-		{
-			channel.rm(path);
-		}
-	}
-	
 	@Override
-	public void walk(String path, Consumer<String> callback)
+	public void walk(String from, String entry, Consumer<String> callback)
 	{
-		int delimiterIndex = path.lastIndexOf('/');
-		String home = path.substring(delimiterIndex + 1);
-		String from = path.substring(0, delimiterIndex);
-		
 		Walk walk = new DequeWalk();
-		walk.to(home);
+		walk.to(entry);
 		
 		try
 		{
@@ -106,15 +97,9 @@ public class JschClient implements Client
 			{
 				String fileName = lsEntry.getFilename();
 				
-				try
-				{
-					walk.to(fileName);
-					tryToWalk(from, walk, callback);
-				}
-				finally
-				{
-					walk.out();
-				}
+				walk.to(fileName);
+				tryToWalk(from, walk, callback);
+				walk.out();
 			}
 		}
 		else

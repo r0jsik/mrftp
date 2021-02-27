@@ -172,7 +172,7 @@ public class ApacheClientTest
 	{
 		List<String> resolvedPaths = new ArrayList<>();
 		
-		client.walk("/walk", resolvedPaths::add);
+		client.walk("", "walk", resolvedPaths::add);
 		
 		List<String> expectedPaths = Arrays.asList(
 			"walk/file-A",
@@ -195,7 +195,7 @@ public class ApacheClientTest
 	{
 		List<String> resolvedPaths = new ArrayList<>();
 		
-		client.walk("/walk/walk-Q", resolvedPaths::add);
+		client.walk("/walk", "walk-Q", resolvedPaths::add);
 		
 		List<String> expectedPaths = Arrays.asList(
 			"walk-Q/file-F",
@@ -213,7 +213,7 @@ public class ApacheClientTest
 	{
 		AtomicReference<String> resolvedPath = new AtomicReference<>();
 		
-		client.walk("/walk/file-B", resolvedPath::set);
+		client.walk("/walk", "file-B", resolvedPath::set);
 		
 		Assertions.assertEquals("file-B", resolvedPath.get());
 	}

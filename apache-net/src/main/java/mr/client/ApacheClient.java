@@ -55,7 +55,10 @@ public class ApacheClient implements Client
 	{
 		try
 		{
-			tryToRemove(path);
+			if ( !ftpClient.deleteFile(path) && !ftpClient.removeDirectory(path))
+			{
+				throw new ClientActionException();
+			}
 		}
 		catch (IOException exception)
 		{
@@ -63,23 +66,11 @@ public class ApacheClient implements Client
 		}
 	}
 	
-	private void tryToRemove(String path) throws IOException
-	{
-		if ( !ftpClient.deleteFile(path) && !ftpClient.removeDirectory(path))
-		{
-			throw new ClientActionException();
-		}
-	}
-	
 	@Override
-	public void walk(String path, Consumer<String> callback)
+	public void walk(String from, String entry, Consumer<String> callback)
 	{
-		int delimiterIndex = path.lastIndexOf('/');
-		String home = path.substring(delimiterIndex + 1);
-		String from = path.substring(0, delimiterIndex);
-		
 		Walk walk = new DequeWalk();
-		walk.to(home);
+		walk.to(entry);
 		
 		try
 		{
@@ -94,34 +85,27 @@ public class ApacheClient implements Client
 	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws IOException
 	{
 		String absolutePath = walk.relate(from);
-		FTPFile[] ftpFiles = ftpClient.listFiles(absolutePath + "/*");
+		FTPFile[] filesList = ftpClient.listFiles(absolutePath + "/*");
 		
-		if (ftpFiles.length == 0)
+		if (filesList.length == 0)
 		{
 			callback.accept(walk.toString());
 		}
 		else
 		{
-			for (FTPFile ftpFile : ftpFiles)
+			for (FTPFile ftpFile : filesList)
 			{
 				String fileName = ftpFile.getName();
-				String relativePath = walk.resolve(fileName);
 				
 				if (ftpFile.isDirectory())
 				{
-					try
-					{
-						walk.to(fileName);
-						tryToWalk(from, walk, callback);
-					}
-					finally
-					{
-						walk.out();
-					}
+					walk.to(fileName);
+					tryToWalk(from, walk, callback);
+					walk.out();
 				}
 				else
 				{
-					callback.accept(relativePath);
+					callback.accept(walk.resolve(fileName));
 				}
 			}
 		}
