@@ -43,7 +43,7 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			client.upload("/public/upload.txt", inputStream);
+			client.write("/public/upload.txt", inputStream::transferTo);
 		}
 		
 		Assertions.assertTrue(() -> (
@@ -56,7 +56,9 @@ public class JschClientTest
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/download.txt", outputStream);
+			client.read("/public/download.txt", inputStream -> {
+				inputStream.transferTo(outputStream);
+			});
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Download test")
@@ -65,14 +67,11 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testDownloadNotExistingFile() throws IOException
+	public void testDownloadNotExistingFile()
 	{
-		try (MockOutputStream outputStream = new MockOutputStream())
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.download("/public/not-existing-file", outputStream);
-			});
-		}
+		Assertions.assertThrows(ClientActionException.class, () -> {
+			client.read("/public/not-existing-file", inputStream -> {});
+		});
 	}
 	
 	@Test
@@ -80,12 +79,14 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and download test"))
 		{
-			client.upload("/public/upload-and-download.txt", inputStream);
+			client.write("/public/upload-and-download.txt", inputStream::transferTo);
 		}
 		
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/upload-and-download.txt", outputStream);
+			client.read("/public/upload-and-download.txt", inputStream -> {
+				inputStream.transferTo(outputStream);
+			});
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Upload and download test")
@@ -108,7 +109,7 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
 		{
-			client.upload("/public/upload-and-remove.txt", inputStream);
+			client.write("/public/upload-and-remove.txt", inputStream::transferTo);
 		}
 		
 		client.remove("/public/upload-and-remove.txt");
@@ -127,16 +128,13 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testActionOnClosedClient() throws IOException
+	public void testActionOnClosedClient()
 	{
 		client.close();
 		
-		try (MockInputStream inputStream = new MockInputStream("Close test"))
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.upload("/public/close.txt", inputStream);
-			});
-		}
+		Assertions.assertThrows(ClientActionException.class, () -> {
+			client.write("/public/close.txt", outputStream -> {});
+		});
 	}
 	
 	@Test

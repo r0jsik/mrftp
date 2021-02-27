@@ -11,11 +11,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 @Component
 @RequiredArgsConstructor
 public class RemoteEntriesControllerLogic implements ApplicationListener<ClientChangedEvent>
@@ -24,6 +19,7 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 	private final EntriesController remoteEntriesController;
 	private final Walk remoteWalk;
 	private final Walk localWalk;
+	private final Client localClient;
 	
 	@Override
 	public void onApplicationEvent(ClientChangedEvent clientChangedEvent)
@@ -54,29 +50,20 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 	
 	private void download(Client client, String entry)
 	{
-		String remotePath = remoteWalk.toString();
+		String from = remoteWalk.toString();
 		
-		client.walk(remotePath, entry, relativePath -> {
-			try
-			{
-				tryToDownload(client, relativePath);
-			}
-			catch (IOException exception)
-			{
-				exception.printStackTrace();
-			}
+		client.walk(from, entry, relativePath -> {
+			tryToDownload(client, relativePath);
 		});
 	}
 	
-	private void tryToDownload(Client client, String relativePath) throws IOException
+	private void tryToDownload(Client client, String relativePath)
 	{
 		String remotePath = remoteWalk.resolve(relativePath);
 		String localPath = localWalk.resolve(relativePath);
-		File file = new File(localPath);
 		
-		try (OutputStream outputStream = new FileOutputStream(file))
-		{
-			client.download(remotePath, outputStream);
-		}
+		client.read(remotePath, inputStream -> {
+			localClient.write(localPath, inputStream::transferTo);
+		});
 	}
 }

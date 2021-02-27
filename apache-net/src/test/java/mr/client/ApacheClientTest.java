@@ -43,7 +43,7 @@ public class ApacheClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			client.upload("/public/upload.txt", inputStream);
+			client.write("/public/upload.txt", inputStream::transferTo);
 		}
 		
 		Assertions.assertTrue(() -> (
@@ -52,22 +52,13 @@ public class ApacheClientTest
 	}
 	
 	@Test
-	public void testUploadToPrivateDirectory() throws IOException
-	{
-		try (MockInputStream inputStream = new MockInputStream("Upload test"))
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.upload("/private/virus.php", inputStream);
-			});
-		}
-	}
-	
-	@Test
 	public void testDownload() throws IOException
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/download.txt", outputStream);
+			client.read("/public/download.txt", inputStream -> {
+				inputStream.transferTo(outputStream);
+			});
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Download test")
@@ -76,25 +67,11 @@ public class ApacheClientTest
 	}
 	
 	@Test
-	public void testDownloadFromPrivateDirectory() throws IOException
+	public void testDownloadNotExistingFile()
 	{
-		try (MockOutputStream outputStream = new MockOutputStream())
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.download("/private/auth", outputStream);
-			});
-		}
-	}
-	
-	@Test
-	public void testDownloadNotExistingFile() throws IOException
-	{
-		try (MockOutputStream outputStream = new MockOutputStream())
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.download("/public/not-existing-file", outputStream);
-			});
-		}
+		Assertions.assertThrows(ClientActionException.class, () -> {
+			client.read("/public/not-existing-file", outputStream -> {});
+		});
 	}
 	
 	@Test
@@ -102,12 +79,14 @@ public class ApacheClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and download test"))
 		{
-			client.upload("/public/upload-and-download.txt", inputStream);
+			client.write("/public/upload-and-download.txt", inputStream::transferTo);
 		}
 		
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/upload-and-download.txt", outputStream);
+			client.read("/public/upload-and-download.txt", inputStream -> {
+				inputStream.transferTo(outputStream);
+			});
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Upload and download test")
@@ -130,7 +109,7 @@ public class ApacheClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
 		{
-			client.upload("/public/upload-and-remove.txt", inputStream);
+			client.write("/public/upload-and-remove.txt", inputStream::transferTo);
 		}
 		
 		client.remove("/public/upload-and-remove.txt");

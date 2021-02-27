@@ -16,21 +16,26 @@ public class JschClientFactory implements ClientFactory
 	{
 		try
 		{
-			JSch jsch = new JSch();
-			jsch.setKnownHosts(knownHostsFile);
-			
-			Session session = jsch.getSession(username, hostname, port);
-			session.setPassword(password);
-			session.connect();
-			
-			ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-			channel.connect();
-			
-			return new JschClient(channel);
+			return tryToCreate(hostname, port, username, password);
 		}
 		catch (JSchException exception)
 		{
 			throw new ClientFactoryException(exception);
 		}
+	}
+	
+	private Client tryToCreate(String hostname, int port, String username, String password) throws JSchException
+	{
+		JSch jsch = new JSch();
+		jsch.setKnownHosts(knownHostsFile);
+		
+		Session session = jsch.getSession(username, hostname, port);
+		session.setPassword(password);
+		session.connect();
+		
+		ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
+		channel.connect();
+		
+		return new JschClient(channel);
 	}
 }

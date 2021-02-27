@@ -19,14 +19,16 @@ public class ApacheClient implements Client
 	private final FTPClient ftpClient;
 	
 	@Override
-	public void upload(String path, InputStream inputStream)
+	public void write(String path, StreamProvider<OutputStream> callback)
 	{
-		try
+		try (OutputStream outputStream = ftpClient.storeFileStream(path))
 		{
-			if ( !ftpClient.storeFile(path, inputStream))
+			if (outputStream == null)
 			{
 				throw new ClientActionException();
 			}
+			
+			callback.provide(outputStream);
 		}
 		catch (IOException exception)
 		{
@@ -35,14 +37,16 @@ public class ApacheClient implements Client
 	}
 	
 	@Override
-	public void download(String path, OutputStream outputStream)
+	public void read(String path, StreamProvider<InputStream> callback)
 	{
-		try
+		try (InputStream inputStream = ftpClient.retrieveFileStream(path))
 		{
-			if ( !ftpClient.retrieveFile(path, outputStream))
+			if (inputStream == null)
 			{
 				throw new ClientActionException();
 			}
+			
+			callback.provide(inputStream);
 		}
 		catch (IOException exception)
 		{

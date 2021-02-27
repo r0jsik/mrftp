@@ -10,6 +10,7 @@ import mr.entry.JschEntriesProjector;
 import mr.walk.DequeWalk;
 import mr.walk.Walk;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
@@ -21,26 +22,26 @@ public class JschClient implements Client
 	private final ChannelSftp channel;
 	
 	@Override
-	public void upload(String path, InputStream inputStream)
+	public void write(String path, StreamProvider<OutputStream> callback)
 	{
-		try
+		try (OutputStream outputStream = channel.put(path))
 		{
-			channel.put(inputStream, path);
+			callback.provide(outputStream);
 		}
-		catch (SftpException exception)
+		catch (SftpException | IOException exception)
 		{
 			throw new ClientActionException(exception);
 		}
 	}
 	
 	@Override
-	public void download(String path, OutputStream outputStream)
+	public void read(String path, StreamProvider<InputStream> callback)
 	{
-		try
+		try (InputStream inputStream = channel.get(path))
 		{
-			channel.get(path, outputStream);
+			callback.provide(inputStream);
 		}
-		catch (SftpException exception)
+		catch (SftpException | IOException exception)
 		{
 			throw new ClientActionException(exception);
 		}

@@ -2,10 +2,11 @@ package mr.init;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import mr.client.Client;
+import mr.client.FileClient;
 import mr.entry.EntriesController;
 import mr.entry.EntriesProjector;
 import mr.entry.EntriesView;
-import mr.entry.FileEntriesProjector;
 import mr.explorer.ExplorerController;
 import mr.explorer.IconLoader;
 import mr.explorer.ResourcesIconLoader;
@@ -42,9 +43,9 @@ public class ExplorerConfiguration
 	}
 	
 	@Bean
-	public EntriesProjector localEntriesProjector()
+	public EntriesProjector localEntriesProjector(Client localClient)
 	{
-		return new FileEntriesProjector();
+		return localClient.entriesProjector();
 	}
 	
 	@Bean
@@ -80,6 +81,12 @@ public class ExplorerConfiguration
 	@Bean
 	public Walk localWalk()
 	{
-		return new DotsOptimizingWalk(new DequeWalk());
+		return new DequeWalk();
+	}
+	
+	@Bean
+	public Client localClient()
+	{
+		return new FileClient();
 	}
 }
