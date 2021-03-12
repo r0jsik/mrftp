@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class StageLauncherController implements LauncherController
@@ -13,7 +12,7 @@ public class StageLauncherController implements LauncherController
 	private ComboBox<String> protocolField;
 	
 	@FXML
-	private TextField hostnameField;
+	private TextField hostField;
 	
 	@FXML
 	private TextField portField;
@@ -28,28 +27,13 @@ public class StageLauncherController implements LauncherController
 	private CheckBox settingsCheckbox;
 	
 	@FXML
-	private Label protocolLabel;
-	
-	@FXML
-	private Label hostnameLabel;
-	
-	@FXML
-	private Label portLabel;
-	
-	@FXML
-	private Label usernameLabel;
-	
-	@FXML
-	private Label passwordLabel;
-	
-	@FXML
 	private Button launchButton;
 	
 	private LauncherEvent onRemember;
 	
 	public StageLauncherController()
 	{
-		onRemember = (protocol, hostname, port, username, password) -> {};
+		onRemember = (protocol, host, port, username, password) -> {};
 	}
 	
 	@Override
@@ -67,7 +51,7 @@ public class StageLauncherController implements LauncherController
 	private void launch(LauncherEvent launcherEvent)
 	{
 		String protocol = protocolField.getSelectionModel().getSelectedItem();
-		String hostname = hostnameField.getText();
+		String host = hostField.getText();
 		int port = Integer.parseInt(portField.getText());
 		String username = usernameField.getText();
 		String password = passwordField.getText();
@@ -75,10 +59,10 @@ public class StageLauncherController implements LauncherController
 		
 		if (remember)
 		{
-			onRemember.call(protocol, hostname, port, username, password);
+			onRemember.call(protocol, host, port, username, password);
 		}
 		
-		launcherEvent.call(protocol, hostname, port, username, password);
+		launcherEvent.call(protocol, host, port, username, password);
 	}
 	
 	@Override
@@ -94,9 +78,9 @@ public class StageLauncherController implements LauncherController
 	}
 	
 	@Override
-	public void setHostname(String hostname)
+	public void setHost(String host)
 	{
-		hostnameField.setText(hostname);
+		hostField.setText(host);
 	}
 	
 	@Override
@@ -115,47 +99,5 @@ public class StageLauncherController implements LauncherController
 	public void setPassword(String password)
 	{
 		passwordField.setText(password);
-	}
-	
-	@Override
-	public void setProtocolLabel(String label)
-	{
-		protocolLabel.setText(label);
-	}
-	
-	@Override
-	public void setHostnameLabel(String label)
-	{
-		hostnameLabel.setText(label);
-	}
-	
-	@Override
-	public void setPortLabel(String label)
-	{
-		portLabel.setText(label);
-	}
-	
-	@Override
-	public void setUsernameLabel(String label)
-	{
-		usernameLabel.setText(label);
-	}
-	
-	@Override
-	public void setPasswordLabel(String label)
-	{
-		passwordLabel.setText(label);
-	}
-	
-	@Override
-	public void setSettingsLabel(String label)
-	{
-		settingsCheckbox.setText(label);
-	}
-	
-	@Override
-	public void setStartLabel(String label)
-	{
-		launchButton.setText(label);
 	}
 }

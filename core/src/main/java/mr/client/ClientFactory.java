@@ -2,5 +2,5 @@ package mr.client;
 
 public interface ClientFactory
 {
-	Client create(String hostname, int port, String username, String password);
+	Client create(String host, int port, String username, String password);
 }

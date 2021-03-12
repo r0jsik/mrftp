@@ -9,39 +9,39 @@
 <?import javafx.scene.control.ComboBox ?>
 
 <GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
-	<Label fx:id="protocolLabel"
+	<Label fx:id="protocolLabel" text="%label.protocol"
 			GridPane.columnIndex="0" GridPane.rowIndex="0" />
 	
 	<ComboBox fx:id="protocolField"
 			GridPane.columnIndex="1" GridPane.rowIndex="0" />
 	
-	<Label fx:id="hostnameLabel"
+	<Label fx:id="hostLabel" text="%label.host"
 			GridPane.columnIndex="0" GridPane.rowIndex="1" />
 	
-	<TextField fx:id="hostnameField"
+	<TextField fx:id="hostField"
 			GridPane.columnIndex="1" GridPane.rowIndex="1" />
 	
-	<Label fx:id="portLabel"
+	<Label fx:id="portLabel" text="%label.port"
 			GridPane.columnIndex="0" GridPane.rowIndex="2" />
 	
 	<TextField fx:id="portField"
 			GridPane.columnIndex="1" GridPane.rowIndex="2" />
 	
-	<Label fx:id="usernameLabel"
+	<Label fx:id="usernameLabel" text="%label.username"
 			GridPane.columnIndex="0" GridPane.rowIndex="3" />
 	
 	<TextField fx:id="usernameField"
 			GridPane.columnIndex="1" GridPane.rowIndex="3" />
 	
-	<Label fx:id="passwordLabel"
+	<Label fx:id="passwordLabel" text="%label.password"
 			GridPane.columnIndex="0" GridPane.rowIndex="4" />
 	
 	<PasswordField fx:id="passwordField"
 			GridPane.columnIndex="1" GridPane.rowIndex="4" />
 	
-	<CheckBox fx:id="settingsCheckbox"
+	<CheckBox fx:id="settingsCheckbox" text="%label.settings.remember"
 			GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.halignment="RIGHT" GridPane.columnSpan="2" />
 	
-	<Button fx:id="launchButton"
+	<Button fx:id="launchButton" text="%label.button.launch"
 			GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT" />
 </GridPane>

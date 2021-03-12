@@ -25,21 +25,9 @@ public class LauncherLogic implements InitializingBean
 	@Override
 	public void afterPropertiesSet()
 	{
-		initializeLabels();
 		initializeForm();
 		initializeOnRemember();
 		initializeOnLaunched();
-	}
-	
-	private void initializeLabels()
-	{
-		launcherController.setProtocolLabel("Protokół");
-		launcherController.setHostnameLabel("Adres serwera");
-		launcherController.setPortLabel("Port");
-		launcherController.setUsernameLabel("Nazwa użytkownika");
-		launcherController.setPasswordLabel("Hasło");
-		launcherController.setSettingsLabel("Zapamiętaj dane logowania");
-		launcherController.setStartLabel("Połącz");
 	}
 	
 	private void initializeForm()
@@ -48,7 +36,7 @@ public class LauncherLogic implements InitializingBean
 		
 		settings.select(context -> {
 			launcherController.setProtocol(context.getProtocol());
-			launcherController.setHostname(context.getHostname());
+			launcherController.setHost(context.getHost());
 			launcherController.setPort(context.getPort());
 			launcherController.setUsername(context.getUsername());
 			launcherController.setPassword(context.getPassword());
@@ -57,10 +45,10 @@ public class LauncherLogic implements InitializingBean
 	
 	private void initializeOnRemember()
 	{
-		launcherController.setOnRemember((protocol, hostname, port, username, password) -> {
+		launcherController.setOnRemember((protocol, host, port, username, password) -> {
 			settings.update(context -> {
 				context.setProtocol(protocol);
-				context.setHostname(hostname);
+				context.setHost(host);
 				context.setPort(port);
 				context.setUsername(username);
 				context.setPassword(password);
@@ -70,10 +58,10 @@ public class LauncherLogic implements InitializingBean
 	
 	private void initializeOnLaunched()
 	{
-		launcherController.setOnLaunched((protocol, hostname, port, username, password) -> {
+		launcherController.setOnLaunched((protocol, host, port, username, password) -> {
 			ClientFactory clientFactory = clientFactoryProvider.getByProtocol(protocol);
-			Client client = clientFactory.create(hostname, port, username, password);
-			String status = String.join("", username, "@", hostname, ":", String.valueOf(port));
+			Client client = clientFactory.create(host, port, username, password);
+			String status = String.join("", username, "@", host, ":", String.valueOf(port));
 			StartExplorerEvent startExplorerEvent = new StartExplorerEvent(this, client, status);
 			
 			applicationEventPublisher.publishEvent(startExplorerEvent);

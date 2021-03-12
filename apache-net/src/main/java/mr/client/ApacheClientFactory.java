@@ -12,11 +12,11 @@ public class ApacheClientFactory implements ClientFactory
 	private final boolean secure;
 	
 	@Override
-	public Client create(String hostname, int port, String username, String password)
+	public Client create(String host, int port, String username, String password)
 	{
 		try
 		{
-			return tryToCreate(hostname, port, username, password);
+			return tryToCreate(host, port, username, password);
 		}
 		catch (IOException | IllegalArgumentException exception)
 		{
@@ -24,10 +24,10 @@ public class ApacheClientFactory implements ClientFactory
 		}
 	}
 	
-	private Client tryToCreate(String hostname, int port, String username, String password) throws IOException
+	private Client tryToCreate(String host, int port, String username, String password) throws IOException
 	{
 		FTPClient ftpClient = createFtpClient();
-		ftpClient.connect(hostname, port);
+		ftpClient.connect(host, port);
 		
 		if (ftpClient.login(username, password))
 		{

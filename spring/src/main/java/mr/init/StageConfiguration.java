@@ -18,7 +18,7 @@ public class StageConfiguration
 	@Bean
 	public SceneFactory sceneFactory()
 	{
-		return new FxmlSceneFactory("layout.fxml");
+		return new FxmlSceneFactory("layout.fxml", "labels");
 	}
 	
 	@Bean

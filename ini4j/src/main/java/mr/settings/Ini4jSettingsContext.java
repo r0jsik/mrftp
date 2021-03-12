@@ -15,9 +15,9 @@ public class Ini4jSettingsContext implements SettingsContext
 	}
 	
 	@Override
-	public void setHostname(String value)
+	public void setHost(String value)
 	{
-		ini.put("launcher", "hostname", value);
+		ini.put("launcher", "host", value);
 	}
 	
 	@Override
@@ -45,9 +45,9 @@ public class Ini4jSettingsContext implements SettingsContext
 	}
 	
 	@Override
-	public String getHostname()
+	public String getHost()
 	{
-		return ini.get("launcher", "hostname");
+		return ini.get("launcher", "host");
 	}
 	
 	@Override

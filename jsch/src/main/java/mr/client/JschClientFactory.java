@@ -12,11 +12,11 @@ public class JschClientFactory implements ClientFactory
 	private final String knownHostsFile;
 	
 	@Override
-	public Client create(String hostname, int port, String username, String password)
+	public Client create(String host, int port, String username, String password)
 	{
 		try
 		{
-			return tryToCreate(hostname, port, username, password);
+			return tryToCreate(host, port, username, password);
 		}
 		catch (JSchException exception)
 		{
@@ -24,12 +24,12 @@ public class JschClientFactory implements ClientFactory
 		}
 	}
 	
-	private Client tryToCreate(String hostname, int port, String username, String password) throws JSchException
+	private Client tryToCreate(String host, int port, String username, String password) throws JSchException
 	{
 		JSch jsch = new JSch();
 		jsch.setKnownHosts(knownHostsFile);
 		
-		Session session = jsch.getSession(username, hostname, port);
+		Session session = jsch.getSession(username, host, port);
 		session.setPassword(password);
 		session.connect();
 		

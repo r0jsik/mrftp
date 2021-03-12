@@ -44,9 +44,9 @@ public class Ini4jSettingsContextTest
 	}
 	
 	@Test
-	public void testHostname()
+	public void testHost()
 	{
-		testSetterAndGetter(SettingsContext::setHostname, "mock-hostname", SettingsContext::getHostname);
+		testSetterAndGetter(SettingsContext::setHost, "mock-host", SettingsContext::getHost);
 	}
 	
 	@Test

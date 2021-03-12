@@ -78,18 +78,6 @@ public class StageExplorerController implements ExplorerController
 	}
 	
 	@Override
-	public void setRefreshLabel(String label)
-	{
-		refreshButton.setText(label);
-	}
-	
-	@Override
-	public void setCloseLabel(String label)
-	{
-		closeButton.setText(label);
-	}
-	
-	@Override
 	public void setStatus(String status)
 	{
 		statusLabel.setText(status);
