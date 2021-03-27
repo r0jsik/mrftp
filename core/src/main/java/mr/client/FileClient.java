@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.function.Consumer;
 
 public class FileClient implements Client
@@ -19,15 +20,26 @@ public class FileClient implements Client
 	@Override
 	public void write(String path, StreamProvider<OutputStream> callback)
 	{
-		File file = new File(path);
+		createParentDirectories(path);
 		
-		try (OutputStream outputStream = new FileOutputStream(file))
+		try (OutputStream outputStream = new FileOutputStream(path))
 		{
 			callback.provide(outputStream);
 		}
 		catch (IOException exception)
 		{
 			throw new ClientActionException(exception);
+		}
+	}
+	
+	private void createParentDirectories(String path)
+	{
+		File file = new File(path);
+		File fileParent = file.getParentFile();
+		
+		if ( !fileParent.mkdirs())
+		{
+			throw new ClientActionException();
 		}
 	}
 	
@@ -51,9 +63,25 @@ public class FileClient implements Client
 	{
 		File file = new File(path);
 		
-		if ( !file.delete())
+		try
 		{
-			throw new ClientActionException();
+			Files.walk(file.toPath()).sorted(Comparator.reverseOrder()).forEach(this::remove);
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
+		}
+	}
+	
+	private void remove(Path path)
+	{
+		try
+		{
+			Files.delete(path);
+		}
+		catch (IOException exception)
+		{
+			throw new ClientActionException(exception);
 		}
 	}
 	

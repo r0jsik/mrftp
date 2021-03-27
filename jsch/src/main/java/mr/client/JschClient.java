@@ -24,6 +24,8 @@ public class JschClient implements Client
 	@Override
 	public void write(String path, StreamProvider<OutputStream> callback)
 	{
+		createParentDirectories(path);
+		
 		try (OutputStream outputStream = channel.put(path))
 		{
 			callback.provide(outputStream);
@@ -31,6 +33,26 @@ public class JschClient implements Client
 		catch (SftpException | IOException exception)
 		{
 			throw new ClientActionException(exception);
+		}
+	}
+	
+	private void createParentDirectories(String path)
+	{
+		StringBuilder parentBuilder = new StringBuilder();
+		String[] nodes = path.split("/");
+		
+		for (int i = 1; i < nodes.length - 1; i++)
+		{
+			parentBuilder.append('/').append(nodes[i]);
+			
+			try
+			{
+				channel.mkdir(parentBuilder.toString());
+			}
+			catch (SftpException exception)
+			{
+				// Directory already exists - ignore the exception
+			}
 		}
 	}
 	

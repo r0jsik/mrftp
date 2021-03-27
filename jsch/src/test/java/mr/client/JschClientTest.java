@@ -52,6 +52,19 @@ public class JschClientTest
 	}
 	
 	@Test
+	public void testUploadDirectory() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload directory test"))
+		{
+			client.write("/public/directory/to/upload/recursively/file.txt", inputStream::transferTo);
+		}
+		
+		Assertions.assertTrue(() -> (
+			MockSshServer.fileExists("/public/directory/to/upload/recursively/file.txt")
+		));
+	}
+	
+	@Test
 	public void testDownload() throws IOException
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
