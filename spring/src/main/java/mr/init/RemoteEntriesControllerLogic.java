@@ -52,18 +52,21 @@ public class RemoteEntriesControllerLogic implements ApplicationListener<ClientC
 	{
 		String from = remoteWalk.toString();
 		
-		client.walk(from, entry, relativePath -> {
-			tryToDownload(client, relativePath);
+		client.walk(from, "/" + entry, (relativePath, isDirectory) -> {
+			tryToDownload(client, relativePath, isDirectory);
 		});
 	}
 	
-	private void tryToDownload(Client client, String relativePath)
+	private void tryToDownload(Client client, String relativePath, boolean isDirectory)
 	{
-		String remotePath = remoteWalk.resolve(relativePath);
-		String localPath = localWalk.resolve(relativePath);
-		
-		client.read(remotePath, inputStream -> {
-			localClient.write(localPath, inputStream::transferTo);
-		});
+		if ( !isDirectory)
+		{
+			String remotePath = remoteWalk.resolve(relativePath);
+			String localPath = localWalk.resolve(relativePath);
+			
+			client.read(remotePath, inputStream -> {
+				localClient.write(localPath, inputStream::transferTo);
+			});
+		}
 	}
 }

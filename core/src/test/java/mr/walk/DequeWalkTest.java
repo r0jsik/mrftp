@@ -104,18 +104,6 @@ public class DequeWalkTest
 	}
 	
 	@Test
-	public void testRelate()
-	{
-		Deque<CharSequence> path = new ArrayDeque<>(initialPath);
-		Walk walk = new DequeWalk(path);
-		
-		String expectedPath = "first-dir/directory-name/other-dir";
-		String resolvedPath = walk.relate("first-dir");
-		
-		Assertions.assertEquals(expectedPath, resolvedPath);
-	}
-	
-	@Test
 	public void testResolveDoesNotChangeWalk()
 	{
 		Deque<CharSequence> path = new ArrayDeque<>(initialPath);

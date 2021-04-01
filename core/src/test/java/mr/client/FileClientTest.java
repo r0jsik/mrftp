@@ -14,6 +14,6 @@ public class FileClientTest
 	@Test
 	public void testWalk()
 	{
-		client.walk("./src/main/java", "mr", System.out::println);
+		client.walk("./src/main/java", "mr", (relativePath, isDirectory) -> System.out.println(relativePath));
 	}
 }

@@ -59,18 +59,21 @@ public class LocalEntriesControllerLogic implements InitializingBean, Applicatio
 	{
 		String from = localWalk.toString();
 		
-		localClient.walk(from, entry, relativePath -> {
-			tryToUpload(client, relativePath);
+		localClient.walk(from, "/" + entry, (relativePath, isDirectory) -> {
+			tryToUpload(client, relativePath, isDirectory);
 		});
 	}
 	
-	private void tryToUpload(Client client, String relativePath)
+	private void tryToUpload(Client client, String relativePath, boolean isDirectory)
 	{
-		String remotePath = remoteWalk.resolve(relativePath);
-		String localPath = localWalk.resolve(relativePath);
-		
-		localClient.read(localPath, inputStream -> {
-			client.write(remotePath, inputStream::transferTo);
-		});
+		if ( !isDirectory)
+		{
+			String remotePath = remoteWalk.resolve(relativePath);
+			String localPath = localWalk.resolve(relativePath);
+			
+			localClient.read(localPath, inputStream -> {
+				client.write(remotePath, inputStream::transferTo);
+			});
+		}
 	}
 }

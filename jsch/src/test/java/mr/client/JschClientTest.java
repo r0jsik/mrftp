@@ -118,7 +118,7 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testUploadAndRemove() throws IOException
+	public void testUploadAndThenRemove() throws IOException
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
 		{
@@ -165,19 +165,25 @@ public class JschClientTest
 	{
 		List<String> resolvedPaths = new ArrayList<>();
 		
-		client.walk("", "walk", resolvedPaths::add);
-		
 		List<String> expectedPaths = Arrays.asList(
-			"walk/file-A",
-			"walk/file-B",
-			"walk/file-C",
-			"walk/walk-P/file-D",
-			"walk/walk-P/file-E",
-			"walk/walk-Q/file-F",
-			"walk/walk-Q/walk-R/file-G",
-			"walk/walk-Q/walk-R/file-H",
-			"walk/walk-Q/walk-R/file-I"
+			"/walk",
+			"/walk/file-A",
+			"/walk/file-B",
+			"/walk/file-C",
+			"/walk/walk-P",
+			"/walk/walk-P/file-D",
+			"/walk/walk-P/file-E",
+			"/walk/walk-Q",
+			"/walk/walk-Q/file-F",
+			"/walk/walk-Q/walk-R",
+			"/walk/walk-Q/walk-R/file-G",
+			"/walk/walk-Q/walk-R/file-H",
+			"/walk/walk-Q/walk-R/file-I"
 		);
+		
+		client.walk("", "/walk", (relativePath, isDirectory) -> {
+			resolvedPaths.add(relativePath);
+		});
 		
 		Collections.sort(resolvedPaths);
 		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
@@ -188,14 +194,18 @@ public class JschClientTest
 	{
 		List<String> resolvedPaths = new ArrayList<>();
 		
-		client.walk("/walk", "walk-Q", resolvedPaths::add);
-		
 		List<String> expectedPaths = Arrays.asList(
-			"walk-Q/file-F",
-			"walk-Q/walk-R/file-G",
-			"walk-Q/walk-R/file-H",
-			"walk-Q/walk-R/file-I"
+			"/walk-Q",
+			"/walk-Q/file-F",
+			"/walk-Q/walk-R",
+			"/walk-Q/walk-R/file-G",
+			"/walk-Q/walk-R/file-H",
+			"/walk-Q/walk-R/file-I"
 		);
+		
+		client.walk("/walk", "/walk-Q", (relativePath, isDirectory) -> {
+			resolvedPaths.add(relativePath);
+		});
 		
 		Collections.sort(resolvedPaths);
 		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
@@ -206,8 +216,10 @@ public class JschClientTest
 	{
 		AtomicReference<String> resolvedPath = new AtomicReference<>();
 		
-		client.walk("/walk", "file-B", resolvedPath::set);
+		client.walk("/walk", "/file-B", (relativePath, isDirectory) -> {
+			resolvedPath.set(relativePath);
+		});
 		
-		Assertions.assertEquals("file-B", resolvedPath.get());
+		Assertions.assertEquals("/file-B", resolvedPath.get());
 	}
 }

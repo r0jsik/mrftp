@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class FileClient implements Client
 {
@@ -36,11 +36,7 @@ public class FileClient implements Client
 	{
 		File file = new File(path);
 		File fileParent = file.getParentFile();
-		
-		if ( !fileParent.mkdirs())
-		{
-			throw new ClientActionException();
-		}
+		fileParent.mkdirs();
 	}
 	
 	@Override
@@ -86,7 +82,7 @@ public class FileClient implements Client
 	}
 	
 	@Override
-	public void walk(String from, String entry, Consumer<String> callback)
+	public void walk(String from, String entry, BiConsumer<String, Boolean> callback)
 	{
 		try
 		{
@@ -98,7 +94,7 @@ public class FileClient implements Client
 		}
 	}
 	
-	private void tryToWalk(String from, String entry, Consumer<String> callback) throws IOException
+	private void tryToWalk(String from, String entry, BiConsumer<String, Boolean> callback) throws IOException
 	{
 		Path path = Paths.get(from, entry);
 		int elementsToSkip = path.getNameCount() - 1;
@@ -108,7 +104,7 @@ public class FileClient implements Client
 			String string = resolvedPath.subpath(elementsToSkip, elements).toString();
 			string = string.replaceAll("\\\\", "/");
 			
-			callback.accept(string);
+			callback.accept(string, false);
 		});
 	}
 	

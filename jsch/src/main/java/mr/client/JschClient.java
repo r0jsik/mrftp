@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public class JschClient implements Client
@@ -72,18 +72,14 @@ public class JschClient implements Client
 	@Override
 	public void remove(String path)
 	{
+		walk("", path, this::remove);
+	}
+	
+	private void remove(String relativePath, boolean isDirectory)
+	{
 		try
 		{
-			SftpATTRS attributes = channel.lstat(path);
-			
-			if (attributes.isDir())
-			{
-				channel.rmdir(path);
-			}
-			else
-			{
-				channel.rm(path);
-			}
+			tryToRemove(relativePath, isDirectory);
 		}
 		catch (SftpException exception)
 		{
@@ -91,8 +87,20 @@ public class JschClient implements Client
 		}
 	}
 	
+	private void tryToRemove(String relativePath, boolean isDirectory) throws SftpException
+	{
+		if (isDirectory)
+		{
+			channel.rmdir(relativePath);
+		}
+		else
+		{
+			channel.rm(relativePath);
+		}
+	}
+	
 	@Override
-	public void walk(String from, String entry, Consumer<String> callback)
+	public void walk(String from, String entry, BiConsumer<String, Boolean> callback)
 	{
 		Walk walk = new DequeWalk();
 		walk.to(entry);
@@ -107,12 +115,14 @@ public class JschClient implements Client
 		}
 	}
 	
-	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws SftpException
+	private void tryToWalk(String from, Walk walk, BiConsumer<String, Boolean> callback) throws SftpException
 	{
-		String absolutePath = walk.relate(from);
+		String absolutePath = from + walk.toString();
 		SftpATTRS attributes = channel.lstat(absolutePath);
+		String relativePath = walk.toString();
+		boolean isDirectory = attributes.isDir();
 		
-		if (attributes.isDir())
+		if (isDirectory)
 		{
 			Vector<ChannelSftp.LsEntry> lsEntries = channel.ls(absolutePath + "/*");
 			
@@ -125,10 +135,8 @@ public class JschClient implements Client
 				walk.out();
 			}
 		}
-		else
-		{
-			callback.accept(walk.toString());
-		}
+		
+		callback.accept(relativePath, isDirectory);
 	}
 	
 	@Override

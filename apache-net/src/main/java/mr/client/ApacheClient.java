@@ -11,7 +11,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public class ApacheClient implements Client
@@ -74,9 +74,14 @@ public class ApacheClient implements Client
 	@Override
 	public void remove(String path)
 	{
+		walk("", path, this::remove);
+	}
+	
+	private void remove(String relativePath, boolean isDirectory)
+	{
 		try
 		{
-			if ( !ftpClient.deleteFile(path) && !ftpClient.removeDirectory(path))
+			if ( !tryToRemove(relativePath, isDirectory))
 			{
 				throw new ClientActionException();
 			}
@@ -87,8 +92,20 @@ public class ApacheClient implements Client
 		}
 	}
 	
+	private boolean tryToRemove(String relativePath, boolean isDirectory) throws IOException
+	{
+		if (isDirectory)
+		{
+			return ftpClient.removeDirectory(relativePath);
+		}
+		else
+		{
+			return ftpClient.deleteFile(relativePath);
+		}
+	}
+	
 	@Override
-	public void walk(String from, String entry, Consumer<String> callback)
+	public void walk(String from, String entry, BiConsumer<String, Boolean> callback)
 	{
 		Walk walk = new DequeWalk();
 		walk.to(entry);
@@ -103,33 +120,30 @@ public class ApacheClient implements Client
 		}
 	}
 	
-	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws IOException
+	private void tryToWalk(String from, Walk walk, BiConsumer<String, Boolean> callback) throws IOException
 	{
-		String absolutePath = walk.relate(from);
+		String absolutePath = from + walk.toString();
 		FTPFile[] filesList = ftpClient.listFiles(absolutePath + "/*");
 		
-		if (filesList.length == 0)
+		for (FTPFile ftpFile : filesList)
 		{
-			callback.accept(walk.toString());
-		}
-		else
-		{
-			for (FTPFile ftpFile : filesList)
+			String fileName = ftpFile.getName();
+			String relativePath = walk.resolve(fileName);
+			boolean isDirectory = ftpFile.isDirectory();
+			
+			if (isDirectory)
 			{
-				String fileName = ftpFile.getName();
-				
-				if (ftpFile.isDirectory())
-				{
-					walk.to(fileName);
-					tryToWalk(from, walk, callback);
-					walk.out();
-				}
-				else
-				{
-					callback.accept(walk.resolve(fileName));
-				}
+				walk.to(fileName);
+				tryToWalk(from, walk, callback);
+				walk.out();
+			}
+			else
+			{
+				callback.accept(relativePath, false);
 			}
 		}
+		
+		callback.accept(walk.toString(), filesList.length != 0);
 	}
 	
 	@Override

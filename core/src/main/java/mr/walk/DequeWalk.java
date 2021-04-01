@@ -35,12 +35,6 @@ public class DequeWalk implements Walk
 	}
 	
 	@Override
-	public String relate(String path)
-	{
-		return String.join("/", path, toString());
-	}
-	
-	@Override
 	public void out()
 	{
 		if (path.size() > 1)
