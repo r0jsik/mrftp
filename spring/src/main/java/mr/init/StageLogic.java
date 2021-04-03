@@ -36,6 +36,7 @@ public class StageLogic
 		
 		stage.setOnCloseRequest(event -> {
 			Platform.exit();
+			System.exit(0);
 		});
 		
 		stage.show();
