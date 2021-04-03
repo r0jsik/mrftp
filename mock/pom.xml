@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<artifactId>mr-ftp</artifactId>
 		<groupId>mr.ftp</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<artifactId>mr-ftp</artifactId>
+		<version>1.0</version>
 	</parent>
 	
 	<artifactId>mock</artifactId>
@@ -17,9 +17,9 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>mr.ftp</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>core</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		
 		<dependency>
