@@ -7,19 +7,24 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @RequiredArgsConstructor
 public class FxmlSceneFactory implements SceneFactory
 {
-	private final String fileName;
+	private final String layoutFileName;
+	private final String labelsFileName;
 	
 	@Override
 	public Scene create(String sceneName, Object controller)
 	{
 		try
 		{
+			ResourceBundle resources = getLabelsBundle(sceneName);
 			URL location = getLocation(sceneName);
 			FXMLLoader fxmlLoader = getLoader(location, controller);
+			fxmlLoader.setResources(resources);
 			Parent root = fxmlLoader.load();
 			
 			return new Scene(root);
@@ -30,9 +35,20 @@ public class FxmlSceneFactory implements SceneFactory
 		}
 	}
 	
+	private ResourceBundle getLabelsBundle(String sceneName)
+	{
+		String labelsFilePath = String.join("/", sceneName, labelsFileName);
+		Locale locale = Locale.getDefault();
+		
+		return ResourceBundle.getBundle(labelsFilePath, locale);
+	}
+	
 	private URL getLocation(String sceneName)
 	{
-		return getClass().getResource(String.join("", "/", sceneName, "/", fileName));
+		String layoutFilePath = String.join("/", "", sceneName, layoutFileName);
+		URL location = getClass().getResource(layoutFilePath);
+		
+		return location;
 	}
 	
 	private FXMLLoader getLoader(URL location, Object controller)

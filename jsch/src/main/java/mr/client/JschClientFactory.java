@@ -12,25 +12,30 @@ public class JschClientFactory implements ClientFactory
 	private final String knownHostsFile;
 	
 	@Override
-	public Client create(String hostname, int port, String username, String password)
+	public Client create(String host, int port, String username, String password)
 	{
 		try
 		{
-			JSch jsch = new JSch();
-			jsch.setKnownHosts(knownHostsFile);
-			
-			Session session = jsch.getSession(username, hostname, port);
-			session.setPassword(password);
-			session.connect();
-			
-			ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-			channel.connect();
-			
-			return new JschClient(channel);
+			return tryToCreate(host, port, username, password);
 		}
 		catch (JSchException exception)
 		{
 			throw new ClientFactoryException(exception);
 		}
+	}
+	
+	private Client tryToCreate(String host, int port, String username, String password) throws JSchException
+	{
+		JSch jsch = new JSch();
+		jsch.setKnownHosts(knownHostsFile);
+		
+		Session session = jsch.getSession(username, host, port);
+		session.setPassword(password);
+		session.connect();
+		
+		ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
+		channel.connect();
+		
+		return new JschClient(channel);
 	}
 }

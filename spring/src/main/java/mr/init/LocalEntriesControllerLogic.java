@@ -12,14 +12,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.function.Consumer;
-
 @Component
 @RequiredArgsConstructor
 public class LocalEntriesControllerLogic implements InitializingBean, ApplicationListener<ClientChangedEvent>
@@ -28,6 +20,7 @@ public class LocalEntriesControllerLogic implements InitializingBean, Applicatio
 	private final EntriesController localEntriesController;
 	private final Walk remoteWalk;
 	private final Walk localWalk;
+	private final Client localClient;
 	
 	@Override
 	public void afterPropertiesSet()
@@ -42,15 +35,9 @@ public class LocalEntriesControllerLogic implements InitializingBean, Applicatio
 		localEntriesController.setOnEntryDeleted(entry -> {
 			String localPath = localWalk.resolve(entry);
 			
-			remove(localPath);
+			localClient.remove(localPath);
 			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 		});
-	}
-	
-	private void remove(String localPath)
-	{
-		File file = new File(localPath);
-		file.delete();
 	}
 	
 	@Override
@@ -61,63 +48,32 @@ public class LocalEntriesControllerLogic implements InitializingBean, Applicatio
 		LocalEntriesViewRefreshEvent localEntriesViewRefreshEvent = new LocalEntriesViewRefreshEvent(this);
 		
 		localEntriesController.setOnEntryTransmitted(entry -> {
-			String localPath = localWalk.resolve(entry);
-			
-			upload(client, localPath);
+			upload(client, entry);
 			
 			applicationEventPublisher.publishEvent(remoteEntriesViewRefreshEvent);
 			applicationEventPublisher.publishEvent(localEntriesViewRefreshEvent);
 		});
 	}
 	
-	private void upload(Client client, String localPath)
+	private void upload(Client client, String entry)
 	{
-		walk(localPath, relativePath -> {
-			try
-			{
-				tryToUpload(client, relativePath);
-			}
-			catch (IOException exception)
-			{
-				exception.printStackTrace();
-			}
+		String from = localWalk.toString();
+		
+		localClient.walk(from, "/" + entry, (relativePath, isDirectory) -> {
+			tryToUpload(client, relativePath, isDirectory);
 		});
 	}
 	
-	private void walk(String path, Consumer<String> callback)
+	private void tryToUpload(Client client, String relativePath, boolean isDirectory)
 	{
-		try
+		if ( !isDirectory)
 		{
-			tryToWalk(path, callback);
-		}
-		catch (IOException exception)
-		{
-			exception.printStackTrace();
-		}
-	}
-	
-	private void tryToWalk(String path, Consumer<String> callback) throws IOException
-	{
-		int elementsToSkip = Paths.get(path).getNameCount() - 1;
-		
-		Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(resolvedPath -> {
-			int elements = resolvedPath.getNameCount();
-			String string = resolvedPath.subpath(elementsToSkip, elements).toString();
-			string = string.replaceAll("\\\\", "/");
+			String remotePath = remoteWalk.resolve(relativePath);
+			String localPath = localWalk.resolve(relativePath);
 			
-			callback.accept(string);
-		});
-	}
-	
-	private void tryToUpload(Client client, String relativePath) throws IOException
-	{
-		String remotePath = remoteWalk.resolve(relativePath);
-		String localPath = localWalk.resolve(relativePath);
-		File file = new File(localPath);
-		
-		try (InputStream inputStream = new FileInputStream(file))
-		{
-			client.upload(remotePath, inputStream);
+			localClient.read(localPath, inputStream -> {
+				client.write(remotePath, inputStream::transferTo);
+			});
 		}
 	}
 }

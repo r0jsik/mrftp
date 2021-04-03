@@ -10,10 +10,11 @@ import mr.entry.JschEntriesProjector;
 import mr.walk.DequeWalk;
 import mr.walk.Walk;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public class JschClient implements Client
@@ -21,26 +22,48 @@ public class JschClient implements Client
 	private final ChannelSftp channel;
 	
 	@Override
-	public void upload(String path, InputStream inputStream)
+	public void write(String path, StreamProvider<OutputStream> callback)
 	{
-		try
+		createParentDirectories(path);
+		
+		try (OutputStream outputStream = channel.put(path))
 		{
-			channel.put(inputStream, path);
+			callback.provide(outputStream);
 		}
-		catch (SftpException exception)
+		catch (SftpException | IOException exception)
 		{
 			throw new ClientActionException(exception);
 		}
 	}
 	
-	@Override
-	public void download(String path, OutputStream outputStream)
+	private void createParentDirectories(String path)
 	{
-		try
+		StringBuilder parentBuilder = new StringBuilder();
+		String[] nodes = path.split("/");
+		
+		for (int i = 1; i < nodes.length - 1; i++)
 		{
-			channel.get(path, outputStream);
+			parentBuilder.append('/').append(nodes[i]);
+			
+			try
+			{
+				channel.mkdir(parentBuilder.toString());
+			}
+			catch (SftpException exception)
+			{
+				// Directory already exists - ignore the exception
+			}
 		}
-		catch (SftpException exception)
+	}
+	
+	@Override
+	public void read(String path, StreamProvider<InputStream> callback)
+	{
+		try (InputStream inputStream = channel.get(path))
+		{
+			callback.provide(inputStream);
+		}
+		catch (SftpException | IOException exception)
 		{
 			throw new ClientActionException(exception);
 		}
@@ -49,18 +72,14 @@ public class JschClient implements Client
 	@Override
 	public void remove(String path)
 	{
+		walk("", path, this::remove);
+	}
+	
+	private void remove(String relativePath, boolean isDirectory)
+	{
 		try
 		{
-			SftpATTRS attributes = channel.lstat(path);
-			
-			if (attributes.isDir())
-			{
-				channel.rmdir(path);
-			}
-			else
-			{
-				channel.rm(path);
-			}
+			tryToRemove(relativePath, isDirectory);
 		}
 		catch (SftpException exception)
 		{
@@ -68,8 +87,20 @@ public class JschClient implements Client
 		}
 	}
 	
+	private void tryToRemove(String relativePath, boolean isDirectory) throws SftpException
+	{
+		if (isDirectory)
+		{
+			channel.rmdir(relativePath);
+		}
+		else
+		{
+			channel.rm(relativePath);
+		}
+	}
+	
 	@Override
-	public void walk(String from, String entry, Consumer<String> callback)
+	public void walk(String from, String entry, BiConsumer<String, Boolean> callback)
 	{
 		Walk walk = new DequeWalk();
 		walk.to(entry);
@@ -84,12 +115,14 @@ public class JschClient implements Client
 		}
 	}
 	
-	private void tryToWalk(String from, Walk walk, Consumer<String> callback) throws SftpException
+	private void tryToWalk(String from, Walk walk, BiConsumer<String, Boolean> callback) throws SftpException
 	{
-		String absolutePath = walk.relate(from);
+		String absolutePath = from + walk.toString();
 		SftpATTRS attributes = channel.lstat(absolutePath);
+		String relativePath = walk.toString();
+		boolean isDirectory = attributes.isDir();
 		
-		if (attributes.isDir())
+		if (isDirectory)
 		{
 			Vector<ChannelSftp.LsEntry> lsEntries = channel.ls(absolutePath + "/*");
 			
@@ -102,10 +135,8 @@ public class JschClient implements Client
 				walk.out();
 			}
 		}
-		else
-		{
-			callback.accept(walk.toString());
-		}
+		
+		callback.accept(relativePath, isDirectory);
 	}
 	
 	@Override

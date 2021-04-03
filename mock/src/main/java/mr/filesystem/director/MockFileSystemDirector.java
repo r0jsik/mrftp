@@ -14,6 +14,11 @@ public class MockFileSystemDirector implements FileSystemDirector
 		fileSystemBuilder.createInaccessibleDirectory("/private");
 		fileSystemBuilder.createFile("/private/auth", "secret-password");
 		fileSystemBuilder.createDirectory("/public-remove-dir");
+		fileSystemBuilder.createFile("/public-remove-dir/file-to-remove-A");
+		fileSystemBuilder.createFile("/public-remove-dir/file-to-remove-B");
+		fileSystemBuilder.createFile("/public-remove-dir/file-to-remove-C");
+		fileSystemBuilder.createFile("/public-remove-dir/nested-directory/file-to-remove-D");
+		fileSystemBuilder.createFile("/public-remove-dir/nested-directory/file-to-remove-E");
 		
 		fileSystemBuilder.createDirectory("/walk");
 		fileSystemBuilder.createDirectory("/walk/walk-P");

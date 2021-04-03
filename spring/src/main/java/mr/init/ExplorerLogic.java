@@ -8,7 +8,6 @@ import mr.event.RemoteEntriesViewRefreshEvent;
 import mr.event.StartExplorerEvent;
 import mr.event.StartLauncherEvent;
 import mr.explorer.ExplorerController;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.DependsOn;
@@ -17,22 +16,10 @@ import org.springframework.stereotype.Component;
 @Component
 @DependsOn("explorerScene")
 @RequiredArgsConstructor
-public class ExplorerLogic implements InitializingBean, ApplicationListener<StartExplorerEvent>
+public class ExplorerLogic implements ApplicationListener<StartExplorerEvent>
 {
 	private final ApplicationEventPublisher applicationEventPublisher;
 	private final ExplorerController explorerController;
-	
-	@Override
-	public void afterPropertiesSet()
-	{
-		initializeLabels();
-	}
-	
-	private void initializeLabels()
-	{
-		explorerController.setCloseLabel("Zamknij");
-		explorerController.setRefreshLabel("Odśwież");
-	}
 	
 	@Override
 	public void onApplicationEvent(StartExplorerEvent startExplorerEvent)

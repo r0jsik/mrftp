@@ -1,6 +1,7 @@
 package mr.warning;
 
 import lombok.RequiredArgsConstructor;
+import mr.client.ClientActionException;
 import mr.client.ClientFactoryException;
 import mr.entry.EntriesProjectionException;
 import mr.scene.SceneFactoryException;
@@ -35,5 +36,23 @@ public class WarningAspect
 	private void unableToShowLocalEntries(EntriesProjectionException exception)
 	{
 		warning.show("Nie można pokazać zawartości katalogu", exception);
+	}
+	
+	@AfterThrowing(pointcut = "execution(* mr.client.Client.write(..))", throwing = "exception")
+	private void unableToUploadEntry(ClientActionException exception)
+	{
+		warning.show("Nie można zapisać danych", exception);
+	}
+	
+	@AfterThrowing(pointcut = "execution(* mr.client.Client.read(..))", throwing = "exception")
+	private void unableToDownloadEntry(ClientActionException exception)
+	{
+		warning.show("Nie można odczytać danych", exception);
+	}
+	
+	@AfterThrowing(pointcut = "execution(* mr.client.Client.remove(..))", throwing = "exception")
+	private void unableToRemoveEntry(ClientActionException exception)
+	{
+		warning.show("Nie można usunąć danych", exception);
 	}
 }

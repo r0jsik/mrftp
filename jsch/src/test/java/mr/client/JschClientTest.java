@@ -43,7 +43,7 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload test"))
 		{
-			client.upload("/public/upload.txt", inputStream);
+			client.write("/public/upload.txt", inputStream::transferTo);
 		}
 		
 		Assertions.assertTrue(() -> (
@@ -52,11 +52,26 @@ public class JschClientTest
 	}
 	
 	@Test
+	public void testUploadDirectory() throws IOException
+	{
+		try (MockInputStream inputStream = new MockInputStream("Upload directory test"))
+		{
+			client.write("/public/directory/to/upload/recursively/file.txt", inputStream::transferTo);
+		}
+		
+		Assertions.assertTrue(() -> (
+			MockSshServer.fileExists("/public/directory/to/upload/recursively/file.txt")
+		));
+	}
+	
+	@Test
 	public void testDownload() throws IOException
 	{
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/download.txt", outputStream);
+			client.read("/public/download.txt", inputStream -> {
+				inputStream.transferTo(outputStream);
+			});
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Download test")
@@ -65,14 +80,11 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testDownloadNotExistingFile() throws IOException
+	public void testDownloadNotExistingFile()
 	{
-		try (MockOutputStream outputStream = new MockOutputStream())
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.download("/public/not-existing-file", outputStream);
-			});
-		}
+		Assertions.assertThrows(ClientActionException.class, () -> {
+			client.read("/public/not-existing-file", inputStream -> {});
+		});
 	}
 	
 	@Test
@@ -80,12 +92,14 @@ public class JschClientTest
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and download test"))
 		{
-			client.upload("/public/upload-and-download.txt", inputStream);
+			client.write("/public/upload-and-download.txt", inputStream::transferTo);
 		}
 		
 		try (MockOutputStream outputStream = new MockOutputStream())
 		{
-			client.download("/public/upload-and-download.txt", outputStream);
+			client.read("/public/upload-and-download.txt", inputStream -> {
+				inputStream.transferTo(outputStream);
+			});
 			
 			Assertions.assertTrue(() -> (
 				outputStream.hasContent("Upload and download test")
@@ -104,11 +118,11 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testUploadAndRemove() throws IOException
+	public void testUploadAndThenRemove() throws IOException
 	{
 		try (MockInputStream inputStream = new MockInputStream("Upload and remove test"))
 		{
-			client.upload("/public/upload-and-remove.txt", inputStream);
+			client.write("/public/upload-and-remove.txt", inputStream::transferTo);
 		}
 		
 		client.remove("/public/upload-and-remove.txt");
@@ -127,16 +141,13 @@ public class JschClientTest
 	}
 	
 	@Test
-	public void testActionOnClosedClient() throws IOException
+	public void testActionOnClosedClient()
 	{
 		client.close();
 		
-		try (MockInputStream inputStream = new MockInputStream("Close test"))
-		{
-			Assertions.assertThrows(ClientActionException.class, () -> {
-				client.upload("/public/close.txt", inputStream);
-			});
-		}
+		Assertions.assertThrows(ClientActionException.class, () -> {
+			client.write("/public/close.txt", outputStream -> {});
+		});
 	}
 	
 	@Test
@@ -154,19 +165,25 @@ public class JschClientTest
 	{
 		List<String> resolvedPaths = new ArrayList<>();
 		
-		client.walk("", "walk", resolvedPaths::add);
-		
 		List<String> expectedPaths = Arrays.asList(
-			"walk/file-A",
-			"walk/file-B",
-			"walk/file-C",
-			"walk/walk-P/file-D",
-			"walk/walk-P/file-E",
-			"walk/walk-Q/file-F",
-			"walk/walk-Q/walk-R/file-G",
-			"walk/walk-Q/walk-R/file-H",
-			"walk/walk-Q/walk-R/file-I"
+			"/walk",
+			"/walk/file-A",
+			"/walk/file-B",
+			"/walk/file-C",
+			"/walk/walk-P",
+			"/walk/walk-P/file-D",
+			"/walk/walk-P/file-E",
+			"/walk/walk-Q",
+			"/walk/walk-Q/file-F",
+			"/walk/walk-Q/walk-R",
+			"/walk/walk-Q/walk-R/file-G",
+			"/walk/walk-Q/walk-R/file-H",
+			"/walk/walk-Q/walk-R/file-I"
 		);
+		
+		client.walk("", "/walk", (relativePath, isDirectory) -> {
+			resolvedPaths.add(relativePath);
+		});
 		
 		Collections.sort(resolvedPaths);
 		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
@@ -177,14 +194,18 @@ public class JschClientTest
 	{
 		List<String> resolvedPaths = new ArrayList<>();
 		
-		client.walk("/walk", "walk-Q", resolvedPaths::add);
-		
 		List<String> expectedPaths = Arrays.asList(
-			"walk-Q/file-F",
-			"walk-Q/walk-R/file-G",
-			"walk-Q/walk-R/file-H",
-			"walk-Q/walk-R/file-I"
+			"/walk-Q",
+			"/walk-Q/file-F",
+			"/walk-Q/walk-R",
+			"/walk-Q/walk-R/file-G",
+			"/walk-Q/walk-R/file-H",
+			"/walk-Q/walk-R/file-I"
 		);
+		
+		client.walk("/walk", "/walk-Q", (relativePath, isDirectory) -> {
+			resolvedPaths.add(relativePath);
+		});
 		
 		Collections.sort(resolvedPaths);
 		Assertions.assertIterableEquals(expectedPaths, resolvedPaths);
@@ -195,8 +216,10 @@ public class JschClientTest
 	{
 		AtomicReference<String> resolvedPath = new AtomicReference<>();
 		
-		client.walk("/walk", "file-B", resolvedPath::set);
+		client.walk("/walk", "/file-B", (relativePath, isDirectory) -> {
+			resolvedPath.set(relativePath);
+		});
 		
-		Assertions.assertEquals("file-B", resolvedPath.get());
+		Assertions.assertEquals("/file-B", resolvedPath.get());
 	}
 }

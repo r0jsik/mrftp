@@ -13,13 +13,13 @@
 			</cellValueFactory>
 		</TableColumn>
 		
-		<TableColumn minWidth="120" reorderable="false" text="Nazwa">
+		<TableColumn minWidth="120" reorderable="false" text="%label.file.name">
 			<cellValueFactory>
 				<PropertyValueFactory property="name" />
 			</cellValueFactory>
 		</TableColumn>
 		
-		<TableColumn minWidth="120" reorderable="false" text="Rozmiar">
+		<TableColumn minWidth="120" reorderable="false" text="%label.file.size">
 			<cellValueFactory>
 				<PropertyValueFactory property="size" />
 			</cellValueFactory>
@@ -31,6 +31,6 @@
 	</columnResizePolicy>
 	
 	<placeholder>
-		<Label text="Brak plików" />
+		<Label text="%label.file.list.empty" />
 	</placeholder>
 </TableView>

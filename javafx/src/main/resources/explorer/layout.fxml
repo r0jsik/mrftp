@@ -8,8 +8,8 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" stylesheets="@style.css">
 	<TilePane styleClass="tile-pane">
-		<Button fx:id="closeButton" text="Zamknij" />
-		<Button fx:id="refreshButton" text="Odśwież" />
+		<Button fx:id="closeButton" text="%label.button.close" />
+		<Button fx:id="refreshButton" text="%label.button.refresh" />
 	</TilePane>
 	
 	<Label fx:id="statusLabel" />
@@ -19,8 +19,8 @@
 			<fx:include source="entries-view.fxml" fx:id="remoteView" />
 			
 			<TilePane styleClass="tile-pane">
-				<Button text="Pobierz" fx:id="transmitRemoteFileButton" />
-				<Button text="Usuń" fx:id="removeRemoteFileButton" />
+				<Button text="%label.file.download" fx:id="transmitRemoteFileButton" />
+				<Button text="%label.file.remove" fx:id="removeRemoteFileButton" />
 			</TilePane>
 		</VBox>
 		
@@ -28,8 +28,8 @@
 			<fx:include source="entries-view.fxml" fx:id="localView" />
 			
 			<TilePane styleClass="tile-pane">
-				<Button text="Wyślij" fx:id="transmitLocalFileButton" />
-				<Button text="Usuń" fx:id="removeLocalFileButton" />
+				<Button text="%label.file.upload" fx:id="transmitLocalFileButton" />
+				<Button text="%label.file.remove" fx:id="removeLocalFileButton" />
 			</TilePane>
 		</VBox>
 	</SplitPane>
