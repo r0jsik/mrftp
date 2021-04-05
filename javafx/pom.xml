@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>mr.ftp</groupId>
+		<artifactId>mr-ftp</artifactId>
+		<version>1.0</version>
+	</parent>
+	
+	<artifactId>javafx</artifactId>
+	
+	<properties>
+		<javafx.version>13.0.2</javafx.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>gui</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jfxtras</groupId>
+			<artifactId>jmetro</artifactId>
+			<version>11.6.12</version>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,29 @@
+.tile-pane
+{
+	-fx-hgap: 10px;
+	-fx-padding: 5px;
+}
+
+.tile-pane .button
+{
+	-fx-pref-width: 100px;
+}
+
+.label
+{
+	-fx-padding: 5px;
+}
+
+.label,
+.table-view,
+.button
+{
+	-fx-font-size: larger;
+}
+
+.table-view .scroll-bar *
+{
+	-fx-min-height: 0;
+	-fx-pref-height: 0;
+	-fx-max-height: 0;
+}

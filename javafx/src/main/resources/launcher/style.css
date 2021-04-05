@@ -1,0 +1,28 @@
+.root
+{
+	-fx-hgap: 20;
+	-fx-vgap: 5;
+	-fx-padding: 10;
+}
+
+.label,
+.combo-box,
+.text-field,
+.check-box,
+.button
+{
+	-fx-font-size: larger;
+}
+
+.combo-box,
+.text-field
+{
+	-fx-pref-width: 180;
+	-fx-pref-height: 30;
+}
+
+.button
+{
+	-fx-pref-width: 90;
+	-fx-pref-height: 24;
+}
